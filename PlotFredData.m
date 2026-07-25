@@ -806,6 +806,12 @@ elseif(itype==23)
     plot(InputTT.Date,InputTT.VISADiscretionary,'g',...
         InputTT.Date,InputTT.meanDisc,'r--',...
         InputTT.Date,InputTT.medianDisc,'b--');
+    if(ishowrecession==1)
+        hold on
+        barval=FRObj.barval;
+        bar(InputTT.Date,barval*InputTT.RevFlag,'b','LineWidth',1);
+        hold off
+    end
     title(titlestr)
     xlabel('Date','FontWeight','bold','FontSize',12,'FontWeight','bold');
     ylabel('Visa Discretionary Spend Index','FontWeight','bold','FontSize',12,'FontWeight','bold');
@@ -820,8 +826,8 @@ elseif(itype==23)
         set(ha2,'handlevisibility','off','visible','off')
     end
     maxDiscVal=max(InputTT.VISADiscretionary,[],'omitnan');
-    minval=0;
-    maxval=150;
+    minval=70;
+    maxval=140;
     set(gca,'YLim',[minval maxval]);
     set(gca,'Color', [0.3 0.3 0.3]);
     set(gca,'XGrid','on','GridColor',[1 1 1]);
@@ -871,6 +877,12 @@ elseif(itype==23)
         InputTT.Date,InputTT.meanWage,'r--',...
         InputTT.Date,InputTT.medianWage,'b--',...
         InputTT.Date,InputTT.wagessmooth,'y');
+    if(ishowrecession==1)
+        hold on
+        barval=FRObj.barval;
+        bar(InputTT.Date,barval*InputTT.RevFlag,'b','LineWidth',1);
+        hold off
+    end
     title(titlestr)
     xlabel('Date','FontWeight','bold','FontSize',12,'FontWeight','bold');
     ylabel('Median Weekly US Wage','FontWeight','bold','FontSize',12,'FontWeight','bold');
@@ -957,6 +969,12 @@ elseif(itype==23)
         InputTT.Date,InputTT.meanSurplus,'r--',...
         InputTT.Date,InputTT.medianSurplus,'b--',...
         InputTT.Date,InputTT.bdebtsmooth,'y--');
+    if(ishowrecession==1)
+        hold on
+        barval=FRObj.barval;
+        bar(InputTT.Date,barval*InputTT.RevFlag,'b','LineWidth',1);
+        hold off
+    end
     title(titlestr)
     xlabel('Date','FontWeight','bold','FontSize',12,'FontWeight','bold');
     ylabel('Fed Budget Surplus Billions USD','FontWeight','bold','FontSize',12,'FontWeight','bold');
@@ -1133,6 +1151,12 @@ elseif(itype==36)
         InputTT.Date,InputTT.meanInventory,'r--',...
         InputTT.Date,InputTT.medianInventory,'b--',...
         InputTT.Date,InputTT.autosmooth,'y--');
+       hold off
+    if(ishowrecession==1)
+        hold on
+        barval=FRObj.barval;
+        bar(InputTT.Date,barval*InputTT.RevFlag,'b','LineWidth',1);
+    end
     title(titlestr)
     xlabel('Date','FontWeight','bold','FontSize',12,'FontWeight','bold');
     ylabel('Domestic Auto Inventory-Thousands','FontWeight','bold','FontSize',12,'FontWeight','bold');
@@ -1147,8 +1171,6 @@ elseif(itype==36)
         set(ha2,'handlevisibility','off','visible','off')
     end
     minval=0;
-    % maxval1=max(InputTT.AUINSA,[],'omitnan');
-    % maxval=1000*floor(maxval1/1000)+1000;
     maxval=2000;
     set(gca,'YLim',[minval maxval]);
     set(gca,'Color', [0.3 0.3 0.3]);
@@ -1164,6 +1186,11 @@ elseif(itype==36)
         InputTT.Date,InputTT.meanFSales,'r--',...
         InputTT.Date,InputTT.medianFSales,'b--',...
         InputTT.Date,InputTT.autosmooth,'y--');
+    if(ishowrecession==1)
+        hold on
+        barval=FRObj.barval;
+        bar(InputTT.Date,barval*InputTT.RevFlag,'b','LineWidth',1);
+    end
     title(titlestr)
     xlabel('Date','FontWeight','bold','FontSize',12,'FontWeight','bold');
     ylabel('Foreign Auto Sales Millions','FontWeight','bold','FontSize',12,'FontWeight','bold');
@@ -1178,7 +1205,7 @@ elseif(itype==36)
         set(ha2,'handlevisibility','off','visible','off')
     end
     minval=0;
-    maxval=4.0;
+    maxval=4;
     set(gca,'YLim',[minval maxval]);
     set(gca,'Color', [0.3 0.3 0.3]);
     set(gca,'XGrid','on','GridColor',[1 1 1]);
@@ -1193,6 +1220,11 @@ elseif(itype==36)
         InputTT.Date,InputTT.meanTSales,'r--',...
         InputTT.Date,InputTT.medianTSales,'b--',...
         InputTT.Date,InputTT.autosmooth,'y--');
+    if(ishowrecession==1)
+        hold on
+        barval=FRObj.barval;
+        bar(InputTT.Date,barval*InputTT.RevFlag,'b','LineWidth',1);
+    end
     title(titlestr)
     xlabel('Date','FontWeight','bold','FontSize',12,'FontWeight','bold');
     ylabel('Total Vehicle Sales Millions','FontWeight','bold','FontSize',12,'FontWeight','bold');
@@ -2289,6 +2321,12 @@ elseif(itype==72)
         InputTT.Date,InputTT.meanLI,'r--',...
         InputTT.Date,InputTT.medianLI,'b--',...
         InputTT.Date,InputTT.leadsmooth,'y--');
+    if(ishowrecession==1)
+        hold on
+        barval=FRObj.barval;
+        bar(InputTT.Date,barval*InputTT.RevFlag,'b','LineWidth',1);
+        hold off
+    end
     title(titlestr)
     xlabel('Date','FontWeight','bold','FontSize',12,'FontWeight','bold');
     ylabel('Leading Index Pct','FontWeight','bold','FontSize',12,'FontWeight','bold');
@@ -2930,6 +2968,12 @@ elseif(itype==90)
         InputTT.Date,InputTT.meanSales,'r--',...
         InputTT.Date,InputTT.medianSales,'b--',...
         InputTT.Date,InputTT.autosmooth,'y--');
+    if(ishowrecession==1)
+        hold on
+        barval=FRObj.barval;
+        bar(InputTT.Date,barval*InputTT.RevFlag,'b','LineWidth',1);
+        hold off
+    end 
     title(titlestr)
     xlabel('Date','FontWeight','bold','FontSize',12,'FontWeight','bold');
     ylabel('Domestic Auto Sales Millions of Cars','FontWeight','bold','FontSize',12,'FontWeight','bold');
@@ -4649,12 +4693,12 @@ elseif(itype==145)
     meanCitrusIndexVal=mean(InputTT.citrussmooth);
     medianCitrusIndexVal=median(InputTT.citrussmooth);
 elseif(itype==146)
-    bar(InputTT.Date,InputTT.RFlag,'r','LineWidth',1);
+    plot(InputTT.Date,InputTT.Prob,'r','LineWidth',1);
     title(titlestr)
     xlabel('Date','FontWeight','bold','FontSize',12,'FontWeight','bold');
-    ylabel('Recession Flag','FontWeight','bold','FontSize',12,'FontWeight','bold');
+    ylabel('Recession Probability %','FontWeight','bold','FontSize',12,'FontWeight','bold');
     minval=0;
-    maxval=2;
+    maxval=110;
     if(iLogo==1)
         eval(['cd ' govjpegpath(1:length(govjpegpath)-1)]);
         ha =gca;
@@ -4669,7 +4713,42 @@ elseif(itype==146)
     set(gca,'Color', [0.3 0.3 0.3]);
     set(gca,'XGrid','on','GridColor',[1 1 1]);
     set(gca,'YGrid','on','GridColor',[1 1 1]);
-
+    medianRecessProbVal=median(InputTT.Prob);
+elseif(itype==147)
+    plot(InputTT.Date,InputTT.Units,'g',...
+        InputTT.Date,InputTT.meanUnits,'r--',...
+        InputTT.Date,InputTT.medianUnits,'b--',...
+        InputTT.Date,InputTT.trkunitssmooth,'y--');
+    if(ishowrecession==1)
+        hold on
+        barval=FRObj.barval;
+        bar(InputTT.Date,barval*InputTT.RevFlag,'b','LineWidth',1);
+        hold off
+    end
+    title(titlestr)
+    xlabel('Date','FontWeight','bold','FontSize',12,'FontWeight','bold');
+    ylabel('Light Truck Production Million/Yr','FontWeight','bold','FontSize',12,'FontWeight','bold');
+    minval=0;
+    maxval=25;
+    if(iLogo==1)
+        eval(['cd ' govjpegpath(1:length(govjpegpath)-1)]);
+        ha =gca;
+        uistack(ha,'bottom');
+        haPos = get(ha,'position');
+        ha2=axes('position',[haPos(1)+.7,haPos(2)-.10, .15,.06,]);
+        [x, ~]=imread(LogoFileName);
+        imshow(x);
+        set(ha2,'handlevisibility','off','visible','off')
+    end
+    set(gca,'YLim',[minval maxval]);
+    set(gca,'Color', [0.3 0.3 0.3]);
+    set(gca,'XGrid','on','GridColor',[1 1 1]);
+    set(gca,'YGrid','on','GridColor',[1 1 1]);
+    hl=legend('AltSales','Mean','Median','Smoothed','FontSize',10,'FontWeight','bold');
+    set(hl,'Color',[1 1 1])
+    set(hl,'TextColor',[0 0 0]);
+    meanUnitsVal=mean(InputTT.trkunitssmooth);
+    medianUnitsVal=median(InputTT.trkunitssmooth);
 end
 
 % Set up an axis for writing text at the bottom of the chart
@@ -4910,7 +4989,7 @@ elseif(itype==38)
     txt1=text(tx1,ty1,txtstr1,'FontWeight','bold','FontSize',12);
     SG38=FRObj.GrowthRateAll(38);
     txtstr2=strcat('Mean =',num2str(meanFSalesVal,6),...
-        '-Median =',num2str(medianFSalesVal,6),'-Annual Saled Chng-',num2str(SG38),'-%');
+        '-Median =',num2str(medianFSalesVal,6),'-Annual Sales Chng-',num2str(SG38),'-%');
     txt2=text(tx2,ty2,txtstr2,'FontWeight','bold','FontSize',12);
 elseif(itype==39)
     txtstr1='Mean/Median Total Vehicle  Sales';
@@ -5629,6 +5708,19 @@ elseif(itype==145)
     txtstr2=strcat('Mean =',num2str(meanCitrusIndexVal,4),...
         '-Median =',num2str(medianCitrusIndexVal,4),'-Growth Rate=',num2str(SG145,4),'-%');
     txt2=text(tx2,ty2,txtstr2,'FontWeight','bold','FontSize',12);
+elseif(itype==146)% This is a dummy fix this
+    txtstr1='Mean/Median Recession Probability';
+    txt1=text(tx1,ty1,txtstr1,'FontWeight','bold','FontSize',12);
+    SG146=100*GrowthRateAll(146,1);
+    txtstr2=strcat('Median Recession Prob=',num2str(medianRecessProbVal));
+    txt2=text(tx2,ty2,txtstr2,'FontWeight','bold','FontSize',12); 
+elseif(itype==147)
+    txtstr1='Mean/Median Truck Units';
+    txt1=text(tx1,ty1,txtstr1,'FontWeight','bold','FontSize',12);
+    SG147=100*GrowthRateAll(147,1);
+    txtstr2=strcat('Mean =',num2str(meanUnitsVal,4),...
+        '-Median =',num2str(medianUnitsVal,4),'-Growth Rate=',num2str(SG147,4),'-%');
+    txt2=text(tx2,ty2,txtstr2,'FontWeight','bold','FontSize',12);     
 end
 set(newaxesh,'Visible','Off');
 pause(chart_time)
@@ -5655,8 +5747,10 @@ if(icapture==1)
 end
 if(itype==128)
     ab=1;
-elseif(itype==133)
+elseif(itype==146)
     ab=2;
+elseif(itype==147)
+    ab=3;
 end
 close('all')
 %% Save the name of the image file created

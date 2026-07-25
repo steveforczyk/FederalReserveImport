@@ -23,6 +23,8 @@
 % Revised: May 18-19 2026 start removing all global variable from code
 % Revised: June 8,2026 Add commodity label to Catalog Table
 % Revised: June 9-22 added addtional items focussed on food costs
+% Revised: Jul 2026 adding recession data to items that are sampled monthly
+% and that are likely to show recession effects
 
 
 % Set Up some initial Data
@@ -188,10 +190,11 @@ fredfile143='PPICabbage.xlsx';
 fredfile144='PPIRice.xlsx';
 fredfile145='PPICitrusFruits.xlsx';
 fredfile146='RecessProb.xlsx';
+fredfile147='ALTSALES.xlsx';
 iCreatePDFReport=1;
 iTechCounter=0;
 icapture=1;
-pdffilename='FredDataImport146A.pdf';
+pdffilename='FredDataImport147A.pdf';
 dataYear=2025;
 tic;
 %% Call some routines that will create nice plot window sizes and locations
@@ -343,10 +346,10 @@ FRObj.iCreatePDFReport=iCreatePDFReport;
 FRObj.RptGenPresent=RptGenPresent;
 ishowrecession=1;
 FRObj.ishowrecession=1;
-Chap=-1*ones(146,1);
-Section=-1*ones(146,1);
-Commodity=zeros(146,1);
-FredPngList=cell(146,1);
+Chap=-1*ones(147,1);
+Section=-1*ones(147,1);
+Commodity=zeros(147,1);
+FredPngList=cell(147,1);
 rho=zeros(25,1);
 numoverlap=zeros(25,1);
 RecessionInfo=zeros(150,1);
@@ -458,23 +461,18 @@ for n=1:nrows146
     end
 end
 RecessProbTT= addvars(RecessProbTT,RFlag);
-meanFlagVal=mean(RecessProbTT.RFlag,'omitnan');
-medianFlagVal=median(RecessProbTT.RFlag,'omitnan');
-maxFlagVal=max(RecessProbTT.RFlag,[],'omitnan');
-meanRFlag=zeros(nrows146,1);
-medianRFlag=zeros(nrows146,1);
-maxRFlag=zeros(nrows146,1);
+meanProbVal=mean(RecessProbTT.Prob,'omitnan');
+medianProbVal=median(RecessProbTT.Prob,'omitnan');
+maxProbVal=max(RecessProbTT.Prob,[],'omitnan');
+meanProb=zeros(nrows146,1);
+medianProb=zeros(nrows146,1);
+maxProb=zeros(nrows146,1);
 for n=1:nrows146
-    meanRFlag(n,1)=meanFlagVal;
-    medianRFlag(n,1)=medianFlagVal;
-    maxRFlag(n,1)=maxFlagVal;
+    meanProb(n,1)=meanProbVal;
+    medianProb(n,1)=medianProbVal;
+    maxProb(n,1)=maxProbVal;
 end
-RecessProbTT= addvars(RecessProbTT,meanRFlag,medianRFlag,maxRFlag);
-% RecessionDatesRTT=InferRecessionDatesTT;
-% RecessionDatesRTT(RecessionDatesRTT.Rflag<1,:)=[];
-% numAllQtrs=height(InferRecessionDatesTT);
-% numRecessionQtrs=height(RecessionDatesRTT);
-% GDPRecessionFrac=numRecessionQtrs/numAllQtrs;
+RecessProbTT= addvars(RecessProbTT,meanProb,medianProb,maxProb);
 SourceFile(146,1)="RecessProb.xlsx";
 Code(146,1)="RECPROUSM156N";
 Desc(146,1)="Smoothed Recession Dates";
@@ -484,7 +482,6 @@ EndYear(146,1)=2025;
 SeasonalAdj(146,1)="No";
 BaseYear(146,1)=1967;
 NumObs(146,1)=707;
-
 FRObj.RecessProbTT=RecessProbTT;
 SmoothedRessProb=1;
 FRObj.SmoothedRessProb=SmoothedRessProb;
@@ -492,14 +489,23 @@ Chap(146,1)=8;
 Section(146,1)=8;
 FRObj.Chap=Chap;
 FRObj.Section=Section;
-% Now plot this data
 itype=146;
-titlestr='SmoothedRecessionDates';
+% Calculate the Simple Stats
+Data=RecessProbTT.Prob;
+FRObj=FRObj.SimpleStats(Data,itype);
+% Now plot this data
+titlestr='SmoothedRecessionProbabilities';
 PlotFredData(FRObj,RecessProbTT,itype,titlestr)
 titlestr=char(titlestr);
 figstr2=strcat(titlestr,'.png');
 figstr2=char(figstr2);
 FredPngList{146,1}=figstr2;
+% Now create the data for a cumilative distribution plot
+titlestr3='RecessionProbability-Cumil-Distribution';
+titlestr3=char(titlestr3);
+figstr3=strcat(titlestr3,'.png');
+figstr3=char(figstr3);
+PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% CPI for Urban Consumers -Food Price Index Home Meals (CUSR0000SAF11)(Monthly)
 % This dataset is loaded here so it is available the commodity data is
@@ -662,6 +668,91 @@ varNames = ["BaseiType","BaseTableName","StartYear1","EndYear1","CompiType","Com
     "rho","GR","numovrlp"];
 FoodCorrTable = table('Size',sz,'VariableTypes',varTypes,'VariableNames',varNames);
 
+%% Light Truck Sales(ALTSALES) Monthly
+% itype=147
+eval(['cd ' fredpath(1:length(fredpath)-1)]);
+AltSalesTable = readtable(fredfile147,'Sheet','Monthly');
+[nrows147,ncols147]=size(AltSalesTable);
+clear DateNumbers
+clear dateArray
+dateArray=strings(nrows147,1);
+for n=1:nrows147
+    nowstr=string(AltSalesTable.Date(n,1));
+    dateArray(n,1)=nowstr;
+    if(n==1)
+        nowStartDate=nowstr;
+    elseif(n==nrows147)
+        nowEndDate=nowstr;
+    end
+end
+rowTimes=datetime(dateArray);
+DateNumbers=datenum(rowTimes);
+loopstr1='Process the The Sales for Light Trucks';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr1);
+loopstr2=strcat('Data is available for-',num2str(nrows147,4),'-dates-',...
+    'From-',nowStartDate,'-to-',nowEndDate');
+fprintf(fid,'%50s\n',loopstr2);
+AltSalesTT=table2timetable(AltSalesTable,'RowTimes','Date');
+AltSalesTT = addvars(AltSalesTT,DateNumbers);
+UnitsmeanVal=mean(AltSalesTT.Units);
+UnitsmedianVal=median(AltSalesTT.Units);
+meanUnits=zeros(nrows147,1);
+medianUnits=zeros(nrows147,1);
+for n=1:nrows147
+    meanUnits(n,1)=UnitsmeanVal;
+    medianUnits(n,1)=UnitsmedianVal;
+end
+AltSalesTT = addvars(AltSalesTT,meanUnits,medianUnits);
+SourceFile(147,1)="ALTSALES.xlsx";
+Code(147,1)="ALTSALES";
+Desc(147,1)="LightTruckSales";
+Freq(147,1)="Monthly";
+StartYear(147,1)=1976;
+EndYear(147,1)=2025;
+SeasonalAdj(147,1)="Yes";
+BaseYear(147,1)=1976;
+NumObs(147,1)=606;
+Chap(147,1)=7;
+Section(147,1)=19;
+itype=147;
+% Calculate the Simple Stats
+Data=AltSalesTT.Units;
+FRObj=FRObj.SimpleStats(Data,itype);
+% Smooth the Data
+trkunitssmooth = smoothdata(Data);
+P0=trkunitssmooth(1);
+PF=trkunitssmooth(605);
+AltSalesTT= addvars(AltSalesTT,trkunitssmooth);
+NYears=EndYear(147,1)-StartYear(147,1)+1;
+FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
+GrowthRateAll=FRObj.GrowthRateAll;
+SG147=100*GrowthRateAll(itype,1);
+FRObj.SG147=SG147;
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0)
+    [AltSalesTT,icase] = OverlapTimeLinesRev1(AltSalesTT,RecessProbTT);
+    FRObj.AltSalesTT=AltSalesTT;
+    RecessionInfo(147,1)=icase;
+end
+% Now plot this data
+FRObj.barval=15;
+% Now plot this data
+titlestr='LightTruck-Sales';
+PlotFredData(FRObj,AltSalesTT,itype,titlestr)
+% Add this data to the Fred Obj
+FRObj.AltSalesTT=AltSalesTT;
+titlestr=char(titlestr);
+figstr2=strcat(titlestr,'.png');
+figstr2=char(figstr2);
+FredPngList{147,1}=figstr2;
+% Now create the data for a cumilative distribution plot
+titlestr3='LightTruck-CumilDistribution';
+titlestr3=char(titlestr3);
+figstr3=strcat(titlestr3,'.png');
+figstr3=char(figstr3);
+PlotCumilFredData(FRObj,itype,titlestr3)
+ab=1;
 %% PPI for Food Manufacturing (PCU311311)(Monthly)
 % itype=127
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
@@ -4382,6 +4473,16 @@ FRObj.VisaDiscTT=VisaDiscTT;
 Chap(26,1)=9;
 Section(26,1)=10;
 itype=26;
+% Now pull of the Recession Probability data that matches the available
+% time points in the HouseSupplyTT
+RecessProbTT=FRObj.RecessProbTT;
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0)
+    [VisaDiscTT,icase] = OverlapTimeLinesRev1(VisaDiscTT,RecessProbTT);
+    FRObj.VisaDiscTT=VisaDiscTT;
+    RecessionInfo(26,1)=icase;
+end
+FRObj.barval=100;
 titlestr='Visa-Disc-Spending-Index';
 PlotFredData(FRObj,VisaDiscTT,itype,titlestr)
 titlestr=char(titlestr);
@@ -4549,6 +4650,16 @@ FRObj.SG28=SG28;
 % Calculate the Simple Stats
 Data=WeeklyWageTT.WeeklyWage;
 FRObj=FRObj.SimpleStats(Data,itype);
+% Now pull of the Recession Probability data that matches the available
+% time points in the RiceTT
+RecessProbTT=FRObj.RecessProbTT;
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0) 
+     [WeeklyWageTT,icase] = OverlapTimeLinesRev1(WeeklyWageTT,RecessProbTT);
+     FRObj.WeeklyWageTT=WeeklyWageTT;
+end
+FRObj.barval=320;
+FRObj.WeeklyWageTT=WeeklyWageTT;
 titlestr='MedianWeeklyWage-1979-2025';
 PlotFredData(FRObj,WeeklyWageTT,itype,titlestr)
 titlestr=char(titlestr);
@@ -4790,6 +4901,16 @@ FRObj.SG31=SG31;
 % Calculate the Simple Stats
 Data=BudgetSurplusTT.Surplus;
 FRObj=FRObj.SimpleStats(Data,itype);
+% Now pull of the Recession Probability data that matches the available
+% time points in the RiceTT
+RecessProbTT=FRObj.RecessProbTT;
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0) 
+     [BudgetSurplusTT,icase] = OverlapTimeLinesRev1(BudgetSurplusTT,RecessProbTT);
+     FRObj.BudgetSurplusTT=BudgetSurplusTT;
+end
+FRObj.barval=400;
+FRObj.WeeklyWageTT=WeeklyWageTT;
 titlestr='FedGovtBudgetSurplus-1980-2025';
 PlotFredData(FRObj,BudgetSurplusTT,itype,titlestr)
 titlestr=char(titlestr);
@@ -5242,6 +5363,16 @@ NYears=EndYear(37,1)-StartYear(37,1)+1;
 FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
 GrowthRateAll=FRObj.GrowthRateAll;
 SG37=100*GrowthRateAll(itype,1);
+% Now pull of the Recession Probability data that matches the available
+% time points in the RiceTT
+RecessProbTT=FRObj.RecessProbTT;
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0) 
+     [DomAutoInvTT,icase] = OverlapTimeLinesRev1(DomAutoInvTT,RecessProbTT);
+     FRObj.DomAutoInvTT=DomAutoInvTT;
+end
+FRObj.barval=1000;
+FRObj.DomAutoInvTT=DomAutoInvTT;
 titlestr='DomesticAutoInventories';
 PlotFredData(FRObj,DomAutoInvTT,itype,titlestr)
 titlestr=char(titlestr);
@@ -5321,6 +5452,14 @@ SG38=100*GrowthRateAll(itype,1);
 titlestr='ForeignAutoSales';
 Data=ForeignAutoSalesTT.FAUTOSAAR;
 FRObj=FRObj.SimpleStats(Data,itype);
+RecessProbTT=FRObj.RecessProbTT;
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0) 
+     [ForeignAutoSalesTT,icase] = OverlapTimeLinesRev1(ForeignAutoSalesTT,RecessProbTT);
+     FRObj.ForeignAutoSalesTT=ForeignAutoSalesTT;
+end
+FRObj.barval=2;
+FRObj.ForeignAutoSalesTT=ForeignAutoSalesTT;
 PlotFredData(FRObj,ForeignAutoSalesTT,itype,titlestr)
 titlestr=char(titlestr);
 figstr2=strcat(titlestr,'.png');
@@ -5398,6 +5537,14 @@ NYears=EndYear(39,1)-StartYear(39,1)+1;
 FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
 GrowthRateAll=FRObj.GrowthRateAll;
 SG39=100*GrowthRateAll(itype,1);
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0) 
+     [TotVehSalesTT,icase] = OverlapTimeLinesRev1(TotVehSalesTT,RecessProbTT);
+     FRObj.TotVehSalesTT=TotVehSalesTT;
+end
+FRObj.barval=15;
+FRObj.TotVehSalesTT=TotVehSalesTT;
+% Plot Total AutoSales
 titlestr='TotalVehicleSales';
 PlotFredData(FRObj,TotVehSalesTT,itype,titlestr)
 titlestr=char(titlestr);
@@ -8261,6 +8408,14 @@ titlestr='LeadingIndex';
 % Calculate simple stats
 Data=LeadIndexTT.Index;
 FRObj=FRObj.SimpleStats(Data,itype);
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0)
+    [LeadingIndexTT,icase] = OverlapTimeLinesRev1(LeadingIndexTT,RecessProbTT);
+    FRObj.LeadingIndexTT=LeadingIndexTT;
+    RecessionInfo(135,1)=icase;
+end
+FRObj.barval=1;
+FRObj.LeadingIndexTT=LeadingIndexTT;
 PlotFredData(FRObj,LeadIndexTT,itype,titlestr)
 titlestr=char(titlestr);
 figstr2=strcat(titlestr,'.png');
@@ -9853,10 +10008,18 @@ FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
 GrowthRateAll=FRObj.GrowthRateAll;
 SG94=100*GrowthRateAll(itype,1);
 FRObj.SG94=SG94;
-titlestr='DomesticAutoSales';
 % Calculate simple stats
 Data=DAUTOTT.Sales;
 FRObj=FRObj.SimpleStats(Data,itype);
+RecessProbTT=FRObj.RecessProbTT;
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0) 
+     [DAUTOTT,icase] = OverlapTimeLinesRev1(DAUTOTT,RecessProbTT);
+     FRObj.DAUTOTT=DAUTOTT;
+end
+FRObj.barval=15;
+FRObj.DAUTOTT=DAUTOTT;
+titlestr='DomesticAutoSales';
 PlotFredData(FRObj,DAUTOTT,itype,titlestr)
 titlestr=char(titlestr);
 figstr2=strcat(titlestr,'.png');
