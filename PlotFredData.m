@@ -43,6 +43,12 @@ if(itype==1)% Monthly Unemployment Rate
         InputTT.Date,InputTT.meanUnrate,'r--',...
         InputTT.Date,InputTT.medianUnrate,'b--',...
         InputTT.Date,InputTT.unratesmooth,'y');
+    if(ishowrecession==1)
+        hold on
+        barval=FRObj.barval;
+        bar(InputTT.Date,barval*InputTT.RevFlag,'b','LineWidth',1);
+        hold off
+    end
     title(titlestr)
     xlabel('Date','FontWeight','bold','FontSize',12,'FontWeight','bold');
     ylabel('Unemployment Rate %','FontWeight','bold','FontSize',12,'FontWeight','bold');
@@ -3293,6 +3299,12 @@ elseif(itype==105)
         InputTT.Date,InputTT.meanCPI,'r--',...
         InputTT.Date,InputTT.medianCPI,'b--',...
         InputTT.Date,InputTT.cpiallsmooth,'y--');
+    if(ishowrecession==1)
+        hold on
+        barval=FRObj.barval;
+        bar(InputTT.Date,barval*InputTT.RevFlag,'b','LineWidth',1);
+        hold off
+    end
     title(titlestr)
     xlabel('Date','FontWeight','bold','FontSize',12,'FontWeight','bold');
     ylabel('CPI All Growth Rate %','FontWeight','bold','FontSize',12,'FontWeight','bold');
@@ -3761,6 +3773,12 @@ elseif(itype==119)
         InputTT.Date,InputTT.meanGlobalEnergy,'r--',...
         InputTT.Date,InputTT.medianGlobalEnergy,'b--',...
         InputTT.Date,InputTT.energysmooth,'y--');
+     if(ishowrecession==1)
+        hold on
+        barval=FRObj.barval;
+        bar(InputTT.Date,barval*InputTT.RevFlag,'b','LineWidth',1);
+        hold off
+     end
     title(titlestr)
     xlabel('Date','FontWeight','bold','FontSize',12,'FontWeight','bold');
     ylabel('Global Energy Index','FontWeight','bold','FontSize',12,'FontWeight','bold');
@@ -5745,7 +5763,7 @@ if(icapture==1)
     screencapture(gcf,[],figstr2);
     eval(['cd ' jpegpath(1:length(jpegpath)-1)]);
 end
-if(itype==128)
+if(itype==1)
     ab=1;
 elseif(itype==146)
     ab=2;

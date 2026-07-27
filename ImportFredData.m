@@ -645,11 +645,19 @@ unratesmooth = smoothdata(Data);
 P0=unratesmooth(1);
 PF=unratesmooth(924);
 UnrateTT= addvars(UnrateTT,unratesmooth);
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0)
+    [UnrateTT,icase] = OverlapTimeLinesRev1(UnrateTT,RecessProbTT);
+    FRObj.UnrateTT=UnrateTT;
+    RecessionInfo(1,1)=icase;
+end
+% Now plot this data
+FRObj.barval=20;
+FRObj.UnrateTT=UnrateTT;
 % Now plot this data
 titlestr='UnemploymentRate-1948-2025';
 PlotFredData(FRObj,UnrateTT,itype,titlestr)
 % Add this table to the FredObj
-FRObj.UnrateTT=UnrateTT;
 titlestr=char(titlestr);
 figstr2=strcat(titlestr,'.png');
 figstr2=char(figstr2);
@@ -8410,12 +8418,12 @@ Data=LeadIndexTT.Index;
 FRObj=FRObj.SimpleStats(Data,itype);
 ishowrecession=FRObj.ishowrecession;
 if(ishowrecession>0)
-    [LeadingIndexTT,icase] = OverlapTimeLinesRev1(LeadingIndexTT,RecessProbTT);
-    FRObj.LeadingIndexTT=LeadingIndexTT;
+    [LeadIndexTT,icase] = OverlapTimeLinesRev1(LeadIndexTT,RecessProbTT);
+    FRObj.LeadIndexTT=LeadIndexTT;
     RecessionInfo(135,1)=icase;
 end
 FRObj.barval=1;
-FRObj.LeadingIndexTT=LeadingIndexTT;
+FRObj.LeadIndexTT=LeadIndexTT;
 PlotFredData(FRObj,LeadIndexTT,itype,titlestr)
 titlestr=char(titlestr);
 figstr2=strcat(titlestr,'.png');
@@ -10561,7 +10569,7 @@ figstr3=strcat(titlestr3,'.png');
 figstr3=char(figstr3);
 PlotCumilFredData(FRObj,itype,titlestr3)
 
-%% Continue with the Conversion Rate of Japanes Yen To USD (DEXJPUS)(Daily)
+%% Continue with the Conversion Rate of Japanese Yen To USD (DEXJPUS)(Daily)
 itype=103;
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
 JapYenUSDTable = readtable(fredfile103,'Sheet','Daily');
@@ -10754,6 +10762,17 @@ cpiallsmooth = smoothdata(Data);
 P0=cpiallsmooth(1);
 PF=cpiallsmooth(830);
 CPIAllTT= addvars(CPIAllTT,cpiallsmooth);
+% Now pull of the Recession Probability data that matches the available
+% time points in the HouseSupplyTT
+RecessProbTT=FRObj.RecessProbTT;
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0)
+    [CPIAllTT,icase] = OverlapTimeLinesRev1(CPIAllTT,RecessProbTT);
+    FRObj.CPIAllTT=CPIAllTT;
+    RecessionInfo(105,1)=icase;
+end
+FRObj.barval=5;
+FRObj.CPIAllTT=CPIAllTT;
 % Now plot this data
 titlestr='CPIAllItems';
 PlotFredData(FRObj,CPIAllTT,itype,titlestr)
@@ -11979,6 +11998,18 @@ FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
 GrowthRateAll=FRObj.GrowthRateAll;
 SG119=100*GrowthRateAll(itype,1);
 FRObj.SG119=SG119;
+% Now pull of the Recession Probability data that matches the available
+% time points in the GlobalEnergyTT
+RecessProbTT=FRObj.RecessProbTT;
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0)
+    [GlobalEnergyTT,icase] = OverlapTimeLinesRev1(GlobalEnergyTT,RecessProbTT);
+    FRObj.GlobalEnergyTT=GlobalEnergyTT;
+    RecessionInfo(119,1)=icase;
+end
+FRObj.barval=200;
+FRObj.GlobalEnergyTT=GlobalEnergyTT;
+
 % Now plot this data
 titlestr='GlobalEnergyIndex';
 PlotFredData(FRObj,GlobalEnergyTT,itype,titlestr)

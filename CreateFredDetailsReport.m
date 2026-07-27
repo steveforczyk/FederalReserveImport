@@ -7097,9 +7097,11 @@ p4.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
 add(chapter,p4);
 
 add(chapter,Section('Grade A Egg Prices'));
+br = PageBreak();
+add(chapter,br);
 %  Egg Prices APU0000708111 (Monthly)  Chap 18-3
 % Add (itype=109)
-parastr11='This item provides the price data for Grade A Eggs on a weekly basis.';
+parastr11='This item provides the price data for Grade A Eggs on a monthly basis.';
 parastr12=' No seasonal adjustments have been applied to the data nor has inflation been used to scale the data .';
 parastr13=' Egg Prices are important because they are a staple for many diets and are related to Chicken prices.';
 parastr19=strcat(parastr11,parastr12,parastr13);
@@ -7354,6 +7356,8 @@ parastr39=strcat(parastr31,parastr32,parastr33);
 p4 = Paragraph(parastr39);
 p4.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
 add(chapter,p4);
+br = PageBreak();
+add(chapter,br);
 
 add(chapter,Section('Natural Gas Spot Prices'));
 % West Texas Crude Prices  DHHNGSP (Daily)  Chap 18-6

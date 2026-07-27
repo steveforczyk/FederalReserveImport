@@ -2572,7 +2572,7 @@ elseif(itype==100)
     set(gca,'Color', [0.3 0.3 0.3]);
     set(gca,'XGrid','on','GridColor',[1 1 1]);
     set(gca,'YGrid','on','GridColor',[1 1 1]);
-    meancpiRate=ypt(10,1);
+    mediancpiRate=ypt(10,1);
   elseif(itype==107)
     plot(xpt,ypt,'r','LineWidth',2);
     title(titlestr3)
@@ -4292,7 +4292,7 @@ elseif(itype==105)
     txt1=text(tx1,ty1,txtstr1,'FontWeight','bold','FontSize',12);
     tx2=.10;
     ty2=.03;
-    txtstr2=strcat('Mean =',num2str(meancpiRate,4));
+    txtstr2=strcat('Median =',num2str(mediancpiRate,4));
     txt2=text(tx2,ty2,txtstr2,'FontWeight','bold','FontSize',12);
 elseif(itype==107)
     txtstr1='Median Gas Price - 1990-2025';
