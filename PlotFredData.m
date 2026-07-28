@@ -362,6 +362,12 @@ elseif(itype==11)
         InputTT.Date,InputTT.meanYield10Years,'r--',...
         InputTT.Date,InputTT.medianYield10Years,'b--',...
         InputTT.Date,InputTT.bond10smooth,'y--');
+    if(ishowrecession==1)
+        hold on
+        barval=FRObj.barval;
+        bar(InputTT.Date,barval*InputTT.RevFlag,'b','LineWidth',1);
+        hold off
+    end
     title(titlestr)
     xlabel('Date','FontWeight','bold','FontSize',12,'FontWeight','bold');
     ylabel('Ten Year Fed Bond Yields','FontWeight','bold','FontSize',12,'FontWeight','bold');
@@ -569,6 +575,12 @@ elseif(itype==16)
         InputTT.Date,InputTT.meanNFJO,'r--',...
         InputTT.Date,InputTT.medianNFJO,'b--',...
         InputTT.Date,InputTT.nfarmsmooth,'y--');
+    if(ishowrecession==1)
+        hold on
+        barval=FRObj.barval;
+        bar(InputTT.Date,barval*InputTT.RevFlag,'b','LineWidth',1);
+        hold off
+    end
     title(titlestr)
     xlabel('Date','FontWeight','bold','FontSize',12,'FontWeight','bold');
     ylabel('NF Job Openings in thousands','FontWeight','bold','FontSize',12,'FontWeight','bold');
@@ -598,6 +610,12 @@ elseif(itype==16)
         InputTT.Date,InputTT.meanCJOpen,'r--',...
         InputTT.Date,InputTT.medianCJOpen,'b--',...
         InputTT.Date,InputTT.constsmooth,'y--');
+    if(ishowrecession==1)
+        hold on
+        barval=FRObj.barval;
+        bar(InputTT.Date,barval*InputTT.RevFlag,'b','LineWidth',1);
+        hold off
+    end
     title(titlestr)
     xlabel('Date','FontWeight','bold','FontSize',12,'FontWeight','bold');
     ylabel('Construction Jobs Open-thousands','FontWeight','bold','FontSize',12,'FontWeight','bold');

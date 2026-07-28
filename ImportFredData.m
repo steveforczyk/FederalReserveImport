@@ -3342,7 +3342,20 @@ bond10smooth = smoothdata(Data);
 P0=bond10smooth(1);
 PF=bond10smooth(866);
 Fed10YearBondsTT = addvars(Fed10YearBondsTT,bond10smooth);
+% Now pull of the Recession Probability data that matches the available
+% time points in the Fed10YearBondsTT
+RecessProbTT=FRObj.RecessProbTT;
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0)
+    [Fed10YearBondsTT,icase] = OverlapTimeLinesRev1(Fed10YearBondsTT,RecessProbTT);
+    FRObj.Fed10YearBondsTT=Fed10YearBondsTT;
+    RecessionInfo(11,1)=icase;
+end
+FRObj.barval=10;
+FRObj.Fed10YearBondsTT=Fed10YearBondsTT;
+% Plot the 10 Year bond rates
 PlotFredData(FRObj,Fed10YearBondsTT,itype,titlestr)
+titlestr='Fed10YearBonds-1953-2025';
 titlestr=char(titlestr);
 figstr2=strcat(titlestr,'.png');
 figstr2=char(figstr2);
@@ -3488,8 +3501,6 @@ GDPTT = addvars(GDPTT,realgdpsmooth);
 % Now plot this data
 Chap(13,1)=13;
 Section(13,1)=2;
-% P0=GDPTT.GDPC1(1)/1000;
-% PF=GDPTT.GDPC1(313)/1000;
 NYears=EndYear(13,1)-StartYear(13,1)+1;
 itype=13;
 FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
@@ -3876,6 +3887,17 @@ TotalNFJOpenTT= addvars(TotalNFJOpenTT,nfarmsmooth);
 itype=18;
 % Calculate the Simple Stats
 FRObj=FRObj.SimpleStats(Data,itype);
+% Now pull of the Recession Probability data that matches the available
+% time points in the Construction Job Openings
+RecessProbTT=FRObj.RecessProbTT;
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0)
+    [TotalNFJOpenTT,icase] = OverlapTimeLinesRev1(TotalNFJOpenTT,RecessProbTT);
+    FRObj.TotalNFJOpenTT=TotalNFJOpenTT;
+    RecessionInfo(18,1)=icase;
+end
+FRObj.barval=7000;
+FRObj.TotalNFJOpenTT=TotalNFJOpenTT;
 titlestr='TotalNonFarm-Job-Openings-2000-2025';
 PlotFredData(FRObj,TotalNFJOpenTT,itype,titlestr)
 titlestr=char(titlestr);
@@ -3951,6 +3973,18 @@ ConstructionOpenTT= addvars(ConstructionOpenTT,constsmooth);
 % Calculate the Simple Stats
 Data=ConstructionOpenTT.JTS2300JOL;
 FRObj=FRObj.SimpleStats(Data,itype);
+% Now pull of the Recession Probability data that matches the available
+% time points in the Construction Job Openings
+RecessProbTT=FRObj.RecessProbTT;
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0)
+    [ConstructionOpenTT,icase] = OverlapTimeLinesRev1(ConstructionOpenTT,RecessProbTT);
+    FRObj.ConstructionOpenTT=ConstructionOpenTT;
+    RecessionInfo(19,1)=icase;
+end
+FRObj.barval=200;
+FRObj.ConstructionOpenTT=ConstructionOpenTT;
+% Plot the construction job openings
 titlestr='ConstructionJobOpenings';
 PlotFredData(FRObj,ConstructionOpenTT,itype,titlestr)
 titlestr=char(titlestr);

@@ -383,29 +383,29 @@ p2.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
 add(chapter,p2);
 br = PageBreak();
 add(chapter,br);
-% add a chart to show the Non Farm Job Openings Distribution
-% eval(['cd ' tiffpath(1:length(tiffpath)-1)]);
-% imdata = imread('NonFarmOpenings-CumilDist.png');
-% [nhigh,nwid,~]=size(imdata);
-% nhigh2=floor(nhigh/2);
-% image = mlreportgen.report.FormalImage();
-% image.Image = which('NonFarmOpenings-CumilDist.png.png');
-% text = Text('NonFarmOpenings-CumilDist');
-% text.Color = 'red';
-% image.Caption = text;
-% %heightstr=strcat(num2str(nhigh/2),'px');
-% heightstr=strcat(num2str(nhigh2),'px');
-% widthstr=strcat(num2str(nwid/2),'px');
-% image.Height = heightstr;
-% image.Width = widthstr;
-% image.ScaleToFit=0;
-% add(chapter,image); 
-% parastr31='The chart was designed to show the cumilative distribution of the Non Farm Job Openings.';
-% parastr32=' Inspection of the graphic shows that the cumilitive 50% values of the distribution to be about 4.6 million per reporting period .';
-% parastr39=strcat(parastr31,parastr32);
-% p4 = Paragraph(parastr39);
-% p4.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
-% add(chapter,p4);
+%add a chart to show the Non Farm Job Openings Distribution
+eval(['cd ' tiffpath(1:length(tiffpath)-1)]);
+imdata = imread('NonFarmOpenings-CumilDist.png');
+[nhigh,nwid,~]=size(imdata);
+nhigh2=floor(nhigh/2);
+image = mlreportgen.report.FormalImage();
+image.Image = which('NonFarmOpenings-CumilDist.png');
+text = Text('NonFarmOpenings-CumilDist');
+text.Color = 'red';
+image.Caption = text;
+%heightstr=strcat(num2str(nhigh/2),'px');
+heightstr=strcat(num2str(nhigh2),'px');
+widthstr=strcat(num2str(nwid/2),'px');
+image.Height = heightstr;
+image.Width = widthstr;
+image.ScaleToFit=0;
+add(chapter,image); 
+parastr31='The chart was designed to show the cumilative distribution of the Non Farm Job Openings.';
+parastr32=' Inspection of the graphic shows that the cumilitive 50% values of the distribution to be about 4.6 million per reporting period .';
+parastr39=strcat(parastr31,parastr32);
+p4 = Paragraph(parastr39);
+p4.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
+add(chapter,p4);
 
 % Start section 2-Construction Job Openings 
 % itype=19
