@@ -1299,7 +1299,7 @@ imdata = imread('SingleHomeLoanDelinquencyRate-1991-2025.png');
 [nhigh,nwid,~]=size(imdata);
 image = mlreportgen.report.FormalImage();
 image.Image = which('SingleHomeLoanDelinquencyRate-1991-2025.png');
-text = Text('Single Family House Completions');
+text = Text('Single Family Mortgage Delinquency Rate');
 text.Color = 'red';
 image.Caption = text;
 heightstr=strcat(num2str(nhigh/2),'px');
@@ -1822,7 +1822,7 @@ add(chapter,br);
 % Chapter 6 Section 15
 % Add new section All Transaction House Price Index-Chapter 6 Section 15
 add(chapter,Section('All Transactions House Price Index'));% itype=95
-parastr1=' This statistic createsm an index to track house prices by comparison to a 1980 baseline.';
+parastr1=' This statistic creates an index to track house prices by comparison to a 1980 baseline.';
 parastr2=' Note that is calculated using all house sales and appraisal data.';
 SG95=FRObj.SG95;
 parastr3=strcat('The observed growth rate of Index was-',num2str(SG95),'-% Per Year');
