@@ -2054,7 +2054,7 @@ elseif(itype==76)
     plot(InputTT.Date,InputTT.WhitePop/1E3,'g',...
         InputTT.Date,InputTT.meanWhite/1E3,'r--',...
         InputTT.Date,InputTT.medianWhite/1E3,'b--');
-    title(titlestr)
+    title(titlestr3)
     xlabel('Date','FontWeight','bold','FontSize',12,'FontWeight','bold');
     ylabel('White Population In Millions','FontWeight','bold','FontSize',12,'FontWeight','bold');
     if(iLogo==1)
@@ -2082,7 +2082,7 @@ elseif(itype==76)
     plot(InputTT.Date,InputTT.HispanicPop/1E3,'g',...
         InputTT.Date,InputTT.meanHisp/1E3,'r--',...
         InputTT.Date,InputTT.medianHisp/1E3,'b--');
-    title(titlestr)
+    title(titlestr3)
     xlabel('Date','FontWeight','bold','FontSize',12,'FontWeight','bold');
     ylabel('Hispanic Population In Millions','FontWeight','bold','FontSize',12,'FontWeight','bold');
     if(iLogo==1)
@@ -2269,7 +2269,7 @@ elseif(itype==90)
     plot(xpt,ypt/1E3,'r','LineWidth',2);
     title(titlestr3)
     xlabel('Cumil Pct','FontWeight','bold','FontSize',12,'FontWeight','bold');
-    ylabel('Personal Disp Income Billions USD','FontWeight','bold','FontSize',12,'FontWeight','bold');
+    ylabel('Personal Disp Income Trillions USD','FontWeight','bold','FontSize',12,'FontWeight','bold');
     minval=0;
     maxval=30;
     if(iLogo==1)
@@ -2315,7 +2315,7 @@ elseif(itype==95)
         InputTT.Date,InputTT.meanPrice,'r--',...
         InputTT.Date,InputTT.medianPrice,'b--',...
         InputTT.Date,InputTT.transmooth,'y--');
-    title(titlestr)
+    title(titlestr3)
     xlabel('Date','FontWeight','bold','FontSize',12,'FontWeight','bold');
     ylabel('All House Price Index','FontWeight','bold','FontSize',12,'FontWeight','bold');
     minval=0;
@@ -3475,7 +3475,116 @@ elseif(itype==147)
     set(gca,'XGrid','on','GridColor',[1 1 1]);
     set(gca,'YGrid','on','GridColor',[1 1 1]);
     medianProductionVal=ypt(10,1);
-
+elseif(itype==148)
+     plot(xpt,ypt,'r','LineWidth',2);
+     title(titlestr3)
+     xlabel('Cumil Pct','FontWeight','bold','FontSize',12,'FontWeight','bold');
+     ylabel('Personal Savings Rate %','FontWeight','bold','FontSize',12,'FontWeight','bold');
+     if(iLogo==1)
+        eval(['cd ' govjpegpath(1:length(govjpegpath)-1)]);
+        ha =gca;
+        uistack(ha,'bottom');
+        haPos = get(ha,'position');
+        ha2=axes('position',[haPos(1)+.7,haPos(2)-.10, .15,.06,]);
+        [x, ~]=imread(LogoFileName);
+        imshow(x);
+        set(ha2,'handlevisibility','off','visible','off')
+    end
+    minval=0;
+    maxval=35;
+    set(gca,'YLim',[minval maxval]);
+    set(gca,'Color', [0.3 0.3 0.3]);
+    set(gca,'XGrid','on','GridColor',[1 1 1]);
+    set(gca,'YGrid','on','GridColor',[1 1 1]);
+    medianrateVal=ypt(10,1);
+elseif(itype==149)
+     plot(xpt,ypt,'r','LineWidth',2);
+     title(titlestr3)
+     xlabel('Cumil Pct','FontWeight','bold','FontSize',12,'FontWeight','bold');
+     ylabel('Manufacturing Workers-Millions','FontWeight','bold','FontSize',12,'FontWeight','bold');
+     if(iLogo==1)
+        eval(['cd ' govjpegpath(1:length(govjpegpath)-1)]);
+        ha =gca;
+        uistack(ha,'bottom');
+        haPos = get(ha,'position');
+        ha2=axes('position',[haPos(1)+.7,haPos(2)-.10, .15,.06,]);
+        [x, ~]=imread(LogoFileName);
+        imshow(x);
+        set(ha2,'handlevisibility','off','visible','off')
+    end
+    minval=0;
+    maxval=20;
+    set(gca,'YLim',[minval maxval]);
+    set(gca,'Color', [0.3 0.3 0.3]);
+    set(gca,'XGrid','on','GridColor',[1 1 1]);
+    set(gca,'YGrid','on','GridColor',[1 1 1]);
+    medianworkersVal=ypt(10,1);
+elseif(itype==150)
+     plot(xpt,ypt,'r','LineWidth',2);
+     title(titlestr3)
+     xlabel('Cumil Pct','FontWeight','bold','FontSize',12,'FontWeight','bold');
+     ylabel('Manufacturing Inventory To Sales','FontWeight','bold','FontSize',12,'FontWeight','bold');
+     if(iLogo==1)
+        eval(['cd ' govjpegpath(1:length(govjpegpath)-1)]);
+        ha =gca;
+        uistack(ha,'bottom');
+        haPos = get(ha,'position');
+        ha2=axes('position',[haPos(1)+.7,haPos(2)-.10, .15,.06,]);
+        [x, ~]=imread(LogoFileName);
+        imshow(x);
+        set(ha2,'handlevisibility','off','visible','off')
+    end
+    minval=0;
+    maxval=2;
+    set(gca,'YLim',[minval maxval]);
+    set(gca,'Color', [0.3 0.3 0.3]);
+    set(gca,'XGrid','on','GridColor',[1 1 1]);
+    set(gca,'YGrid','on','GridColor',[1 1 1]);
+    medianInvVal=ypt(10,1);
+elseif(itype==151)
+     plot(xpt,ypt,'r','LineWidth',2);
+     title(titlestr3)
+     xlabel('Cumil Pct','FontWeight','bold','FontSize',12,'FontWeight','bold');
+     ylabel('Manufacturing Inventory Billions USD','FontWeight','bold','FontSize',12,'FontWeight','bold');
+     if(iLogo==1)
+        eval(['cd ' govjpegpath(1:length(govjpegpath)-1)]);
+        ha =gca;
+        uistack(ha,'bottom');
+        haPos = get(ha,'position');
+        ha2=axes('position',[haPos(1)+.7,haPos(2)-.10, .15,.06,]);
+        [x, ~]=imread(LogoFileName);
+        imshow(x);
+        set(ha2,'handlevisibility','off','visible','off')
+    end
+    minval=0;
+    maxval=1000;
+    set(gca,'YLim',[minval maxval]);
+    set(gca,'Color', [0.3 0.3 0.3]);
+    set(gca,'XGrid','on','GridColor',[1 1 1]);
+    set(gca,'YGrid','on','GridColor',[1 1 1]);
+    medianInvVal=ypt(10,1);
+elseif(itype==152)
+     plot(xpt,ypt,'r','LineWidth',2);
+     title(titlestr3)
+     xlabel('Cumil Pct','FontWeight','bold','FontSize',12,'FontWeight','bold');
+     ylabel('Manufacturing Orders USD','FontWeight','bold','FontSize',12,'FontWeight','bold');
+     if(iLogo==1)
+        eval(['cd ' govjpegpath(1:length(govjpegpath)-1)]);
+        ha =gca;
+        uistack(ha,'bottom');
+        haPos = get(ha,'position');
+        ha2=axes('position',[haPos(1)+.7,haPos(2)-.10, .15,.06,]);
+        [x, ~]=imread(LogoFileName);
+        imshow(x);
+        set(ha2,'handlevisibility','off','visible','off')
+    end
+    minval=0;
+    maxval=400;
+    set(gca,'YLim',[minval maxval]);
+    set(gca,'Color', [0.3 0.3 0.3]);
+    set(gca,'XGrid','on','GridColor',[1 1 1]);
+    set(gca,'YGrid','on','GridColor',[1 1 1]);
+    medianOrdersVal=ypt(10,1);
 end
 % Set up an axis for writing text at the bottom of the chart
 newaxesh=axes('Position',[0 0 1 1]);
@@ -4499,6 +4608,31 @@ elseif(itype==147)
     txt1=text(tx1,ty1,txtstr1,'FontWeight','bold','FontSize',12);
     txtstr2=strcat('Median Prod Rate =',num2str(medianProductionVal),'-Millions/Yr');
     txt2=text(tx2,ty2,txtstr2,'FontWeight','bold','FontSize',12);
+elseif(itype==148)
+    txtstr1='Personal Savings Rate -1959-2026';
+    txt1=text(tx1,ty1,txtstr1,'FontWeight','bold','FontSize',12);
+    txtstr2=strcat('Median Savings Rate =',num2str(medianrateVal),'-%');
+    txt2=text(tx2,ty2,txtstr2,'FontWeight','bold','FontSize',12);
+elseif(itype==149)
+    txtstr1='Manufacturing Workers -1939-2026';
+    txt1=text(tx1,ty1,txtstr1,'FontWeight','bold','FontSize',12);
+    txtstr2=strcat('Median Prod Rate =',num2str(medianworkersVal),'-Millions');
+    txt2=text(tx2,ty2,txtstr2,'FontWeight','bold','FontSize',12);
+elseif(itype==150)
+    txtstr1='Manufacturing Inventory To Sales -1992-2025';
+    txt1=text(tx1,ty1,txtstr1,'FontWeight','bold','FontSize',12);
+    txtstr2=strcat('Median Inventory Ratio =',num2str(medianInvVal),'-Millions');
+    txt2=text(tx2,ty2,txtstr2,'FontWeight','bold','FontSize',12);
+elseif(itype==151)
+    txtstr1='Manufacturing Inventory-1992-2025';
+    txt1=text(tx1,ty1,txtstr1,'FontWeight','bold','FontSize',12);
+    txtstr2=strcat('Median Inventory =',num2str(medianInvVal),'-Billions USD');
+    txt2=text(tx2,ty2,txtstr2,'FontWeight','bold','FontSize',12);
+elseif(itype==152)
+    txtstr1='Manufacturing Orders-1992-2025';
+    txt1=text(tx1,ty1,txtstr1,'FontWeight','bold','FontSize',12);
+    txtstr2=strcat('Median Orders =',num2str(medianOrdersVal),'-Billions USD');
+    txt2=text(tx2,ty2,txtstr2,'FontWeight','bold','FontSize',12);
 end
 set(newaxesh,'Visible','Off');
 pause(chart_time)
@@ -4525,7 +4659,7 @@ if(icapture==1)
 end
 if(itype==146)
     ab=1;
-elseif(itype==147)
+elseif(itype==152)
     ab=2;
 end
 close('all')

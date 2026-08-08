@@ -13,9 +13,6 @@ function  PlotFredData(FRObj,InputTT,itype,titlestr)
 % Revised: Oct 2025 Thru Feb 2026 added additional items
 % Revised: June 2026 added additional charts
 
-
-
-
 % Get the data to add a logo to the bottom right of the chart if desired
 iLogo=FRObj.iLogo;
 LogoFileName=FRObj.LogoFileName;
@@ -80,6 +77,12 @@ elseif(itype==2)
         InputTT.Date,InputTT.meanSCPNFNE,'r--',...
         InputTT.Date,InputTT.medianSCPNFNE,'b--',...
         InputTT.Date,InputTT.scpismooth,'y');
+    if(ishowrecession==1)
+        hold on
+        barval=FRObj.barval;
+        bar(InputTT.Date,barval*InputTT.RevFlag,'b','LineWidth',1);
+        hold off
+    end
     title(titlestr)
     xlabel('Date','FontWeight','bold','FontSize',12,'FontWeight','bold');
     ylabel('Sticky CPI %','FontWeight','bold','FontSize',12,'FontWeight','bold');
@@ -397,6 +400,12 @@ elseif(itype==12)
         InputTT.Date,InputTT.meanU2,'r--',...
         InputTT.Date,InputTT.medianU2,'b--',...
         InputTT.Date,InputTT.u2smooth,'y--');
+    if(ishowrecession==1)
+        hold on
+        barval=FRObj.barval;
+        bar(InputTT.Date,barval*InputTT.RevFlag,'b','LineWidth',1);
+        hold off
+    end
     title(titlestr)
     xlabel('Date','FontWeight','bold','FontSize',12,'FontWeight','bold');
     ylabel('U2 Unemployment Rate','FontWeight','bold','FontSize',12,'FontWeight','bold');
@@ -512,7 +521,7 @@ elseif(itype==15)
     mean2YearBondYield=mean(InputTT.Yield,'omitnan');
     median2YearBondYield=median(InputTT.Yield,'omitnan');
 elseif(itype==16)
-    plot(InputTT.Date,InputTT.ICSA/1E6,'g',...
+    semilogy(InputTT.Date,InputTT.ICSA/1E6,'g',...
         InputTT.Date,InputTT.meanInitialClaims/1E6,'r--',...
         InputTT.Date,InputTT.medianInitialClaims/1E6,'b--',...
         InputTT.Date,InputTT.initu2smooth,'y--');
@@ -542,7 +551,7 @@ elseif(itype==16)
     medianClaims=median(InputTT.medianInitialClaims);
     ab=1;
  elseif(itype==17)
-    plot(InputTT.Date,InputTT.CCSA/1E6,'g',...
+    semilogy(InputTT.Date,InputTT.CCSA/1E6,'g',...
         InputTT.Date,InputTT.meanContinueClaims/1E6,'r--',...
         InputTT.Date,InputTT.medianContinueClaims/1E6,'b--',...
         InputTT.Date,InputTT.contu2smooth,'y--');
@@ -648,6 +657,12 @@ elseif(itype==16)
         InputTT.Date,InputTT.meanMFacOpen,'r--',...
         InputTT.Date,InputTT.medianMFacOpen,'b--',...
         InputTT.Date,InputTT.mansmooth,'y--');
+    if(ishowrecession==1)
+        hold on
+        barval=FRObj.barval;
+        bar(InputTT.Date,barval*InputTT.RevFlag,'b','LineWidth',1);
+        hold off
+    end
     title(titlestr)
     xlabel('Date','FontWeight','bold','FontSize',12,'FontWeight','bold');
     ylabel('Manufacturing Jobs Open-thousands','FontWeight','bold','FontSize',12,'FontWeight','bold');
@@ -679,6 +694,12 @@ elseif(itype==16)
         InputTT.Date,InputTT.meanProfOpen,'r--',...
         InputTT.Date,InputTT.medianProfOpen,'b--', ...
         InputTT.Date,InputTT.profsmooth,'y');
+    if(ishowrecession==1)
+        hold on
+        barval=FRObj.barval;
+        bar(InputTT.Date,barval*InputTT.RevFlag,'b','LineWidth',1);
+        hold off
+    end
     title(titlestr)
     xlabel('Date','FontWeight','bold','FontSize',12,'FontWeight','bold');
     ylabel('Professional Jobs Open-thousands','FontWeight','bold','FontSize',12,'FontWeight','bold');
@@ -710,6 +731,12 @@ elseif(itype==16)
         InputTT.Date,InputTT.meanHCOpen,'r--',...
         InputTT.Date,InputTT.medianHCOpen,'b--',...
         InputTT.Date,InputTT.hcaresmooth,'y--');
+    if(ishowrecession==1)
+        hold on
+        barval=FRObj.barval;
+        bar(InputTT.Date,barval*InputTT.RevFlag,'b','LineWidth',1);
+        hold off
+    end
     title(titlestr)
     xlabel('Date','FontWeight','bold','FontSize',12,'FontWeight','bold');
     ylabel('Health Care Jobs Open-thousands','FontWeight','bold','FontSize',12,'FontWeight','bold');
@@ -741,6 +768,12 @@ elseif(itype==23)
         InputTT.Date,InputTT.meanGovOpen,'r--',...
         InputTT.Date,InputTT.medianGovOpen,'b--',...
         InputTT.Date,InputTT.govsmooth,'y');
+    if(ishowrecession==1)
+        hold on
+        barval=FRObj.barval;
+        bar(InputTT.Date,barval*InputTT.RevFlag,'b','LineWidth',1);
+        hold off
+    end
     title(titlestr)
     xlabel('Date','FontWeight','bold','FontSize',12,'FontWeight','bold');
     ylabel('Government Jobs Open-thousands','FontWeight','bold','FontSize',12,'FontWeight','bold');
@@ -2871,7 +2904,7 @@ elseif(itype==90)
         InputTT.Date,InputTT.hdsmooth,'y--');
     title(titlestr)
     xlabel('Date','FontWeight','bold','FontSize',12,'FontWeight','bold');
-    ylabel('HouseHold Debt Service % wrt Disposable Income','FontWeight','bold','FontSize',12,'FontWeight','bold');
+    ylabel('HouseHold Debt Service % of Disposable Income','FontWeight','bold','FontSize',12,'FontWeight','bold');
     minval=8;
     maxval=18;
     if(iLogo==1)
@@ -4007,7 +4040,6 @@ elseif(itype==125)
         bar(InputTT.Date,barval*InputTT.RevFlag,'b','LineWidth',1);
         hold off
     end
-
     title(titlestr)
     xlabel('Date','FontWeight','bold','FontSize',12,'FontWeight','bold');
     ylabel('Sugar Price-USD/lb','FontWeight','bold','FontSize',12,'FontWeight','bold');
@@ -4785,6 +4817,181 @@ elseif(itype==147)
     set(hl,'TextColor',[0 0 0]);
     meanUnitsVal=mean(InputTT.trkunitssmooth);
     medianUnitsVal=median(InputTT.trkunitssmooth);
+elseif(itype==148)
+    plot(InputTT.Date,InputTT.Rate,'g',...
+        InputTT.Date,InputTT.meanrate,'r--',...
+        InputTT.Date,InputTT.medianrate,'b--',...
+        InputTT.Date,InputTT.psavesmooth,'y--');
+    if(ishowrecession==1)
+        hold on
+        barval=FRObj.barval;
+        bar(InputTT.Date,barval*InputTT.RevFlag,'b','LineWidth',1);
+        hold off
+    end
+    title(titlestr)
+    xlabel('Date','FontWeight','bold','FontSize',12,'FontWeight','bold');
+    ylabel('Personal Savings Rate-%','FontWeight','bold','FontSize',12,'FontWeight','bold');
+    minval=0;
+    maxval=35;
+    if(iLogo==1)
+        eval(['cd ' govjpegpath(1:length(govjpegpath)-1)]);
+        ha =gca;
+        uistack(ha,'bottom');
+        haPos = get(ha,'position');
+        ha2=axes('position',[haPos(1)+.7,haPos(2)-.10, .15,.06,]);
+        [x, ~]=imread(LogoFileName);
+        imshow(x);
+        set(ha2,'handlevisibility','off','visible','off')
+    end
+    set(gca,'YLim',[minval maxval]);
+    set(gca,'Color', [0.3 0.3 0.3]);
+    set(gca,'XGrid','on','GridColor',[1 1 1]);
+    set(gca,'YGrid','on','GridColor',[1 1 1]);
+    hl=legend('PerSavRate','Mean','Median','Smoothed','FontSize',10,'FontWeight','bold');
+    set(hl,'Color',[1 1 1])
+    set(hl,'TextColor',[0 0 0]);
+    meanrateVal=mean(InputTT.psavesmooth);
+    medianrateVal=median(InputTT.psavesmooth);
+  elseif(itype==149)
+    plot(InputTT.Date,InputTT.Workers/1000,'g',...
+        InputTT.Date,InputTT.meanworkers,'r--',...
+        InputTT.Date,InputTT.medianworkers,'b--',...
+        InputTT.Date,InputTT.workersmooth,'y--');
+    if(ishowrecession==1)
+        hold on
+        barval=FRObj.barval;
+        bar(InputTT.Date,barval*InputTT.RevFlag,'b','LineWidth',1);
+        hold off
+    end
+    title(titlestr)
+    xlabel('Date','FontWeight','bold','FontSize',12,'FontWeight','bold');
+    ylabel('Manufacturing Workers-Millions','FontWeight','bold','FontSize',12,'FontWeight','bold');
+    minval=0;
+    maxval=20;
+    if(iLogo==1)
+        eval(['cd ' govjpegpath(1:length(govjpegpath)-1)]);
+        ha =gca;
+        uistack(ha,'bottom');
+        haPos = get(ha,'position');
+        ha2=axes('position',[haPos(1)+.7,haPos(2)-.10, .15,.06,]);
+        [x, ~]=imread(LogoFileName);
+        imshow(x);
+        set(ha2,'handlevisibility','off','visible','off')
+    end
+    set(gca,'YLim',[minval maxval]);
+    set(gca,'Color', [0.3 0.3 0.3]);
+    set(gca,'XGrid','on','GridColor',[1 1 1]);
+    set(gca,'YGrid','on','GridColor',[1 1 1]);
+    hl=legend('Workers','Mean','Median','Smoothed','FontSize',10,'FontWeight','bold');
+    set(hl,'Color',[1 1 1])
+    set(hl,'TextColor',[0 0 0]);
+    meanworkersVal=mean(InputTT.workersmooth);
+    medianworkersVal=median(InputTT.workersmooth);
+elseif(itype==150)
+    plot(InputTT.Date,InputTT.Ratio,'g',...
+        InputTT.Date,InputTT.meanManInventory,'r--',...
+        InputTT.Date,InputTT.meanManInventory,'b--',...
+        InputTT.Date,InputTT.maninvsmooth,'y--');
+    if(ishowrecession==1)
+        hold on
+        barval=FRObj.barval;
+        bar(InputTT.Date,barval*InputTT.RevFlag,'b','LineWidth',1);
+        hold off
+    end
+    title(titlestr)
+    xlabel('Date','FontWeight','bold','FontSize',12,'FontWeight','bold');
+    ylabel('Manufacturing Workers-Millions','FontWeight','bold','FontSize',12,'FontWeight','bold');
+    minval=0;
+    maxval=2;
+    if(iLogo==1)
+        eval(['cd ' govjpegpath(1:length(govjpegpath)-1)]);
+        ha =gca;
+        uistack(ha,'bottom');
+        haPos = get(ha,'position');
+        ha2=axes('position',[haPos(1)+.7,haPos(2)-.10, .15,.06,]);
+        [x, ~]=imread(LogoFileName);
+        imshow(x);
+        set(ha2,'handlevisibility','off','visible','off')
+    end
+    set(gca,'YLim',[minval maxval]);
+    set(gca,'Color', [0.3 0.3 0.3]);
+    set(gca,'XGrid','on','GridColor',[1 1 1]);
+    set(gca,'YGrid','on','GridColor',[1 1 1]);
+    hl=legend('Workers','Mean','Median','Smoothed','FontSize',10,'FontWeight','bold');
+    set(hl,'Color',[1 1 1])
+    set(hl,'TextColor',[0 0 0]);
+    meanInvVal=mean(InputTT.maninvsmooth);
+    medianInvVal=median(InputTT.maninvsmooth);
+  elseif(itype==151)
+    plot(InputTT.Date,InputTT.Inventories/1000,'g',...
+        InputTT.Date,InputTT.meanInventory,'r--',...
+        InputTT.Date,InputTT.medianInventory,'b--',...
+        InputTT.Date,InputTT.mfacsmooth,'y--');
+    if(ishowrecession==1)
+        hold on
+        barval=FRObj.barval;
+        bar(InputTT.Date,barval*InputTT.RevFlag,'b','LineWidth',1);
+        hold off
+    end
+    title(titlestr)
+    xlabel('Date','FontWeight','bold','FontSize',12,'FontWeight','bold');
+    ylabel('Manufacturing Inventories-Billions USD','FontWeight','bold','FontSize',12,'FontWeight','bold');
+    minval=0;
+    maxval=1000;
+    if(iLogo==1)
+        eval(['cd ' govjpegpath(1:length(govjpegpath)-1)]);
+        ha =gca;
+        uistack(ha,'bottom');
+        haPos = get(ha,'position');
+        ha2=axes('position',[haPos(1)+.7,haPos(2)-.10, .15,.06,]);
+        [x, ~]=imread(LogoFileName);
+        imshow(x);
+        set(ha2,'handlevisibility','off','visible','off')
+    end
+    set(gca,'YLim',[minval maxval]);
+    set(gca,'Color', [0.3 0.3 0.3]);
+    set(gca,'XGrid','on','GridColor',[1 1 1]);
+    set(gca,'YGrid','on','GridColor',[1 1 1]);
+    hl=legend('Inventory','Mean','Median','Smoothed','FontSize',10,'FontWeight','bold');
+    set(hl,'Color',[1 1 1])
+    set(hl,'TextColor',[0 0 0]);
+    meanInvVal=mean(InputTT.mfacsmooth);
+    medianInvVal=median(InputTT.mfacsmooth);
+ elseif(itype==152)
+    plot(InputTT.Date,InputTT.Orders/1000,'g',...
+        InputTT.Date,InputTT.meanDGoods,'r--',...
+        InputTT.Date,InputTT.medianDGoods,'b--',...
+        InputTT.Date,InputTT.goodsmooth,'y--');
+    if(ishowrecession==1)
+        hold on
+        barval=FRObj.barval;
+        bar(InputTT.Date,barval*InputTT.RevFlag,'b','LineWidth',1);
+        hold off
+    end
+    title(titlestr)
+    xlabel('Date','FontWeight','bold','FontSize',12,'FontWeight','bold');
+    ylabel('Manufacturing Orders Billions USD','FontWeight','bold','FontSize',12,'FontWeight','bold');
+    minval=0;
+    maxval=400;
+    if(iLogo==1)
+        eval(['cd ' govjpegpath(1:length(govjpegpath)-1)]);
+        ha =gca;
+        uistack(ha,'bottom');
+        haPos = get(ha,'position');
+        ha2=axes('position',[haPos(1)+.7,haPos(2)-.10, .15,.06,]);
+        [x, ~]=imread(LogoFileName);
+        imshow(x);
+        set(ha2,'handlevisibility','off','visible','off')
+    end
+    set(gca,'YLim',[minval maxval]);
+    set(gca,'Color', [0.3 0.3 0.3]);
+    set(gca,'XGrid','on','GridColor',[1 1 1]);
+    set(gca,'YGrid','on','GridColor',[1 1 1]);
+    hl=legend('Orders','Mean','Median','Smoothed','FontSize',10,'FontWeight','bold');
+    set(hl,'Color',[1 1 1])
+    set(hl,'TextColor',[0 0 0]);
+    meanOrdersVal=mean(InputTT.goodsmooth);
+    medianOrdersVal=median(InputTT.goodsmooth);
 end
 
 % Set up an axis for writing text at the bottom of the chart
@@ -5756,7 +5963,42 @@ elseif(itype==147)
     SG147=100*GrowthRateAll(147,1);
     txtstr2=strcat('Mean =',num2str(meanUnitsVal,4),...
         '-Median =',num2str(medianUnitsVal,4),'-Growth Rate=',num2str(SG147,4),'-%');
-    txt2=text(tx2,ty2,txtstr2,'FontWeight','bold','FontSize',12);     
+    txt2=text(tx2,ty2,txtstr2,'FontWeight','bold','FontSize',12); 
+elseif(itype==148)
+    txtstr1='Mean/Median Personal Savings Rate';
+    txt1=text(tx1,ty1,txtstr1,'FontWeight','bold','FontSize',12);
+    SG148=100*GrowthRateAll(148,1);
+    txtstr2=strcat('Mean =',num2str(meanrateVal,4),...
+        '-Median =',num2str(medianrateVal,4),'-Growth Rate=',num2str(SG148,4),'-%');
+    txt2=text(tx2,ty2,txtstr2,'FontWeight','bold','FontSize',12);
+elseif(itype==149)
+    txtstr1='Mean/Median Manufacturing Workers-Millions';
+    txt1=text(tx1,ty1,txtstr1,'FontWeight','bold','FontSize',12);
+    SG149=100*GrowthRateAll(149,1);
+    txtstr2=strcat('Mean =',num2str(meanworkersVal,4),...
+        '-Median =',num2str(medianworkersVal,4),'-Growth Rate=',num2str(SG149,4),'-%');
+    txt2=text(tx2,ty2,txtstr2,'FontWeight','bold','FontSize',12); 
+elseif(itype==150)
+    txtstr1='Mean/Median Manufacturing Inventory To Sales Ratio';
+    txt1=text(tx1,ty1,txtstr1,'FontWeight','bold','FontSize',12);
+    SG150=100*GrowthRateAll(150,1);
+    txtstr2=strcat('Mean =',num2str(meanInvVal,4),...
+        '-Median =',num2str(medianInvVal,4),'-Growth Rate=',num2str(SG150,4),'-%');
+    txt2=text(tx2,ty2,txtstr2,'FontWeight','bold','FontSize',12); 
+elseif(itype==151)
+    txtstr1='Mean/Median Manufacturing Inventory';
+    txt1=text(tx1,ty1,txtstr1,'FontWeight','bold','FontSize',12);
+    SG151=100*GrowthRateAll(151,1);
+    txtstr2=strcat('Mean =',num2str(meanInvVal,4),...
+        '-Median =',num2str(medianInvVal,4),'-Growth Rate=',num2str(SG151,4),'-%');
+    txt2=text(tx2,ty2,txtstr2,'FontWeight','bold','FontSize',12); 
+elseif(itype==152)
+    txtstr1='Mean/Median Manufacturing Orders';
+    txt1=text(tx1,ty1,txtstr1,'FontWeight','bold','FontSize',12);
+    SG152=100*GrowthRateAll(152,1);
+    txtstr2=strcat('Mean =',num2str(meanOrdersVal,4),...
+        '-Median =',num2str(medianOrdersVal,4),'-Growth Rate=',num2str(SG152,4),'-%');
+    txt2=text(tx2,ty2,txtstr2,'FontWeight','bold','FontSize',12); 
 end
 set(newaxesh,'Visible','Off');
 pause(chart_time)
@@ -5785,7 +6027,7 @@ if(itype==1)
     ab=1;
 elseif(itype==146)
     ab=2;
-elseif(itype==147)
+elseif(itype==152)
     ab=3;
 end
 close('all')

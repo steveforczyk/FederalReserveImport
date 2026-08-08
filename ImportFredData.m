@@ -25,6 +25,7 @@
 % Revised: June 9-22 added addtional items focussed on food costs
 % Revised: Jul 2026 adding recession data to items that are sampled monthly
 % and that are likely to show recession effects
+% Revised: Aug 3,2026 added Personal Savings Rate Data
 
 
 % Set Up some initial Data
@@ -191,10 +192,15 @@ fredfile144='PPIRice.xlsx';
 fredfile145='PPICitrusFruits.xlsx';
 fredfile146='RecessProb.xlsx';
 fredfile147='ALTSALES.xlsx';
+fredfile148='PSAVERT.xlsx';
+fredfile149='MANEMP.xlsx';
+fredfile150='ManInventoryToSales.xlsx';
+fredfile151='ManufacturersInventories.xlsx';
+fredfile152='DurableGoodsOrders.xlsx';
 iCreatePDFReport=1;
 iTechCounter=0;
 icapture=1;
-pdffilename='FredDataImport147A.pdf';
+pdffilename='FredDataImport152A.pdf';
 dataYear=2025;
 tic;
 %% Call some routines that will create nice plot window sizes and locations
@@ -227,7 +233,7 @@ padding=[75 75 75 75];
 igrid=1;
 % Set up paramters for graphs that will center them on the screen
 [hor1,vert1,Fz1,Fz2,machine]=SetScreenCoordinates(widd,lend);
-[hor2,vert2,Fz1,Fz2,machine]=SetScreenCoordinates(widd2,lend2);
+[hor2,vert2,~,~,~]=SetScreenCoordinates(widd2,lend2);
 chart_time=5;
 idirector=1;
 initialtimestr=datetime("now");
@@ -307,7 +313,7 @@ PStatsObj.excelpath= excelpath;
 PStatsObj.pdfpath= pdfpath;
 PStatsObj.logfilepath=logfilepath;
 eval(['cd ' excelpath(1:length(excelpath)-1)]);
-
+minCorrPts=100;
 %% Start a PDF report if requested by user and user has the Matlab Report
 % Generator Package Installed
 if((iCreatePDFReport==1) && (RptGenPresent==1))
@@ -346,18 +352,19 @@ FRObj.iCreatePDFReport=iCreatePDFReport;
 FRObj.RptGenPresent=RptGenPresent;
 ishowrecession=1;
 FRObj.ishowrecession=1;
-Chap=-1*ones(147,1);
-Section=-1*ones(147,1);
-Commodity=zeros(147,1);
-FredPngList=cell(147,1);
+Chap=-1*ones(152,1);
+Section=-1*ones(152,1);
+Commodity=zeros(152,1);
+FredPngList=cell(152,1);
 rho=zeros(25,1);
 numoverlap=zeros(25,1);
-RecessionInfo=zeros(150,1);
+RecessionInfo=zeros(152,1);
 % Start with loading some items that need to be available immediately
 % For this reason they are done "Out of order"
 %% Get the Inferred Recession Dates(JHDUSRGDPBR)-could be useful immediately
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-InferRecessionDatesTable = readtable(fredfile73,'Sheet','Quarterly');
+%InferRecessionDatesTable = readtable(fredfile73,'Sheet','Quarterly');
+InferRecessionDatesTable = readtable(FRObj.fredfile73,'Sheet','Quarterly');
 [nrows73,~]=size(InferRecessionDatesTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows73,1);
@@ -452,7 +459,6 @@ fprintf(fid,'%50s\n',loopstr5);
 % A probability of 1 implies a recession period and 0 is not recession
 RFlag=zeros(nrows146,1);
 recession_months=0;
-%RecessProbTT= addvars(RecessProbTT,RFlag);
 for n=1:nrows146
     nowProb=RecessProbTT(n,1).Prob;
     if(nowProb>=50)
@@ -587,6 +593,180 @@ titlestr3=char(titlestr3);
 figstr3=strcat(titlestr3,'.png');
 figstr3=char(figstr3);
 PlotCumilFredData(FRObj,itype,titlestr3)
+%% Start with Durable Goods Orders(Monthly) (UMDMNO) Chap 11-5
+% Itype=152
+loopstr='**********Start Looping through the available FRED data**********';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr);
+eval(['cd ' fredpath(1:length(fredpath)-1)]);
+loopstr1='Process the Durable Goods Orders';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr1);
+DurableGoodsTable = readtable(fredfile152,'Sheet','Monthly');
+[nrows152,~]=size(DurableGoodsTable);
+dateArray=strings(nrows152,1);
+for n=1:nrows152
+    nowstr=string(DurableGoodsTable.Date(n,1));
+    dateArray(n,1)=nowstr;
+    if(n==1)
+        nowStartDate=nowstr;
+    elseif(n==nrows152)
+        nowEndDate=nowstr;
+    end
+end
+loopstr2=strcat('Data is available for-',num2str(nrows152,4),'-dates-',...
+    'From-',nowStartDate,'-to-',nowEndDate');
+fprintf(fid,'%50s\n',loopstr2);
+rowTimes=datetime(dateArray);
+DateNumbers=datenum(rowTimes);
+DurableGoodsTT=table2timetable(DurableGoodsTable,'RowTimes','Date');
+DurableGoodsTT = addvars(DurableGoodsTT,DateNumbers);
+meanDGoodsVal=mean(DurableGoodsTT.Orders);
+medianDGoodsVal=mean(DurableGoodsTT.Orders);
+meanDGoods=zeros(nrows152,1);
+medianDGoods=zeros(nrows152,1);
+for n=1:nrows152
+    meanDGoods(n,1)=meanDGoodsVal;
+    medianDGoods(n,1)=medianDGoodsVal;
+end
+DurableGoodsTT = addvars(DurableGoodsTT,meanDGoods,medianDGoods);
+SourceFile(152,1)="DurableGoodsOrders.xlsx";
+Code(152,1)="UMDMNO";
+Desc(152,1)="Durable Goods Orders";
+Freq(152,1)="Monthly";
+StartYear(152,1)=1992;
+EndYear(152,1)=2025;
+SeasonalAdj(152,1)="No";
+BaseYear(152,1)=1992;
+NumObs(152,1)=413;
+FRObj.Desc=Desc;
+Chap(152,1)=11;
+Section(152,1)=5;
+% Calculate the Simple Stats
+itype=152;
+Data=DurableGoodsTT.Orders/1000;
+FRObj=FRObj.SimpleStats(Data,itype);
+NYears=EndYear(152,1)-StartYear(152,1)+1;
+FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
+GrowthRateAll=FRObj.GrowthRateAll;
+SG152=100*GrowthRateAll(itype,1);
+FRObj.SG152=SG152;
+% Smooth the Data
+goodsmooth = smoothdata(Data);
+P0=goodsmooth(1);
+PF=goodsmooth(413);
+DurableGoodsTT= addvars(DurableGoodsTT,goodsmooth);
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0)
+    [DurableGoodsTT,icase] = OverlapTimeLinesRev1(DurableGoodsTT,RecessProbTT);
+    FRObj.DurableGoodsTT=DurableGoodsTT;
+    RecessionInfo(152,1)=icase;
+end
+% Now plot this data
+FRObj.barval=200;
+FRObj.DurableGoodsTT=DurableGoodsTT;
+% Now plot this data
+titlestr='DurableGoodsOrders';
+PlotFredData(FRObj,DurableGoodsTT,itype,titlestr)
+% Add this table to the FredObj
+titlestr=char(titlestr);
+figstr2=strcat(titlestr,'.png');
+figstr2=char(figstr2);
+FredPngList{1,1}=figstr2;
+% Now create the data for a cumilative distribution plot
+titlestr3='DurableGoods-CumilDist';
+titlest3=char(titlestr3);
+figstr3=strcat(titlestr3,'.png');
+figstr3=char(figstr3);
+PlotCumilFredData(FRObj,itype,titlestr3)
+%% Start with The Manufacturers Inventories (MNFCTRIMSA) (Monthly)  Chap 11-4
+% Itype=151
+% This underlying data set seems to have the wrong data in the Fred
+% Database
+loopstr='**********Start Looping through the available FRED data**********';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr);
+eval(['cd ' fredpath(1:length(fredpath)-1)]);
+loopstr1='Process the Manufacturers Inventory';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr1);
+ManuInvTable = readtable(fredfile151,'Sheet','Monthly');
+[nrows151,~]=size(ManuInvTable);
+dateArray=strings(nrows151,1);
+for n=1:nrows151
+    nowstr=string(ManuInvTable.Date(n,1));
+    dateArray(n,1)=nowstr;
+    if(n==1)
+        nowStartDate=nowstr;
+    elseif(n==nrows151)
+        nowEndDate=nowstr;
+    end
+end
+loopstr2=strcat('Data is available for-',num2str(nrows151,4),'-dates-',...
+    'From-',nowStartDate,'-to-',nowEndDate');
+fprintf(fid,'%50s\n',loopstr2);
+rowTimes=datetime(dateArray);
+DateNumbers=datenum(rowTimes);
+ManuInventoryTT=table2timetable(ManuInvTable,'RowTimes','Date');
+ManuInventoryTT = addvars(ManuInventoryTT,DateNumbers);
+meanManuInvVal=mean(ManuInventoryTT.Inventories/1000);
+medianManuInvVal=median(ManuInventoryTT.Inventories/1000);
+meanInventory=zeros(nrows151,1);
+medianInventory=zeros(nrows151,1);
+for n=1:nrows151
+    meanInventory(n,1)=meanManuInvVal;
+    medianInventory(n,1)=medianManuInvVal;
+end
+ManuInventoryTT = addvars(ManuInventoryTT,meanInventory,medianInventory);
+SourceFile(151,1)="ManufacturersInventories.xlsx";
+Code(151,1)="MNFCTRIMSA";
+Desc(151,1)="Manufacturing Inventories";
+Freq(151,1)="Monthly";
+StartYear(151,1)=1992;
+EndYear(151,1)=2025;
+SeasonalAdj(151,1)="Yes";
+BaseYear(151,1)=1992;
+NumObs(151,1)=413;
+FRObj.Desc=Desc;
+Chap(151,1)=11;
+Section(151,1)=4;
+% Calculate the Simple Stats
+itype=151;
+Data=ManuInventoryTT.Inventories/1000;
+FRObj=FRObj.SimpleStats(Data,itype);
+NYears=EndYear(151,1)-StartYear(151,1)+1;
+FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
+GrowthRateAll=FRObj.GrowthRateAll;
+SG151=100*GrowthRateAll(itype,1);
+FRObj.SG151=SG151;
+% Smooth the Data
+mfacsmooth = smoothdata(Data);
+P0=mfacsmooth(1);
+PF=mfacsmooth(413);
+ManuInventoryTT= addvars(ManuInventoryTT,mfacsmooth);
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0)
+    [ManuInventoryTT,icase] = OverlapTimeLinesRev1(ManuInventoryTT,RecessProbTT);
+    FRObj.ManuInventoryTT=ManuInventoryTT;
+    RecessionInfo(151,1)=icase;
+end
+% Now plot this data
+FRObj.barval=500;
+FRObj.ManuInventoryTT=ManuInventoryTT;
+% Now plot this data
+titlestr='ManufacturingInventories';
+PlotFredData(FRObj,ManuInventoryTT,itype,titlestr)
+% Add this table to the FredObj
+titlestr=char(titlestr);
+figstr2=strcat(titlestr,'.png');
+figstr2=char(figstr2);
+FredPngList{1,1}=figstr2;
+% Now create the data for a cumilative distribution plot
+titlestr3='ManufacturingInvCumilDist';
+titlest3=char(titlestr3);
+figstr3=strcat(titlestr3,'.png');
+figstr3=char(figstr3);
+PlotCumilFredData(FRObj,itype,titlestr3)
 % Next work on importing most of the tables (>100 tables)
 %% Start with The Unemployment Data (UNRATE) (Monthly)  Chap 3-1
 loopstr='**********Start Looping through the available FRED data**********';
@@ -668,1914 +848,12 @@ titlest3=char(titlestr3);
 figstr3=strcat(titlestr3,'.png');
 figstr3=char(figstr3);
 PlotCumilFredData(FRObj,itype,titlestr3)
-
 % Pre Allocate a table to store Food price data that will be used later
 sz = [25 11];
 varTypes = ["double","string","double","double","double","string","double","double","double","double","double"];
 varNames = ["BaseiType","BaseTableName","StartYear1","EndYear1","CompiType","CompTableName","StartYear2","EndYear2",...
     "rho","GR","numovrlp"];
 FoodCorrTable = table('Size',sz,'VariableTypes',varTypes,'VariableNames',varNames);
-
-%% Light Truck Sales(ALTSALES) Monthly
-% itype=147
-eval(['cd ' fredpath(1:length(fredpath)-1)]);
-AltSalesTable = readtable(fredfile147,'Sheet','Monthly');
-[nrows147,ncols147]=size(AltSalesTable);
-clear DateNumbers
-clear dateArray
-dateArray=strings(nrows147,1);
-for n=1:nrows147
-    nowstr=string(AltSalesTable.Date(n,1));
-    dateArray(n,1)=nowstr;
-    if(n==1)
-        nowStartDate=nowstr;
-    elseif(n==nrows147)
-        nowEndDate=nowstr;
-    end
-end
-rowTimes=datetime(dateArray);
-DateNumbers=datenum(rowTimes);
-loopstr1='Process the The Sales for Light Trucks';
-fprintf(fid,'\n');
-fprintf(fid,'%50s\n',loopstr1);
-loopstr2=strcat('Data is available for-',num2str(nrows147,4),'-dates-',...
-    'From-',nowStartDate,'-to-',nowEndDate');
-fprintf(fid,'%50s\n',loopstr2);
-AltSalesTT=table2timetable(AltSalesTable,'RowTimes','Date');
-AltSalesTT = addvars(AltSalesTT,DateNumbers);
-UnitsmeanVal=mean(AltSalesTT.Units);
-UnitsmedianVal=median(AltSalesTT.Units);
-meanUnits=zeros(nrows147,1);
-medianUnits=zeros(nrows147,1);
-for n=1:nrows147
-    meanUnits(n,1)=UnitsmeanVal;
-    medianUnits(n,1)=UnitsmedianVal;
-end
-AltSalesTT = addvars(AltSalesTT,meanUnits,medianUnits);
-SourceFile(147,1)="ALTSALES.xlsx";
-Code(147,1)="ALTSALES";
-Desc(147,1)="LightTruckSales";
-Freq(147,1)="Monthly";
-StartYear(147,1)=1976;
-EndYear(147,1)=2025;
-SeasonalAdj(147,1)="Yes";
-BaseYear(147,1)=1976;
-NumObs(147,1)=606;
-Chap(147,1)=7;
-Section(147,1)=19;
-itype=147;
-% Calculate the Simple Stats
-Data=AltSalesTT.Units;
-FRObj=FRObj.SimpleStats(Data,itype);
-% Smooth the Data
-trkunitssmooth = smoothdata(Data);
-P0=trkunitssmooth(1);
-PF=trkunitssmooth(605);
-AltSalesTT= addvars(AltSalesTT,trkunitssmooth);
-NYears=EndYear(147,1)-StartYear(147,1)+1;
-FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
-GrowthRateAll=FRObj.GrowthRateAll;
-SG147=100*GrowthRateAll(itype,1);
-FRObj.SG147=SG147;
-ishowrecession=FRObj.ishowrecession;
-if(ishowrecession>0)
-    [AltSalesTT,icase] = OverlapTimeLinesRev1(AltSalesTT,RecessProbTT);
-    FRObj.AltSalesTT=AltSalesTT;
-    RecessionInfo(147,1)=icase;
-end
-% Now plot this data
-FRObj.barval=15;
-% Now plot this data
-titlestr='LightTruck-Sales';
-PlotFredData(FRObj,AltSalesTT,itype,titlestr)
-% Add this data to the Fred Obj
-FRObj.AltSalesTT=AltSalesTT;
-titlestr=char(titlestr);
-figstr2=strcat(titlestr,'.png');
-figstr2=char(figstr2);
-FredPngList{147,1}=figstr2;
-% Now create the data for a cumilative distribution plot
-titlestr3='LightTruck-CumilDistribution';
-titlestr3=char(titlestr3);
-figstr3=strcat(titlestr3,'.png');
-figstr3=char(figstr3);
-PlotCumilFredData(FRObj,itype,titlestr3)
-ab=1;
-%% PPI for Food Manufacturing (PCU311311)(Monthly)
-% itype=127
-eval(['cd ' fredpath(1:length(fredpath)-1)]);
-PPIFoodTable = readtable(fredfile127,'Sheet','Monthly');
-[nrows127,ncols127]=size(PPIFoodTable);
-clear DateNumbers
-clear dateArray
-dateArray=strings(nrows127,1);
-for n=1:nrows127
-    nowstr=string(PPIFoodTable.Date(n,1));
-    dateArray(n,1)=nowstr;
-    if(n==1)
-        nowStartDate=nowstr;
-    elseif(n==nrows)
-        nowEndDate=nowstr;
-    end
-end
-rowTimes=datetime(dateArray);
-DateNumbers=datenum(rowTimes);
-loopstr1='Process the PPI Food Production Index';
-fprintf(fid,'\n');
-fprintf(fid,'%50s\n',loopstr1);
-loopstr2=strcat('Data is available for-',num2str(nrows127,4),'-dates-',...
-    'From-',nowStartDate,'-to-',nowEndDate');
-fprintf(fid,'%50s\n',loopstr2);
-PPIFoodTT=table2timetable(PPIFoodTable,'RowTimes','Date');
-PPIFoodTT = addvars(PPIFoodTT,DateNumbers);
-PPIFoodmeanVal=mean(PPIFoodTT.Index);
-PPIFoodmedianVal=median(PPIFoodTT.Index);
-meanPPIFood=zeros(nrows127,1);
-medianPPIFood=zeros(nrows127,1);
-for n=1:nrows127
-    meanPPIFood(n,1)=PPIFoodmeanVal;
-    medianPPIFood(n,1)=PPIFoodmedianVal;
-end
-PPIFoodTT = addvars(PPIFoodTT,meanPPIFood,medianPPIFood);
-SourceFile(127,1)="PPIFoodManufacturing.xlsx";
-Code(127,1)="PCU311311";
-Desc(127,1)="PCIFoodPriceIndex";
-Freq(127,1)="Monthly";
-StartYear(127,1)=1984;
-EndYear(127,1)=2025;
-SeasonalAdj(127,1)="No";
-BaseYear(127,1)=1984;
-NumObs(127,1)=497;
-Chap(127,1)=19;
-Section(127,1)=2;
-itype=127;
-% Calculate the Simple Stats
-Data=PPIFoodTT.Index;
-FRObj=FRObj.SimpleStats(Data,itype);
-% Smooth the Data
-ppifoodsmooth = smoothdata(Data);
-P0=ppifoodsmooth(1);
-PF=ppifoodsmooth(497);
-PPIFoodTT= addvars(PPIFoodTT,ppifoodsmooth);
-NYears=EndYear(127,1)-StartYear(127,1)+1;
-FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
-GrowthRateAll=FRObj.GrowthRateAll;
-SG127=100*GrowthRateAll(itype,1);
-FRObj.SG127=SG127;
-% Now plot this data
-titlestr='PPI-Food-Production';
-PlotFredData(FRObj,PPIFoodTT,itype,titlestr)
-% Add this data to the Fred Obj
-FRObj.PPIFoodTT=PPIFoodTT;
-titlestr=char(titlestr);
-figstr2=strcat(titlestr,'.png');
-figstr2=char(figstr2);
-FredPngList{127,1}=figstr2;
-% Now create the data for a cumilative distribution plot
-titlestr3='PPI-FoodIndex-CumilDistribution';
-titlestr3=char(titlestr3);
-figstr3=strcat(titlestr3,'.png');
-figstr3=char(figstr3);
-PlotCumilFredData(FRObj,itype,titlestr3)
-% Now calculate the correlation between 
-datacol=1;
-minCorrPts=100;
-ikind=1;
-[rho(1),~,numoverlap(1)] = CalculateCorrelation(UrbanHFTT,PPIFoodTT,ikind,minCorrPts);
-dispstr=strcat('Price Correlation Between Urban Home Food and Food Production Costs-',num2str(rho(1)));
-disp(dispstr)
-FoodCorrTable(1,:) = {126,"UrbanHFTT",StartYear1,EndYear1,127,"PPIFoodTT",1984,2025,rho(1),SG127,numoverlap(1)};
-%% PPI for Diesel #2 Fuel (WPU057303)(Monthly)
-% itype=128
-eval(['cd ' fredpath(1:length(fredpath)-1)]);
-PPIDieselTable = readtable(fredfile128,'Sheet','Monthly');
-[nrows128,ncols128]=size(PPIDieselTable);
-clear DateNumbers
-clear dateArray
-dateArray=strings(nrows128,1);
-for n=1:nrows128
-    nowstr=string(PPIDieselTable.Date(n,1));
-    dateArray(n,1)=nowstr;
-    if(n==1)
-        nowStartDate=nowstr;
-    elseif(n==nrows)
-        nowEndDate=nowstr;
-    end
-end
-rowTimes=datetime(dateArray);
-DateNumbers=datenum(rowTimes);
-loopstr1='Process the PPI Diesel #2 Production Index';
-fprintf(fid,'\n');
-fprintf(fid,'%50s\n',loopstr1);
-loopstr2=strcat('Data is available for-',num2str(nrows128,4),'-dates-',...
-    'From-',nowStartDate,'-to-',nowEndDate');
-fprintf(fid,'%50s\n',loopstr2);
-PPIDieselTT=table2timetable(PPIDieselTable,'RowTimes','Date');
-PPIDieselTT = addvars(PPIDieselTT,DateNumbers);
-PPIDieselmeanVal=mean(PPIDieselTT.Index);
-PPIDieselmedianVal=median(PPIDieselTT.Index);
-meanPPIDiesel=zeros(nrows128,1);
-medianPPIDiesel=zeros(nrows128,1);
-for n=1:nrows128
-    meanPPIDiesel(n,1)=PPIDieselmeanVal;
-    medianPPIDiesel(n,1)=PPIDieselmedianVal;
-end
-PPIDieselTT = addvars(PPIDieselTT,meanPPIDiesel,medianPPIDiesel);
-SourceFile(128,1)="PPIDiesel.xlsx";
-Code(128,1)="WPU057303";
-Desc(128,1)="PCIDieselPriceIndex";
-Freq(128,1)="Monthly";
-StartYear(128,1)=1973;
-EndYear(128,1)=2025;
-SeasonalAdj(128,1)="No";
-BaseYear(128,1)=1982;
-NumObs(128,1)=640;
-Chap(128,1)=19;
-Section(128,1)=3;
-itype=128;
-% Calculate the Simple Stats
-Data=PPIDieselTT.Index;
-FRObj=FRObj.SimpleStats(Data,itype);
-% Smooth the Data
-ppidieselsmooth = smoothdata(Data);
-P0=ppidieselsmooth(1);
-PF=ppidieselsmooth(640);
-PPIDieselTT= addvars(PPIDieselTT,ppidieselsmooth);
-NYears=EndYear(128,1)-StartYear(128,1)+1;
-FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
-GrowthRateAll=FRObj.GrowthRateAll;
-SG128=100*GrowthRateAll(itype,1);
-FRObj.SG128=SG128;
-% Now pull of the Recession Probability data that matches the available
-% time poiunts in the PPIDieselTT
-RecessProbTT=FRObj.RecessProbTT;
-ab=1;
-ishowrecession=FRObj.ishowrecession;
-if(ishowrecession>0)
-    [PPIDieselTT,icase] = OverlapTimeLinesRev1(PPIDieselTT,RecessProbTT);
-    FRObj.PPIDieselTT=PPIDieselTT;
-    RecessionInfo(128,1)=icase;
-end
-% Now plot this data
-FRObj.barval=100;
-titlestr='PPI-Diesel-Production';
-PlotFredData(FRObj,PPIDieselTT,itype,titlestr)
-% Add this data to the Fred Obj
-titlestr=char(titlestr);
-figstr2=strcat(titlestr,'.png');
-figstr2=char(figstr2);
-FredPngList{128,1}=figstr2;
-% Now create the data for a cumilative distribution plot
-titlestr3='PPI-DieselIndex-CumilDistribution';
-titlestr3=char(titlestr3);
-figstr3=strcat(titlestr3,'.png');
-figstr3=char(figstr3);
-PlotCumilFredData(FRObj,itype,titlestr3)
-% Now calculate the correlation between Food prices and Diesel Fuel
-datacol=1;
-minCorrPts=100;
-ikind=1;
-[rho(2),~,numoverlap(2)] = CalculateCorrelation(UrbanHFTT,PPIDieselTT,ikind,minCorrPts);
-ab=1;
-dispstr=strcat('Price Correlation Between Urban Home Food and Diesel Production Costs-',num2str(rho(2)));
-disp(dispstr)
-FoodCorrTable(2,:) = {126,"UrbanHFTT",StartYear1,EndYear1,128,"PPIDieselTT",1973,2025,rho(2),SG128,numoverlap(2)};
-
-%% Avererage Price For Beef Bologna (APU0000705121)(Monthly)
-% itype=129
-eval(['cd ' fredpath(1:length(fredpath)-1)]);
-BolognaTable = readtable(fredfile129,'Sheet','Monthly');
-[nrows129,ncols129]=size(BolognaTable);
-clear DateNumbers
-clear dateArray
-dateArray=strings(nrows129,1);
-for n=1:nrows129
-    nowstr=string(BolognaTable.Date(n,1));
-    dateArray(n,1)=nowstr;
-    if(n==1)
-        nowStartDate=nowstr;
-    elseif(n==nrows)
-        nowEndDate=nowstr;
-    end
-end
-rowTimes=datetime(dateArray);
-DateNumbers=datenum(rowTimes);
-loopstr1='Process the Average Beef Bologna Prices';
-fprintf(fid,'\n');
-fprintf(fid,'%50s\n',loopstr1);
-loopstr2=strcat('Data is available for-',num2str(nrows129,4),'-dates-',...
-    'From-',nowStartDate,'-to-',nowEndDate');
-fprintf(fid,'%50s\n',loopstr2);
-BolognaTT=table2timetable(BolognaTable,'RowTimes','Date');
-BolognaTT = addvars(BolognaTT,DateNumbers);
-BolognameanVal=mean(BolognaTT.Price);
-BolognamedianVal=median(BolognaTT.Price);
-meanBologna=zeros(nrows129,1);
-medianBologna=zeros(nrows129,1);
-for n=1:nrows129
-    meanBologna(n,1)=BolognameanVal;
-    medianBologna(n,1)=BolognamedianVal;
-end
-BolognaTT = addvars(BolognaTT,meanBologna,medianBologna);
-SourceFile(129,1)="BolognaPrices.xlsx";
-Code(129,1)="APU0000705121";
-Desc(129,1)="MeanBolognaPrices";
-Freq(129,1)="Monthly";
-StartYear(129,1)=1980;
-EndYear(129,1)=2019;
-SeasonalAdj(129,1)="No";
-BaseYear(129,1)=1980;
-NumObs(129,1)=477;
-Chap(129,1)=19;
-Section(129,1)=4;
-itype=129;
-% Calculate the Simple Stats
-Data=BolognaTT.Price;
-FRObj=FRObj.SimpleStats(Data,itype);
-% Smooth the Data
-bolognasmooth = smoothdata(Data);
-P0=bolognasmooth(1);
-PF=bolognasmooth(477);
-BolognaTT= addvars(BolognaTT,bolognasmooth);
-NYears=EndYear(129,1)-StartYear(129,1)+1;
-FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
-GrowthRateAll=FRObj.GrowthRateAll;
-SG129=100*GrowthRateAll(itype,1);
-FRObj.SG129=SG129;
-% Now pull of the Recession Probability data that matches the available
-% time points in the PPIDieselTT
-RecessProbTT=FRObj.RecessProbTT;
-ishowrecession=FRObj.ishowrecession;
-if(ishowrecession>0)
-    [BolognaTT,icase] = OverlapTimeLinesRev1(BolognaTT,RecessProbTT);
-    FRObj.BolognaTT=BolognaTT;
-    RecessionInfo(129,1)=icase;
-end
-FRObj.barval=3;
-FRObj.BolognaTT=BolognaTT;
-% Now plot this data
-titlestr='BolognaPrices';
-PlotFredData(FRObj,BolognaTT,itype,titlestr)
-% Add this data to the Fred Obj
-FRObj.BolognaTT=BolognaTT;
-titlestr=char(titlestr);
-figstr2=strcat(titlestr,'.png');
-figstr2=char(figstr2);
-FredPngList{129,1}=figstr2;
-% Now create the data for a cumilative distribution plot
-titlestr3='BolognaPrices-CumilDistribution';
-titlestr3=char(titlestr3);
-figstr3=strcat(titlestr3,'.png');
-figstr3=char(figstr3);
-PlotCumilFredData(FRObj,itype,titlestr3)
-% Now calculate the correlation between Food prices and Bologna
-datacol=1;
-minCorrPts=100;
-ikind=2;
-[rho(3),~,numoverlap(3)] = CalculateCorrelation(UrbanHFTT,BolognaTT,ikind,minCorrPts);
-dispstr=strcat('Price Correlation Between Urban Home Food and Bologna-',num2str(rho(3)));
-disp(dispstr)
-FoodCorrTable(3,:) = {126,"UrbanHFTT",StartYear1,EndYear1,129,"BolognaTT",1980,2019,rho(3),SG129,numoverlap(3)};
-
-%% Avererage Price For Boneless Ham (APU0000704312)(Monthly)
-% itype=130
-eval(['cd ' fredpath(1:length(fredpath)-1)]);
-BonelessHamTable = readtable(fredfile130,'Sheet','Monthly');
-[nrows130,ncols130]=size(BonelessHamTable);
-clear DateNumbers
-clear dateArray
-dateArray=strings(nrows130,1);
-for n=1:nrows130
-    nowstr=string(BonelessHamTable.Date(n,1));
-    dateArray(n,1)=nowstr;
-    if(n==1)
-        nowStartDate=nowstr;
-    elseif(n==nrows)
-        nowEndDate=nowstr;
-    end
-end
-rowTimes=datetime(dateArray);
-DateNumbers=datenum(rowTimes);
-loopstr1='Process the Average BonelessHam Prices';
-fprintf(fid,'\n');
-fprintf(fid,'%50s\n',loopstr1);
-loopstr2=strcat('Data is available for-',num2str(nrows130,4),'-dates-',...
-    'From-',nowStartDate,'-to-',nowEndDate');
-fprintf(fid,'%50s\n',loopstr2);
-BonelessHamTT=table2timetable(BonelessHamTable,'RowTimes','Date');
-BonelessHamTT = addvars(BonelessHamTT,DateNumbers);
-HammeanVal=mean(BonelessHamTT.Price);
-HammedianVal=median(BonelessHamTT.Price);
-meanHam=zeros(nrows130,1);
-medianHam=zeros(nrows130,1);
-for n=1:nrows130
-    meanHam(n,1)=HammeanVal;
-    medianHam(n,1)=HammedianVal;
-end
-BonelessHamTT = addvars(BonelessHamTT,meanHam,medianHam);
-SourceFile(130,1)="BonelessHamPrices.xlsx";
-Code(130,1)="APU0000704312";
-Desc(130,1)="MeanBonelessHamPrices";
-Freq(130,1)="Monthly";
-StartYear(130,1)=1991;
-EndYear(130,1)=2025;
-SeasonalAdj(130,1)="No";
-BaseYear(130,1)=1991;
-NumObs(130,1)=425;
-Chap(130,1)=19;
-Section(130,1)=5;
-itype=130;
-% Calculate the Simple Stats
-Data=BonelessHamTT.Price;
-FRObj=FRObj.SimpleStats(Data,itype);
-% Smooth the Data
-hamsmooth = smoothdata(Data);
-P0=hamsmooth(1);
-PF=hamsmooth(425);
-BonelessHamTT= addvars(BonelessHamTT,hamsmooth);
-NYears=EndYear(130,1)-StartYear(130,1)+1;
-FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
-GrowthRateAll=FRObj.GrowthRateAll;
-SG130=100*GrowthRateAll(itype,1);
-FRObj.SG130=SG130;
-% Now plot this data
-% Now pull of the Recession Probability data that matches the available
-% time points in the BonelessHamTT
-RecessProbTT=FRObj.RecessProbTT;
-ishowrecession=FRObj.ishowrecession;
-if(ishowrecession>0)
-    [BonelessHamTT,icase] = OverlapTimeLinesRev1(BonelessHamTT,RecessProbTT);
-    FRObj.BonelessHamTT=BonelessHamTT;
-    RecessionInfo(130,1)=icase;
-end
-FRObj.barval=4;
-FRObj.BonelessHamTT=BonelessHamTT;
-titlestr='BonelessHamPrices';
-PlotFredData(FRObj,BonelessHamTT,itype,titlestr)
-% Add this data to the Fred Obj
-FRObj.BonelessHamTT=BonelessHamTT;
-titlestr=char(titlestr);
-figstr2=strcat(titlestr,'.png');
-figstr2=char(figstr2);
-FredPngList{130,1}=figstr2;
-% Now create the data for a cumilative distribution plot
-titlestr3='BonelessHamPrices-CumilDistribution';
-titlestr3=char(titlestr3);
-figstr3=strcat(titlestr3,'.png');
-figstr3=char(figstr3);
-PlotCumilFredData(FRObj,itype,titlestr3)
-% Now calculate the correlation between Food prices and BonelessHam
-datacol=1;
-minCorrPts=100;
-ikind=2;
-[rho(4),~,numoverlap(4)] = CalculateCorrelation(UrbanHFTT,BonelessHamTT,ikind,minCorrPts);
-dispstr=strcat('Price Correlation Between Urban Home Food and Boneless Ham Prices-',num2str(rho(4)));
-disp(dispstr)
-FoodCorrTable(4,:) = {126,"UrbanHFTT",StartYear1,EndYear1,130,"BonelessHamTT",1991,2025,rho(4),SG130,numoverlap(4)};
-%% Average Price For BeefChuckRoast (APU0000703213)(Monthly)
-% itype=131
-eval(['cd ' fredpath(1:length(fredpath)-1)]);
-ChuckRoastTable = readtable(fredfile131,'Sheet','Monthly');
-[nrows131,ncols131]=size(ChuckRoastTable);
-clear DateNumbers
-clear dateArray
-dateArray=strings(nrows131,1);
-for n=1:nrows131
-    nowstr=string(ChuckRoastTable.Date(n,1));
-    dateArray(n,1)=nowstr;
-    if(n==1)
-        nowStartDate=nowstr;
-    elseif(n==nrows)
-        nowEndDate=nowstr;
-    end
-end
-rowTimes=datetime(dateArray);
-DateNumbers=datenum(rowTimes);
-loopstr1='Process the Average Boneless Chuck Roast Prices';
-fprintf(fid,'\n');
-fprintf(fid,'%50s\n',loopstr1);
-loopstr2=strcat('Data is available for-',num2str(nrows131,4),'-dates-',...
-    'From-',nowStartDate,'-to-',nowEndDate');
-fprintf(fid,'%50s\n',loopstr2);
-ChuckRoastTT=table2timetable(ChuckRoastTable,'RowTimes','Date');
-ChuckRoastTT = addvars(ChuckRoastTT,DateNumbers);
-CRoastmeanVal=mean(ChuckRoastTT.Price);
-CRoastmedianVal=median(ChuckRoastTT.Price);
-meanCRoast=zeros(nrows131,1);
-medianCRoast=zeros(nrows131,1);
-for n=1:nrows131
-    meanCRoast(n,1)=CRoastmeanVal;
-    medianCRoast(n,1)=CRoastmedianVal;
-end
-ChuckRoastTT = addvars(ChuckRoastTT,meanCRoast,medianCRoast);
-SourceFile(131,1)="ChuckRoastPrices.xlsx";
-Code(131,1)="APU0000703213";
-Desc(131,1)="MeanBonelessChuckRoastPrices";
-Freq(131,1)="Monthly";
-StartYear(131,1)=1989;
-EndYear(131,1)=2025;
-SeasonalAdj(131,1)="No";
-BaseYear(131,1)=1989;
-NumObs(131,1)=449;
-Chap(131,1)=19;
-Section(131,1)=6;
-itype=131;
-% Calculate the Simple Stats
-Data=ChuckRoastTT.Price;
-FRObj=FRObj.SimpleStats(Data,itype);
-% Smooth the Data
-croastsmooth = smoothdata(Data);
-P0=croastsmooth(1);
-PF=croastsmooth(449);
-ChuckRoastTT= addvars(ChuckRoastTT,croastsmooth);
-NYears=EndYear(131,1)-StartYear(131,1)+1;
-FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
-GrowthRateAll=FRObj.GrowthRateAll;
-SG131=100*GrowthRateAll(itype,1);
-FRObj.SG131=SG131;
-% Now pull of the Recession Probability data that matches the available
-% time points in the ChuckRoastTT
-RecessProbTT=FRObj.RecessProbTT;
-ishowrecession=FRObj.ishowrecession;
-if(ishowrecession>0)
-    [ChuckRoastTT,icase] = OverlapTimeLinesRev1(ChuckRoastTT,RecessProbTT);
-    FRObj.ChuckRoastTT=ChuckRoastTT;
-    RecessionInfo(131,1)=icase;
-
-end
-FRObj.barval=4;
-FRObj.ChuckRoastTT=ChuckRoastTT;
-% Now plot this data
-titlestr='ChuckRoastPrices';
-PlotFredData(FRObj,ChuckRoastTT,itype,titlestr)
-% Add this data to the Fred Obj
-FRObj.ChuckRoastTT=ChuckRoastTT;
-titlestr=char(titlestr);
-figstr2=strcat(titlestr,'.png');
-figstr2=char(figstr2);
-FredPngList{131,1}=figstr2;
-% Now create the data for a cumilative distribution plot
-titlestr3='ChuckRoastPrices-CumilDistribution';
-titlestr3=char(titlestr3);
-figstr3=strcat(titlestr3,'.png');
-figstr3=char(figstr3);
-PlotCumilFredData(FRObj,itype,titlestr3)
-% Now calculate the correlation between Food prices and BonelessHam
-datacol=1;
-minCorrPts=100;
-ikind=2;
-[rho(5),~,numoverlap(5)] = CalculateCorrelation(UrbanHFTT,ChuckRoastTT,ikind,minCorrPts);
-dispstr=strcat('Price Correlation Between Urban Home Food and Chuck Roast Prices-',num2str(rho(5)));
-disp(dispstr)
-FoodCorrTable(5,:) = {126,"UrbanHFTT",StartYear1,EndYear1,131,"ChuckRoastTT",1989,2025,rho(5),SG131,numoverlap(5)};
-
-%% Average Price For Bacon For North East Region (APU0100704111)(Monthly)
-% itype=132
-eval(['cd ' fredpath(1:length(fredpath)-1)]);
-BaconTable = readtable(fredfile132,'Sheet','Monthly');
-[nrows132,ncols132]=size(BaconTable);
-clear DateNumbers
-clear dateArray
-dateArray=strings(nrows132,1);
-for n=1:nrows132
-    nowstr=string(BaconTable.Date(n,1));
-    dateArray(n,1)=nowstr;
-    if(n==1)
-        nowStartDate=nowstr;
-    elseif(n==nrows132)
-        nowEndDate=nowstr;
-    end
-end
-rowTimes=datetime(dateArray);
-DateNumbers=datenum(rowTimes);
-loopstr1='Process the Average Sliced Bacon Prices';
-fprintf(fid,'\n');
-fprintf(fid,'%50s\n',loopstr1);
-loopstr2=strcat('Data is available for-',num2str(nrows132,4),'-dates-',...
-    'From-',nowStartDate,'-to-',nowEndDate');
-fprintf(fid,'%50s\n',loopstr2);
-BaconPriceTT=table2timetable(BaconTable,'RowTimes','Date');
-BaconPriceTT = addvars(BaconPriceTT,DateNumbers);
-BaconmeanVal=mean(BaconPriceTT.Price);
-BaconmedianVal=median(BaconPriceTT.Price);
-meanBacon=zeros(nrows132,1);
-medianBacon=zeros(nrows132,1);
-for n=1:nrows132
-    meanBacon(n,1)=BaconmeanVal;
-    medianBacon(n,1)=BaconmedianVal;
-end
-BaconPriceTT = addvars(BaconPriceTT,meanBacon,medianBacon);
-SourceFile(132,1)="BaconPrices.xlsx";
-Code(132,1)="APU0100704111";
-Desc(132,1)="MeanSliceBaconPrice";
-Freq(132,1)="Monthly";
-StartYear(132,1)=1980;
-EndYear(132,1)=2025;
-SeasonalAdj(132,1)="No";
-BaseYear(132,1)=1980;
-NumObs(132,1)=557;
-Chap(132,1)=19;
-Section(132,1)=7;
-itype=132;
-% Calculate the Simple Stats
-Data=BaconPriceTT.Price;
-FRObj=FRObj.SimpleStats(Data,itype);
-% Smooth the Data
-baconsmooth = smoothdata(Data);
-P0=baconsmooth(1);
-PF=baconsmooth(557);
-BaconPriceTT= addvars(BaconPriceTT,baconsmooth);
-NYears=EndYear(132,1)-StartYear(132,1)+1;
-FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
-GrowthRateAll=FRObj.GrowthRateAll;
-SG132=100*GrowthRateAll(itype,1);
-FRObj.SG132=SG132;
-% Now pull of the Recession Probability data that matches the available
-% time points in the BaconPriceTT
-RecessProbTT=FRObj.RecessProbTT;
-ishowrecession=FRObj.ishowrecession;
-if(ishowrecession>0)
-    [BaconPriceTT,icase] = OverlapTimeLinesRev1(BaconPriceTT,RecessProbTT);
-    FRObj.BaconPriceTT=BaconPriceTT;
-    RecessionInfo(132,1)=icase;
-
-end
-FRObj.barval=2;
-FRObj.BaconPriceTT=BaconPriceTT;
-% Now plot this data
-titlestr='BaconPrices';
-PlotFredData(FRObj,BaconPriceTT,itype,titlestr)
-% Add this data to the Fred Obj
-FRObj.BaconPriceTT=BaconPriceTT;
-titlestr=char(titlestr);
-figstr2=strcat(titlestr,'.png');
-figstr2=char(figstr2);
-FredPngList{132,1}=figstr2;
-% Now create the data for a cumilative distribution plot
-titlestr3='BaconPrices-CumilDistribution';
-titlestr3=char(titlestr3);
-figstr3=strcat(titlestr3,'.png');
-figstr3=char(figstr3);
-PlotCumilFredData(FRObj,itype,titlestr3)
-% Now calculate the correlation between Food prices and Slice Bacon
-datacol=1;
-minCorrPts=100;
-ikind=2;
-[rho(6),~,numoverlap(6)] = CalculateCorrelation(UrbanHFTT,BaconPriceTT,ikind,minCorrPts);
-dispstr=strcat('Price Correlation Between Urban Home Food and Bacon Prices-',num2str(rho(6)));
-disp(dispstr)
-FoodCorrTable(6,:) = {126,"UrbanHFTT",StartYear1,EndYear1,132,"BaconPriceTT",1980,2025,rho(6),SG132,numoverlap(6)};
-
-%% Average Index Of Soybeans (WPU01830131)(Monthly)
-% itype=133
-eval(['cd ' fredpath(1:length(fredpath)-1)]);
-SoybeanTable = readtable(fredfile133,'Sheet','Monthly');
-[nrows133,ncols133]=size(SoybeanTable);
-clear DateNumbers
-clear dateArray
-dateArray=strings(nrows133,1);
-for n=1:nrows133
-    nowstr=string(SoybeanTable.Date(n,1));
-    dateArray(n,1)=nowstr;
-    if(n==1)
-        nowStartDate=nowstr;
-    elseif(n==nrows133)
-        nowEndDate=nowstr;
-    end
-end
-rowTimes=datetime(dateArray);
-DateNumbers=datenum(rowTimes);
-loopstr1='Process the Global Soybean Price Index';
-fprintf(fid,'\n');
-fprintf(fid,'%50s\n',loopstr1);
-loopstr2=strcat('Data is available for-',num2str(nrows133,4),'-dates-',...
-    'From-',nowStartDate,'-to-',nowEndDate');
-fprintf(fid,'%50s\n',loopstr2);
-SoybeanIndexTT=table2timetable(SoybeanTable,'RowTimes','Date');
-SoybeanIndexTT = addvars(SoybeanIndexTT,DateNumbers);
-SoybeanmeanVal=mean(SoybeanIndexTT.Index);
-SoybeanmedianVal=median(SoybeanIndexTT.Index);
-meanSoybean=zeros(nrows133,1);
-medianSoybean=zeros(nrows133,1);
-for n=1:nrows133
-    meanSoybean(n,1)=SoybeanmeanVal;
-    medianSoybean(n,1)=SoybeanmedianVal;
-end
-SoybeanIndexTT = addvars(SoybeanIndexTT,meanSoybean,medianSoybean);
-SourceFile(133,1)="SoybeanIndex.xlsx";
-Code(133,1)="WPU01830131";
-Desc(133,1)="MeanSoybeanIndex";
-Freq(133,1)="Monthly";
-StartYear(133,1)=1947;
-EndYear(133,1)=2025;
-SeasonalAdj(133,1)="No";
-BaseYear(133,1)=1982;
-NumObs(133,1)=952;
-Chap(133,1)=19;
-Section(133,1)=8;
-itype=133;
-% Calculate the Simple Stats
-Data=SoybeanIndexTT.Index;
-FRObj=FRObj.SimpleStats(Data,itype);
-% Smooth the Data
-soysmooth = smoothdata(Data);
-P0=soysmooth(1);
-PF=soysmooth(952);
-SoybeanIndexTT= addvars(SoybeanIndexTT,soysmooth);
-NYears=EndYear(133,1)-StartYear(133,1)+1;
-FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
-GrowthRateAll=FRObj.GrowthRateAll;
-SG133=100*GrowthRateAll(itype,1);
-FRObj.SG133=SG133;
-% Now pull of the Recession Probability data that matches the available
-% time points in the SoybeanIndexTT
-RecessProbTT=FRObj.RecessProbTT;
-ishowrecession=FRObj.ishowrecession;
-if(ishowrecession>0)
-    disp('start Soybean case)')
-    [SoybeanIndexTT,icase] = OverlapTimeLinesRev1(SoybeanIndexTT,RecessProbTT);
-    FRObj.SoybeanIndexTT=SoybeanIndexTT;
-    RecessionInfo(133,1)=icase;
-
-end
-FRObj.barval=100;
-FRObj.SoybeanIndexTT=SoybeanIndexTT;
-disp('Finished Soybean Case')
-% Now plot this data
-titlestr='SoybeanIndex';
-PlotFredData(FRObj,SoybeanIndexTT,itype,titlestr)
-% Add this data to the Fred Obj
-FRObj.SoybeanIndexTT=SoybeanIndexTT;
-titlestr=char(titlestr);
-figstr2=strcat(titlestr,'.png');
-figstr2=char(figstr2);
-FredPngList{133,1}=figstr2;
-% Now create the data for a cumilative distribution plot
-titlestr3='SoybeanIndex-CumilDistribution';
-titlestr3=char(titlestr3);
-figstr3=strcat(titlestr3,'.png');
-figstr3=char(figstr3);
-PlotCumilFredData(FRObj,itype,titlestr3)
-% Now calculate the correlation between Food prices and the Soybean Index
-datacol=1;
-minCorrPts=100;
-ikind=1;
-[rho(11),~,numoverlap(11)] = CalculateCorrelation(UrbanHFTT,SoybeanIndexTT,ikind,minCorrPts);
-dispstr=strcat('Price Correlation Between Urban Home Food and the Soybean Index-',num2str(rho(11)));
-disp(dispstr)
-FoodCorrTable(11,:) = {126,"UrbanHFTT",StartYear1,EndYear1,133,"SoybeanIndexTT",1952,2025,rho(11),SG133,numoverlap(11)};
-
-%% Continue with Flour Prices  (APU0000701111) (Monthly)  Chap 19-9
-loopstr='**********Start Looping through the available FRED data**********';
-fprintf(fid,'\n');
-fprintf(fid,'%50s\n',loopstr);
-eval(['cd ' fredpath(1:length(fredpath)-1)]);
-loopstr1='Process the Flour Price Data For US Cities';
-fprintf(fid,'\n');
-fprintf(fid,'%50s\n',loopstr1);
-FlourPriceTable = readtable(fredfile134,'Sheet','Monthly');
-[nrows134,ncols134]=size(FlourPriceTable);
-dateArray=strings(nrows134,1);
-for n=1:nrows134
-    nowstr=string(FlourPriceTable.Date(n,1));
-    dateArray(n,1)=nowstr;
-    if(n==1)
-        nowStartDate=nowstr;
-    elseif(n==nrows134)
-        nowEndDate=nowstr;
-    end
-end
-loopstr2=strcat('Data is available for-',num2str(nrows134,4),'-dates-',...
-    'From-',nowStartDate,'-to-',nowEndDate');
-fprintf(fid,'%50s\n',loopstr2);
-rowTimes=datetime(dateArray);
-DateNumbers=datenum(rowTimes);
-FlourPriceTT=table2timetable(FlourPriceTable,'RowTimes','Date');
-FlourPriceTT = addvars(FlourPriceTT,DateNumbers);
-meanFlourPriceVal=mean(FlourPriceTT.Price);
-medianFlourPriceVal=median(FlourPriceTT.Price);
-meanFlourPrice=zeros(nrows134,1);
-medianFlourPrice=zeros(nrows134,1);
-for n=1:nrows134
-    meanFlourPrice(n,1)=meanFlourPriceVal;
-    medianFlourPrice(n,1)=medianFlourPriceVal;
-end
-FlourPriceTT = addvars(FlourPriceTT,meanFlourPrice,medianFlourPrice);
-SourceFile(134,1)="FlourPrices.xlsx";
-Code(134,1)="APU0000701111";
-Desc(134,1)="FlourPrice-USD/lb";
-Freq(134,1)="Monthly";
-StartYear(134,1)=1980;
-EndYear(134,1)=2025;
-SeasonalAdj(134,1)="No";
-BaseYear(134,1)=1980;
-NumObs(134,1)=557;
-FRObj.Desc=Desc;
-Chap(134,1)=19;
-Section(134,1)=9;
-Commodity(134,1)=1;
-% Calculate the Simple Stats
-itype=134;
-Data=FlourPriceTT.Price;
-FRObj=FRObj.SimpleStats(Data,itype);
-% Smooth the Data
-floursmooth = smoothdata(Data);
-P0=floursmooth(1);
-PF=floursmooth(557);
-FlourPriceTT= addvars(FlourPriceTT,floursmooth);
-NYears=EndYear(134,1)-StartYear(134,1)+1;
-FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
-GrowthRateAll=FRObj.GrowthRateAll;
-SG134=100*GrowthRateAll(itype,1);
-FRObj.SG134=SG134;
-% Now pull of the Recession Probability data that matches the available
-% time points in the FlourPriceTT
-RecessProbTT=FRObj.RecessProbTT;
-ishowrecession=FRObj.ishowrecession;
-if(ishowrecession>0)
-    [FlourPriceTT,icase] = OverlapTimeLinesRev1(FlourPriceTT,RecessProbTT);
-    FRObj.FlourPriceTT=FlourPriceTT;
-    RecessionInfo(134,1)=icase;
-end
-FRObj.barval=1;
-FRObj.FlourPriceTT=FlourPriceTT;
-% Now plot this data
-titlestr='FlourPrice';
-PlotFredData(FRObj,FlourPriceTT,itype,titlestr)
-% Add this table to the FredObj
-FRObj.FlourPriceTT=FlourPriceTT;
-titlestr=char(titlestr);
-figstr2=strcat(titlestr,'.png');
-figstr2=char(figstr2);
-FredPngList{134,1}=figstr2;
-% Now create the data for a cumilative distribution plot
-titlestr3='FPrice-CumilDist';
-titlestr3=char(titlestr3);
-figstr3=strcat(titlestr3,'.png');
-figstr3=char(figstr3);
-PlotCumilFredData(FRObj,itype,titlestr3);
-% Calculate the correlation
-ikind=2;
-[rho(14),~,numoverlap(14)] = CalculateCorrelation(UrbanHFTT,FlourPriceTT,ikind,minCorrPts);
-dispstr=strcat('Price Correlation Between Urban Home Food and Flour Prices-',num2str(rho(14)));
-disp(dispstr)
-FoodCorrTable(14,:) = {126,"UrbanHFTT",StartYear1,EndYear1,134,"FlourPriceTT",1980,2025,rho(14),SG134,numoverlap(14)};
-
-%% Continue with Cooking Oil Price Index (WPU0278) (Monthly)  Chap 19-10
-loopstr='**********Start Looping through the available FRED data**********';
-fprintf(fid,'\n');
-fprintf(fid,'%50s\n',loopstr);
-eval(['cd ' fredpath(1:length(fredpath)-1)]);
-loopstr1='Process the Cooking Oil Price Index';
-fprintf(fid,'\n');
-fprintf(fid,'%50s\n',loopstr1);
-CookingOilTable = readtable(fredfile135,'Sheet','Monthly');
-[nrows135,ncols135]=size(CookingOilTable);
-dateArray=strings(nrows135,1);
-for n=1:nrows135
-    nowstr=string(CookingOilTable.Date(n,1));
-    dateArray(n,1)=nowstr;
-    if(n==1)
-        nowStartDate=nowstr;
-    elseif(n==nrows135)
-        nowEndDate=nowstr;
-    end
-end
-loopstr2=strcat('Data is available for-',num2str(nrows135,4),'-dates-',...
-    'From-',nowStartDate,'-to-',nowEndDate');
-fprintf(fid,'%50s\n',loopstr2);
-rowTimes=datetime(dateArray);
-DateNumbers=datenum(rowTimes);
-CookingOilTT=table2timetable(CookingOilTable,'RowTimes','Date');
-CookingOilTT = addvars(CookingOilTT,DateNumbers);
-meanCookingOilIndexVal=mean(CookingOilTT.Index);
-medianCookingOilIndexVal=median(CookingOilTT.Index);
-meanCookingOilIndex=zeros(nrows135,1);
-medianCookingOilIndex=zeros(nrows135,1);
-for n=1:nrows135
-    meanCookingOilIndex(n,1)=meanCookingOilIndexVal;
-    medianCookingOilIndex(n,1)=medianCookingOilIndexVal;
-end
-CookingOilTT = addvars(CookingOilTT,meanCookingOilIndex,medianCookingOilIndex);
-SourceFile(135,1)="CookingOilPriceIndex.xlsx";
-Code(135,1)="WPU0278";
-Desc(135,1)="CookingOilPriceIndex";
-Freq(135,1)="Monthly";
-StartYear(135,1)=1947;
-EndYear(135,1)=2025;
-SeasonalAdj(135,1)="No";
-BaseYear(135,1)=1982;
-NumObs(135,1)=953;
-FRObj.Desc=Desc;
-Chap(135,1)=19;
-Section(135,1)=10;
-Commodity(135,1)=1;
-% Calculate the Simple Stats
-itype=135;
-Data=CookingOilTT.Index;
-FRObj=FRObj.SimpleStats(Data,itype);
-% Smooth the Data
-coilsmooth = smoothdata(Data);
-P0=coilsmooth(1);
-PF=coilsmooth(953);
-CookingOilTT= addvars(CookingOilTT,coilsmooth);
-NYears=EndYear(135,1)-StartYear(135,1)+1;
-FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
-GrowthRateAll=FRObj.GrowthRateAll;
-SG135=100*GrowthRateAll(itype,1);
-FRObj.SG135=SG135;
-% Now pull of the Recession Probability data that matches the available
-% time points in the FlourPriceTT
-RecessProbTT=FRObj.RecessProbTT;
-ishowrecession=FRObj.ishowrecession;
-if(ishowrecession>0)
-    [CookingOilTT,icase] = OverlapTimeLinesRev1(CookingOilTT,RecessProbTT);
-    FRObj.CookingOilTT=CookingOilTT;
-    RecessionInfo(135,1)=icase;
-end
-FRObj.barval=100;
-FRObj.CookingOilTT=CookingOilTT;
-% Now plot this data
-titlestr='CookingOilIndex';
-PlotFredData(FRObj,CookingOilTT,itype,titlestr)
-% Add this table to the FredObj
-FRObj.CookingOilTT=CookingOilTT;
-titlestr=char(titlestr);
-figstr2=strcat(titlestr,'.png');
-figstr2=char(figstr2);
-FredPngList{135,1}=figstr2;
-% Now create the data for a cumilative distribution plot
-titlestr3='CookingOilIndex-CumilDist';
-titlestr3=char(titlestr3);
-figstr3=strcat(titlestr3,'.png');
-figstr3=char(figstr3);
-PlotCumilFredData(FRObj,itype,titlestr3);
-% Calculate the correlation
-ikind=1;
-[rho(15),~,numoverlap(15)] = CalculateCorrelation(UrbanHFTT,CookingOilTT,ikind,minCorrPts);
-dispstr=strcat('Price Correlation Between Urban Home Food and Cooking Oil Index-',num2str(rho(15)));
-disp(dispstr)
-FoodCorrTable(15,:) = {126,"UrbanHFTT",StartYear1,EndYear1,135,"CookingOilTT",1947,2025,rho(15),SG135,numoverlap(15)};
-
-%% Continue with Whole Chicken Prices (APU0000706111) (Monthly)  Chap 19-11
-loopstr='**********Start Looping through the available FRED data**********';
-fprintf(fid,'\n');
-fprintf(fid,'%50s\n',loopstr);
-eval(['cd ' fredpath(1:length(fredpath)-1)]);
-loopstr1='Process the Whole Chicken Prices';
-fprintf(fid,'\n');
-fprintf(fid,'%50s\n',loopstr1);
-WholeChickenTable = readtable(fredfile136,'Sheet','Monthly');
-[nrows136,ncols136]=size(WholeChickenTable);
-dateArray=strings(nrows136,1);
-for n=1:nrows136
-    nowstr=string(WholeChickenTable.Date(n,1));
-    dateArray(n,1)=nowstr;
-    if(n==1)
-        nowStartDate=nowstr;
-    elseif(n==nrows136)
-        nowEndDate=nowstr;
-    end
-end
-loopstr2=strcat('Data is available for-',num2str(nrows136,4),'-dates-',...
-    'From-',nowStartDate,'-to-',nowEndDate');
-fprintf(fid,'%50s\n',loopstr2);
-rowTimes=datetime(dateArray);
-DateNumbers=datenum(rowTimes);
-WholeChickenTT=table2timetable(WholeChickenTable,'RowTimes','Date');
-WholeChickenTT = addvars(WholeChickenTT,DateNumbers);
-meanWChickenVal=mean(WholeChickenTT.Price);
-medianWChickenVal=median(WholeChickenTT.Price);
-meanWChickenPrice=zeros(nrows136,1);
-medianWChickenPrice=zeros(nrows136,1);
-for n=1:nrows136
-    meanWChickenPrice(n,1)=meanWChickenVal;
-    medianWChickenPrice(n,1)=medianWChickenVal;
-end
-WholeChickenTT = addvars(WholeChickenTT,meanWChickenPrice,medianWChickenPrice);
-SourceFile(136,1)="WholeChickenPrices.xlsx";
-Code(136,1)="APU0000706111";
-Desc(136,1)="WholeChickenPrices";
-Freq(136,1)="Monthly";
-StartYear(136,1)=1980;
-EndYear(136,1)=2025;
-SeasonalAdj(136,1)="No";
-BaseYear(136,1)=1980;
-NumObs(136,1)=557;
-FRObj.Desc=Desc;
-Chap(136,1)=19;
-Section(136,1)=11;
-Commodity(136,1)=1;
-% Calculate the Simple Stats
-itype=136;
-Data=WholeChickenTT.Price;
-FRObj=FRObj.SimpleStats(Data,itype);
-% Smooth the Data
-chicksmooth = smoothdata(Data);
-P0=chicksmooth(1);
-PF=chicksmooth(557);
-WholeChickenTT= addvars(WholeChickenTT,chicksmooth);
-NYears=EndYear(136,1)-StartYear(136,1)+1;
-FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
-GrowthRateAll=FRObj.GrowthRateAll;
-SG136=100*GrowthRateAll(itype,1);
-FRObj.SG136=SG136;
-% Now pull of the Recession Probability data that matches the available
-% time points in the WholeChickenTT
-RecessProbTT=FRObj.RecessProbTT;
-ishowrecession=FRObj.ishowrecession;
-if(ishowrecession>0)
-    [WholeChickenTT,icase] = OverlapTimeLinesRev1(WholeChickenTT,RecessProbTT);
-    FRObj.WholeChickenTT=WholeChickenTT;
-    RecessionInfo(136,1)=icase;
-end
-FRObj.barval=1;
-FRObj.WholeChickenTT=WholeChickenTT;
-% Now plot this data
-titlestr='WholeChickenPrices';
-PlotFredData(FRObj,WholeChickenTT,itype,titlestr)
-% Add this table to the FredObj
-FRObj.WholeChickenTT=WholeChickenTT;
-titlestr=char(titlestr);
-figstr2=strcat(titlestr,'.png');
-figstr2=char(figstr2);
-FredPngList{136,1}=figstr2;
-% Now create the data for a cumilative distribution plot
-titlestr3='WholeChickenPrices-CumilDist';
-titlestr3=char(titlestr3);
-figstr3=strcat(titlestr3,'.png');
-figstr3=char(figstr3);
-PlotCumilFredData(FRObj,itype,titlestr3);
-% Calculate the correlation
-ikind=2;
-[rho(16),~,numoverlap(16)] = CalculateCorrelation(UrbanHFTT,WholeChickenTT,ikind,minCorrPts);
-dispstr=strcat('Price Correlation Between Urban Home Food and Whole Chicken Prices-',num2str(rho(16)));
-disp(dispstr)
-FoodCorrTable(16,:) = {126,"UrbanHFTT",StartYear1,EndYear1,135,"WholeChickenTT",1980,2025,rho(16),SG136,numoverlap(16)};
-
-%% Continue with PPI Farm Products (WPU01) (Monthly)  Chap 19-12
-loopstr='**********Start Looping through the available FRED data**********';
-fprintf(fid,'\n');
-fprintf(fid,'%50s\n',loopstr);
-eval(['cd ' fredpath(1:length(fredpath)-1)]);
-loopstr1='Process the PPI Farm Index';
-fprintf(fid,'\n');
-fprintf(fid,'%50s\n',loopstr1);
-FarmProdcutsTable = readtable(fredfile137,'Sheet','Monthly');
-[nrows137,ncols137]=size(FarmProdcutsTable);
-dateArray=strings(nrows137,1);
-for n=1:nrows137
-    nowstr=string(FarmProdcutsTable.Date(n,1));
-    dateArray(n,1)=nowstr;
-    if(n==1)
-        nowStartDate=nowstr;
-    elseif(n==nrows137)
-        nowEndDate=nowstr;
-    end
-end
-loopstr2=strcat('Data is available for-',num2str(nrows137,4),'-dates-',...
-    'From-',nowStartDate,'-to-',nowEndDate');
-fprintf(fid,'%50s\n',loopstr2);
-rowTimes=datetime(dateArray);
-DateNumbers=datenum(rowTimes);
-FarmProductsTT=table2timetable(FarmProdcutsTable,'RowTimes','Date');
-FarmProductsTT = addvars(FarmProductsTT,DateNumbers);
-meanFPVal=mean(FarmProductsTT.Index);
-medianFPVal=median(FarmProductsTT.Index);
-meanFarmProducts=zeros(nrows137,1);
-medianFarmProducts=zeros(nrows137,1);
-for n=1:nrows137
-    meanFarmProducts(n,1)=meanFPVal;
-    medianFarmProducts(n,1)=medianFPVal;
-end
-FarmProductsTT = addvars(FarmProductsTT,meanFarmProducts,medianFarmProducts);
-SourceFile(137,1)="PPIFarmProducts.xlsx";
-Code(137,1)="WPU01";
-Desc(137,1)="PPIFarmProducts";
-Freq(137,1)="Monthly";
-StartYear(137,1)=1913;
-EndYear(137,1)=2025;
-SeasonalAdj(137,1)="No";
-BaseYear(137,1)=1982;
-NumObs(137,1)=1361;
-FRObj.Desc=Desc;
-Chap(137,1)=19;
-Section(137,1)=12;
-Commodity(137,1)=1;
-% Calculate the Simple Stats
-itype=137;
-Data=FarmProductsTT.Index;
-FRObj=FRObj.SimpleStats(Data,itype);
-% Smooth the Data
-farmsmooth = smoothdata(Data);
-P0=farmsmooth(1);
-PF=farmsmooth(1361);
-FarmProductsTT= addvars(FarmProductsTT,farmsmooth);
-NYears=EndYear(137,1)-StartYear(137,1)+1;
-FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
-GrowthRateAll=FRObj.GrowthRateAll;
-SG137=100*GrowthRateAll(itype,1);
-FRObj.SG137=SG137;
-% Now pull of the Recession Probability data that matches the available
-% time points in the WholeChickenTT
-RecessProbTT=FRObj.RecessProbTT;
-ishowrecession=FRObj.ishowrecession;
-if(ishowrecession>0)
-    [FarmProductsTT,icase] = OverlapTimeLinesRev1(FarmProductsTT,RecessProbTT);
-    FRObj.FarmProductsTT=FarmProductsTT;
-    RecessionInfo(137,1)=icase;
-end
-FRObj.barval=80;
-FRObj.FarmProductsTT=FarmProductsTT;
-% Now plot this data
-titlestr='FarmProductsIndex';
-PlotFredData(FRObj,FarmProductsTT,itype,titlestr)
-% Add this table to the FredObj
-FRObj.FarmProductsTT=FarmProductsTT;
-titlestr=char(titlestr);
-figstr2=strcat(titlestr,'.png');
-figstr2=char(figstr2);
-FredPngList{137,1}=figstr2;
-% Now create the data for a cumilative distribution plot
-titlestr3='FarmProductsIndex-CumilDist';
-titlestr3=char(titlestr3);
-figstr3=strcat(titlestr3,'.png');
-figstr3=char(figstr3);
-PlotCumilFredData(FRObj,itype,titlestr3);
-% Calculate the correlation
-ikind=1;
-[rho(17),~,numoverlap(17)] = CalculateCorrelation(UrbanHFTT,FarmProductsTT,ikind,minCorrPts);
-dispstr=strcat('Price Correlation Between Urban Home Food and Farm Products Index-',num2str(rho(17)));
-disp(dispstr)
-FoodCorrTable(17,:) = {126,"UrbanHFTT",StartYear1,EndYear1,137,"FarmProductsTT",1913,2025,rho(17),SG137,numoverlap(17)};
-
-%% Continue with PPI Slaughter Cattle (WPU0131) (Monthly)  Chap 19-13
-loopstr='**********Start Looping through the available FRED data**********';
-fprintf(fid,'\n');
-fprintf(fid,'%50s\n',loopstr);
-eval(['cd ' fredpath(1:length(fredpath)-1)]);
-loopstr1='Process the PPI Cattle Products';
-fprintf(fid,'\n');
-fprintf(fid,'%50s\n',loopstr1);
-CattleTable = readtable(fredfile138,'Sheet','Monthly');
-[nrows138,ncols138]=size(CattleTable);
-dateArray=strings(nrows138,1);
-for n=1:nrows138
-    nowstr=string(CattleTable.Date(n,1));
-    dateArray(n,1)=nowstr;
-    if(n==1)
-        nowStartDate=nowstr;
-    elseif(n==nrows138)
-        nowEndDate=nowstr;
-    end
-end
-loopstr2=strcat('Data is available for-',num2str(nrows138,4),'-dates-',...
-    'From-',nowStartDate,'-to-',nowEndDate');
-fprintf(fid,'%50s\n',loopstr2);
-rowTimes=datetime(dateArray);
-DateNumbers=datenum(rowTimes);
-CattleTT=table2timetable(CattleTable,'RowTimes','Date');
-CattleTT = addvars(CattleTT,DateNumbers);
-meanCattleVal=mean(CattleTT.Index);
-medianCattleVal=median(CattleTT.Index);
-meanCattle=zeros(nrows138,1);
-medianCattle=zeros(nrows138,1);
-for n=1:nrows138
-    meanCattle(n,1)=meanCattleVal;
-    medianCattle(n,1)=medianCattleVal;
-end
-CattleTT = addvars(CattleTT,meanCattle,medianCattle);
-SourceFile(138,1)="PPICattle.xlsx";
-Code(138,1)="WPU0131";
-Desc(138,1)="PPISlaughterCattle";
-Freq(138,1)="Monthly";
-StartYear(138,1)=1947;
-EndYear(138,1)=2025;
-SeasonalAdj(138,1)="No";
-BaseYear(138,1)=1982;
-NumObs(138,1)=953;
-FRObj.Desc=Desc;
-Chap(138,1)=19;
-Section(138,1)=13;
-Commodity(138,1)=1;
-% Calculate the Simple Stats
-itype=138;
-Data=CattleTT.Index;
-FRObj=FRObj.SimpleStats(Data,itype);
-% Smooth the Data
-cattlesmooth = smoothdata(Data);
-P0=cattlesmooth(1);
-PF=cattlesmooth(953);
-CattleTT= addvars(CattleTT,cattlesmooth);
-NYears=EndYear(138,1)-StartYear(138,1)+1;
-FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
-GrowthRateAll=FRObj.GrowthRateAll;
-SG138=100*GrowthRateAll(itype,1);
-FRObj.SG138=SG138;
-% Now pull of the Recession Probability data that matches the available
-% time points in the CattleTT
-RecessProbTT=FRObj.RecessProbTT;
-ishowrecession=FRObj.ishowrecession;
-if(ishowrecession>0)
-    [CattleTT,icase] = OverlapTimeLinesRev1(CattleTT,RecessProbTT);
-    FRObj.CattleTT=CattleTT;
-    RecessionInfo(138,1)=icase;
-end
-FRObj.barval=120;
-FRObj.CattleTT=CattleTT;
-% Now plot this data
-titlestr='CattleIndex';
-PlotFredData(FRObj,CattleTT,itype,titlestr)
-% Add this table to the FredObj
-FRObj.CattleTT=CattleTT;
-titlestr=char(titlestr);
-figstr2=strcat(titlestr,'.png');
-figstr2=char(figstr2);
-FredPngList{138,1}=figstr2;
-% Now create the data for a cumilative distribution plot
-titlestr3='CattleIndex-CumilDist';
-titlestr3=char(titlestr3);
-figstr3=strcat(titlestr3,'.png');
-figstr3=char(figstr3);
-PlotCumilFredData(FRObj,itype,titlestr3);
-% Calculate the correlation
-ikind=1;
-[rho(18),~,numoverlap(18)] = CalculateCorrelation(UrbanHFTT,CattleTT,ikind,minCorrPts);
-dispstr=strcat('Price Correlation Between Urban Home Food and Cattle Index-',num2str(rho(18)));
-disp(dispstr)
-FoodCorrTable(18,:) = {126,"UrbanHFTT",StartYear1,EndYear1,138,"CattleTT",1947,2025,rho(18),SG138,numoverlap(18)};
-
-%% Continue with PPI Tomatoes (WPU01130217) (Monthly)  Chap 19-14
-loopstr='**********Start Looping through the available FRED data**********';
-fprintf(fid,'\n');
-fprintf(fid,'%50s\n',loopstr);
-eval(['cd ' fredpath(1:length(fredpath)-1)]);
-loopstr1='Process the PPI Tomatoes';
-fprintf(fid,'\n');
-fprintf(fid,'%50s\n',loopstr1);
-TomatoesTable = readtable(fredfile139,'Sheet','Monthly');
-[nrows139,ncols139]=size(TomatoesTable);
-dateArray=strings(nrows139,1);
-for n=1:nrows139
-    nowstr=string(TomatoesTable.Date(n,1));
-    dateArray(n,1)=nowstr;
-    if(n==1)
-        nowStartDate=nowstr;
-    elseif(n==nrows139)
-        nowEndDate=nowstr;
-    end
-end
-loopstr2=strcat('Data is available for-',num2str(nrows139,4),'-dates-',...
-    'From-',nowStartDate,'-to-',nowEndDate');
-fprintf(fid,'%50s\n',loopstr2);
-rowTimes=datetime(dateArray);
-DateNumbers=datenum(rowTimes);
-TomatoesTT=table2timetable(TomatoesTable,'RowTimes','Date');
-TomatoesTT = addvars(TomatoesTT,DateNumbers);
-meanTomatoesVal=mean(TomatoesTT.Index);
-medianTomatoesVal=median(TomatoesTT.Index);
-meanTomatoes=zeros(nrows139,1);
-medianTomatoes=zeros(nrows139,1);
-for n=1:nrows139
-    meanTomatoes(n,1)=meanTomatoesVal;
-    medianTomatoes(n,1)=medianTomatoesVal;
-end
-TomatoesTT = addvars(TomatoesTT,meanTomatoes,medianTomatoes);
-SourceFile(139,1)="PPITomatoes.xlsx";
-Code(139,1)="WPU01130217";
-Desc(139,1)="PPITomatoes";
-Freq(139,1)="Monthly";
-StartYear(139,1)=1947;
-EndYear(139,1)=2025;
-SeasonalAdj(139,1)="No";
-BaseYear(139,1)=1982;
-NumObs(139,1)=951;
-FRObj.Desc=Desc;
-Chap(139,1)=19;
-Section(139,1)=14;
-Commodity(139,1)=1;
-% Calculate the Simple Stats
-itype=139;
-Data=TomatoesTT.Index;
-FRObj=FRObj.SimpleStats(Data,itype);
-% Smooth the Data
-tomatoessmooth = smoothdata(Data);
-P0=tomatoessmooth(1);
-PF=tomatoessmooth(951);
-TomatoesTT= addvars(TomatoesTT,tomatoessmooth);
-NYears=EndYear(139,1)-StartYear(139,1)+1;
-FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
-GrowthRateAll=FRObj.GrowthRateAll;
-SG139=100*GrowthRateAll(itype,1);
-FRObj.SG139=SG139;
-% Now pull of the Recession Probability data that matches the available
-% time points in the CattleTT
-RecessProbTT=FRObj.RecessProbTT;
-ishowrecession=FRObj.ishowrecession;
-if(ishowrecession>0)
-    [TomatoesTT,icase] = OverlapTimeLinesRev1(TomatoesTT,RecessProbTT);
-    FRObj.TomatoesTT=TomatoesTT;
-    RecessionInfo(139,1)=icase;
-end
-FRObj.barval=200;
-FRObj.TomatoesTT=TomatoesTT;
-% Now plot this data
-titlestr='TomatoesIndex';
-PlotFredData(FRObj,TomatoesTT,itype,titlestr)
-% Add this table to the FredObj
-FRObj.TomatoesTT=TomatoesTT;
-titlestr=char(titlestr);
-figstr2=strcat(titlestr,'.png');
-figstr2=char(figstr2);
-FredPngList{139,1}=figstr2;
-% Now create the data for a cumilative distribution plot
-titlestr3='TomatoesIndex-CumilDist';
-titlestr3=char(titlestr3);
-figstr3=strcat(titlestr3,'.png');
-figstr3=char(figstr3);
-PlotCumilFredData(FRObj,itype,titlestr3);
-% Calculate the correlation
-ikind=1;
-[rho(19),~,numoverlap(19)] = CalculateCorrelation(UrbanHFTT,TomatoesTT,ikind,minCorrPts);
-dispstr=strcat('Price Correlation Between Urban Home Food and Tomatoes Index-',num2str(rho(19)));
-disp(dispstr)
-FoodCorrTable(19,:) = {126,"UrbanHFTT",StartYear1,EndYear1,139,"TomatoesTT",1947,2025,rho(19),SG139,numoverlap(19)};
-
-%% Continue with PPI Corn (WPU01220205) (Monthly)  Chap 19-15
-loopstr='**********Start Looping through the available FRED data**********';
-fprintf(fid,'\n');
-fprintf(fid,'%50s\n',loopstr);
-eval(['cd ' fredpath(1:length(fredpath)-1)]);
-loopstr1='Process the PPI Corn';
-fprintf(fid,'\n');
-fprintf(fid,'%50s\n',loopstr1);
-CornTable = readtable(fredfile140,'Sheet','Monthly');
-[nrows140,ncols140]=size(CornTable);
-dateArray=strings(nrows140,1);
-for n=1:nrows140
-    nowstr=string(CornTable.Date(n,1));
-    dateArray(n,1)=nowstr;
-    if(n==1)
-        nowStartDate=nowstr;
-    elseif(n==nrows140)
-        nowEndDate=nowstr;
-    end
-end
-loopstr2=strcat('Data is available for-',num2str(nrows140,4),'-dates-',...
-    'From-',nowStartDate,'-to-',nowEndDate');
-fprintf(fid,'%50s\n',loopstr2);
-rowTimes=datetime(dateArray);
-DateNumbers=datenum(rowTimes);
-CornTT=table2timetable(CornTable,'RowTimes','Date');
-CornTT = addvars(CornTT,DateNumbers);
-meanCornVal=mean(CornTT.Index);
-medianCornVal=median(CornTT.Index);
-meanCorn=zeros(nrows140,1);
-medianCorn=zeros(nrows140,1);
-for n=1:nrows140
-    meanCorn(n,1)=meanCornVal;
-    medianCorn(n,1)=medianCornVal;
-end
-CornTT = addvars(CornTT,meanCorn,medianCorn);
-SourceFile(140,1)="PPICorn.xlsx";
-Code(140,1)="WPU01220205";
-Desc(140,1)="PPICorn";
-Freq(140,1)="Monthly";
-StartYear(140,1)=1947;
-EndYear(140,1)=2025;
-SeasonalAdj(140,1)="No";
-BaseYear(140,1)=1982;
-NumObs(140,1)=953;
-FRObj.Desc=Desc;
-Chap(140,1)=19;
-Section(140,1)=15;
-Commodity(140,1)=1;
-% Calculate the Simple Stats
-itype=140;
-Data=CornTT.Index;
-FRObj=FRObj.SimpleStats(Data,itype);
-% Smooth the Data
-cornsmooth = smoothdata(Data);
-P0=cornsmooth(1);
-PF=cornsmooth(951);
-CornTT= addvars(CornTT,cornsmooth);
-NYears=EndYear(140,1)-StartYear(140,1)+1;
-FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
-GrowthRateAll=FRObj.GrowthRateAll;
-SG140=100*GrowthRateAll(itype,1);
-FRObj.SG140=SG140;
-% Now pull of the Recession Probability data that matches the available
-% time points in the CattleTT
-RecessProbTT=FRObj.RecessProbTT;
-ishowrecession=FRObj.ishowrecession;
-if(ishowrecession>0)
-    [CornTT,icase] = OverlapTimeLinesRev1(CornTT,RecessProbTT);
-    FRObj.CornTT=CornTT;
-    RecessionInfo(140,1)=icase;
-end
-FRObj.barval=100;
-FRObj.CornTT=CornTT;
-% Now plot this data
-titlestr='CornIndex';
-PlotFredData(FRObj,CornTT,itype,titlestr)
-% Add this table to the FredObj
-FRObj.CornTT=CornTT;
-titlestr=char(titlestr);
-figstr2=strcat(titlestr,'.png');
-figstr2=char(figstr2);
-FredPngList{140,1}=figstr2;
-% Now create the data for a cumilative distribution plot
-titlestr3='CornIndex-CumilDist';
-titlestr3=char(titlestr3);
-figstr3=strcat(titlestr3,'.png');
-figstr3=char(figstr3);
-PlotCumilFredData(FRObj,itype,titlestr3);
-% Calculate the correlation
-ikind=1;
-[rho(20),~,numoverlap(20)] = CalculateCorrelation(UrbanHFTT,CornTT,ikind,minCorrPts);
-dispstr=strcat('Price Correlation Between Urban Home Food and Corn Index-',num2str(rho(20)));
-disp(dispstr)
-FoodCorrTable(20,:) = {126,"UrbanHFTT",StartYear1,EndYear1,140,"CornTT",1947,2025,rho(20),SG140,numoverlap(20)};
-
-%% Continue with PPI Raw Milk (WPU01610102) (Monthly)  Chap 19-16
-loopstr='**********Start Looping through the available FRED data**********';
-fprintf(fid,'\n');
-fprintf(fid,'%50s\n',loopstr);
-eval(['cd ' fredpath(1:length(fredpath)-1)]);
-loopstr1='Process the PPI Raw Milk';
-fprintf(fid,'\n');
-fprintf(fid,'%50s\n',loopstr1);
-RawMilkTable = readtable(fredfile141,'Sheet','Monthly');
-[nrows141,ncols141]=size(RawMilkTable);
-dateArray=strings(nrows141,1);
-for n=1:nrows141
-    nowstr=string(RawMilkTable.Date(n,1));
-    dateArray(n,1)=nowstr;
-    if(n==1)
-        nowStartDate=nowstr;
-    elseif(n==nrows141)
-        nowEndDate=nowstr;
-    end
-end
-loopstr2=strcat('Data is available for-',num2str(nrows141,4),'-dates-',...
-    'From-',nowStartDate,'-to-',nowEndDate');
-fprintf(fid,'%50s\n',loopstr2);
-rowTimes=datetime(dateArray);
-DateNumbers=datenum(rowTimes);
-RawMilkTT=table2timetable(RawMilkTable,'RowTimes','Date');
-RawMilkTT = addvars(RawMilkTT,DateNumbers);
-meanRawMilkVal=mean(RawMilkTT.Index);
-medianRawMilkVal=median(RawMilkTT.Index);
-meanRawMilk=zeros(nrows141,1);
-medianRawMilk=zeros(nrows141,1);
-for n=1:nrows141
-    meanRawMilk(n,1)=meanRawMilkVal;
-    medianRawMilk(n,1)=medianRawMilkVal;
-end
-RawMilkTT = addvars(RawMilkTT,meanRawMilk,medianRawMilk);
-SourceFile(141,1)="PPIRawMilk.xlsx";
-Code(141,1)="WPU01610102";
-Desc(141,1)="PPIRawMilk";
-Freq(141,1)="Monthly";
-StartYear(141,1)=1973;
-EndYear(141,1)=2025;
-SeasonalAdj(141,1)="No";
-BaseYear(141,1)=1982;
-NumObs(141,1)=630;
-FRObj.Desc=Desc;
-Chap(141,1)=19;
-Section(141,1)=16;
-Commodity(141,1)=1;
-% Calculate the Simple Stats
-itype=141;
-Data=RawMilkTT.Index;
-FRObj=FRObj.SimpleStats(Data,itype);
-% Smooth the Data
-milksmooth = smoothdata(Data);
-P0=milksmooth(1);
-PF=milksmooth(630);
-RawMilkTT= addvars(RawMilkTT,milksmooth);
-NYears=EndYear(141,1)-StartYear(141,1)+1;
-FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
-GrowthRateAll=FRObj.GrowthRateAll;
-SG141=100*GrowthRateAll(itype,1);
-FRObj.SG141=SG141;
-% Now pull of the Recession Probability data that matches the available
-% time points in the RawMilkTT
-RecessProbTT=FRObj.RecessProbTT;
-ishowrecession=FRObj.ishowrecession;
-if(ishowrecession>0)
-     [RawMilkTT,icase] = OverlapTimeLinesRev1(RawMilkTT,RecessProbTT);
-     FRObj.RawMilkTT=RawMilkTT;
-     RecessionInfo(141,1)=icase;
-end
-FRObj.barval=50;
-FRObj.RawMilkTT=RawMilkTT;
-% Now plot this data
-titlestr='MilkIndex';
-PlotFredData(FRObj,RawMilkTT,itype,titlestr)
-% Add this table to the FredObj
-FRObj.RawMilkTT=RawMilkTT;
-titlestr=char(titlestr);
-figstr2=strcat(titlestr,'.png');
-figstr2=char(figstr2);
-FredPngList{141,1}=figstr2;
-% Now create the data for a cumilative distribution plot
-titlestr3='MilkIndex-CumilDist';
-titlestr3=char(titlestr3);
-figstr3=strcat(titlestr3,'.png');
-figstr3=char(figstr3);
-PlotCumilFredData(FRObj,itype,titlestr3);
-% Calculate the correlation
-ikind=1;
-[rho(21),~,numoverlap(21)] = CalculateCorrelation(UrbanHFTT,RawMilkTT,ikind,minCorrPts);
-dispstr=strcat('Price Correlation Between Urban Home Food and Raw Milk Index-',num2str(rho(21)));
-disp(dispstr)
-FoodCorrTable(21,:) = {126,"UrbanHFTT",StartYear1,EndYear1,141,"RawMilkTT",1973,2025,rho(21),SG141,numoverlap(21)};
-
-%% Continue with PPI Fruits and Mellons Vegetables and Nuts (WPU011) (Monthly)  Chap 19-17
-loopstr='**********Start Looping through the available FRED data**********';
-fprintf(fid,'\n');
-fprintf(fid,'%50s\n',loopstr);
-eval(['cd ' fredpath(1:length(fredpath)-1)]);
-loopstr1='Process the PPI Fruits';
-fprintf(fid,'\n');
-fprintf(fid,'%50s\n',loopstr1);
-FruitsTable = readtable(fredfile142,'Sheet','Monthly');
-[nrows142,ncols142]=size(FruitsTable);
-dateArray=strings(nrows142,1);
-for n=1:nrows142
-    nowstr=string(FruitsTable.Date(n,1));
-    dateArray(n,1)=nowstr;
-    if(n==1)
-        nowStartDate=nowstr;
-    elseif(n==nrows142)
-        nowEndDate=nowstr;
-    end
-end
-loopstr2=strcat('Data is available for-',num2str(nrows142,4),'-dates-',...
-    'From-',nowStartDate,'-to-',nowEndDate');
-fprintf(fid,'%50s\n',loopstr2);
-rowTimes=datetime(dateArray);
-DateNumbers=datenum(rowTimes);
-PCIFruitsTT=table2timetable(FruitsTable,'RowTimes','Date');
-PCIFruitsTT = addvars(PCIFruitsTT,DateNumbers);
-meanFruitsVal=mean(PCIFruitsTT.Index);
-medianFruitsVal=median(PCIFruitsTT.Index);
-meanFruits=zeros(nrows142,1);
-medianFruits=zeros(nrows142,1);
-for n=1:nrows142
-    meanFruits(n,1)=meanFruitsVal;
-    medianFruits(n,1)=medianFruitsVal;
-end
-PCIFruitsTT = addvars(PCIFruitsTT,meanFruits,medianFruits);
-SourceFile(142,1)="PPIFruits.xlsx";
-Code(142,1)="WPU011";
-Desc(142,1)="PPIFruits&Vegetables";
-Freq(142,1)="Monthly";
-StartYear(142,1)=1926;
-EndYear(142,1)=2025;
-SeasonalAdj(142,1)="No";
-BaseYear(142,1)=1982;
-NumObs(142,1)=1205;
-FRObj.Desc=Desc;
-Chap(142,1)=19;
-Section(142,1)=17;
-Commodity(142,1)=1;
-% Calculate the Simple Stats
-itype=142;
-Data=PCIFruitsTT.Index;
-FRObj=FRObj.SimpleStats(Data,itype);
-% Smooth the Data
-fruitsmooth = smoothdata(Data);
-P0=fruitsmooth(1);
-PF=fruitsmooth(1205);
-PCIFruitsTT= addvars(PCIFruitsTT,fruitsmooth);
-NYears=EndYear(142,1)-StartYear(142,1)+1;
-FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
-GrowthRateAll=FRObj.GrowthRateAll;
-SG142=100*GrowthRateAll(itype,1);
-FRObj.SG142=SG142;
-% Now pull of the Recession Probability data that matches the available
-% time points in the PCIFruitsTT
-RecessProbTT=FRObj.RecessProbTT;
-ishowrecession=FRObj.ishowrecession;
-if(ishowrecession>0)
-     [PCIFruitsTT,icase] = OverlapTimeLinesRev1(PCIFruitsTT,RecessProbTT);
-     FRObj.PCIFruitsTT=PCIFruitsTT;   
-     RecessionInfo(142,1)=icase;
-end
-FRObj.barval=100;
-FRObj.PCIFruitsTT=PCIFruitsTT;
-% Now plot this data
-titlestr='FruitsIndex';
-PlotFredData(FRObj,PCIFruitsTT,itype,titlestr)
-% Add this table to the FredObj
-FRObj.PCIFruitsTT=PCIFruitsTT;
-titlestr=char(titlestr);
-figstr2=strcat(titlestr,'.png');
-figstr2=char(figstr2);
-FredPngList{142,1}=figstr2;
-% Now create the data for a cumilative distribution plot
-titlestr3='FruitsIndex-CumilDist';
-titlestr3=char(titlestr3);
-figstr3=strcat(titlestr3,'.png');
-figstr3=char(figstr3);
-PlotCumilFredData(FRObj,itype,titlestr3);
-% Calculate the correlation
-ikind=1;
-[rho(22),~,numoverlap(22)] = CalculateCorrelation(UrbanHFTT,PCIFruitsTT,ikind,minCorrPts);
-dispstr=strcat('Price Correlation Between Urban Home Food and Fruit And Vegatable Index-',num2str(rho(22)));
-disp(dispstr)
-FoodCorrTable(22,:) = {126,"UrbanHFTT",StartYear1,EndYear1,142,"PCIFruitsTT",1926,2025,rho(22),SG142,numoverlap(22)};
-
-%% Continue with PPI Cabbage (WPU01130211) (Monthly)  Chap 19-18
-loopstr='**********Start Looping through the available FRED data**********';
-fprintf(fid,'\n');
-fprintf(fid,'%50s\n',loopstr);
-eval(['cd ' fredpath(1:length(fredpath)-1)]);
-loopstr1='Process the PPI Cabbage';
-fprintf(fid,'\n');
-fprintf(fid,'%50s\n',loopstr1);
-CabbageTable = readtable(fredfile143,'Sheet','Monthly');
-[nrows143,ncols143]=size(CabbageTable);
-dateArray=strings(nrows143,1);
-for n=1:nrows143
-    nowstr=string(CabbageTable.Date(n,1));
-    dateArray(n,1)=nowstr;
-    if(n==1)
-        nowStartDate=nowstr;
-    elseif(n==nrows143)
-        nowEndDate=nowstr;
-    end
-end
-loopstr2=strcat('Data is available for-',num2str(nrows143,4),'-dates-',...
-    'From-',nowStartDate,'-to-',nowEndDate');
-fprintf(fid,'%50s\n',loopstr2);
-rowTimes=datetime(dateArray);
-DateNumbers=datenum(rowTimes);
-PPICabbageTT=table2timetable(CabbageTable,'RowTimes','Date');
-PPICabbageTT = addvars(PPICabbageTT,DateNumbers);
-meanCabbageVal=mean(PPICabbageTT.Index);
-medianCabbageVal=median(PPICabbageTT.Index);
-meanCabbage=zeros(nrows143,1);
-medianCabbage=zeros(nrows143,1);
-for n=1:nrows143
-    meanCabbage(n,1)=meanCabbageVal;
-    medianCabbage(n,1)=medianCabbageVal;
-end
-PPICabbageTT = addvars(PPICabbageTT,meanCabbage,medianCabbage);
-SourceFile(143,1)="PPICabbage.xlsx";
-Code(143,1)="WPU01130211";
-Desc(143,1)="PPICabbage";
-Freq(143,1)="Monthly";
-StartYear(143,1)=1947;
-EndYear(143,1)=2025;
-SeasonalAdj(143,1)="No";
-BaseYear(143,1)=1982;
-NumObs(143,1)=951;
-FRObj.Desc=Desc;
-Chap(143,1)=19;
-Section(143,1)=18;
-Commodity(143,1)=1;
-% Calculate the Simple Stats
-itype=143;
-Data=PPICabbageTT.Index;
-FRObj=FRObj.SimpleStats(Data,itype);
-% Smooth the Data
-cabbagesmooth = smoothdata(Data);
-P0=cabbagesmooth(1);
-PF=cabbagesmooth(951);
-PPICabbageTT= addvars(PPICabbageTT,cabbagesmooth);
-NYears=EndYear(143,1)-StartYear(143,1)+1;
-FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
-GrowthRateAll=FRObj.GrowthRateAll;
-SG143=100*GrowthRateAll(itype,1);
-FRObj.SG143=SG143;
-% Now pull of the Recession Probability data that matches the available
-% time points in the PPICabageTT
-RecessProbTT=FRObj.RecessProbTT;
-ishowrecession=FRObj.ishowrecession;
-if(ishowrecession>0)% Plot is missing 
-     [PPICabbageTT,icase] = OverlapTimeLinesRev1(PPICabbageTT,RecessProbTT);
-     FRObj.PPICabbageTT=PPICabbageTT;
-     RecessionInfo(143,1)=icase;
-end
-FRObj.barval=200;
-FRObj.PPICabbageTT=PPICabbageTT;
-% Now plot this data
-titlestr='CabbageIndex';
-PlotFredData(FRObj,PPICabbageTT,itype,titlestr)
-% Add this table to the FredObj
-FRObj.PPICabbageTT=PPICabbageTT;
-titlestr=char(titlestr);
-figstr2=strcat(titlestr,'.png');
-figstr2=char(figstr2);
-FredPngList{143,1}=figstr2;
-% Now create the data for a cumilative distribution plot
-titlestr3='CabbageIndex-CumilDist';
-titlestr3=char(titlestr3);
-figstr3=strcat(titlestr3,'.png');
-figstr3=char(figstr3);
-PlotCumilFredData(FRObj,itype,titlestr3);
-% Calculate the correlation
-ikind=1;
-[rho(23),~,numoverlap(23)] = CalculateCorrelation(UrbanHFTT,PPICabbageTT,ikind,minCorrPts);
-dispstr=strcat('Price Correlation Between Urban Home Food and Cabbage Index-',num2str(rho(23)));
-disp(dispstr)
-FoodCorrTable(23,:) = {126,"UrbanHFTT",StartYear1,EndYear1,143,"PCICabbageTT",1947,2025,rho(23),SG143,numoverlap(23)};
-%% Continue with PPI Rice (WPU01230103) (Monthly)  Chap 19-19
-loopstr='**********Start Looping through the available FRED data**********';
-fprintf(fid,'\n');
-fprintf(fid,'%50s\n',loopstr);
-eval(['cd ' fredpath(1:length(fredpath)-1)]);
-loopstr1='Process the PPI Rice';
-fprintf(fid,'\n');
-fprintf(fid,'%50s\n',loopstr1);
-RiceTable = readtable(fredfile144,'Sheet','Monthly');
-[nrows144,ncols144]=size(RiceTable);
-dateArray=strings(nrows144,1);
-for n=1:nrows144
-    nowstr=string(RiceTable.Date(n,1));
-    dateArray(n,1)=nowstr;
-    if(n==1)
-        nowStartDate=nowstr;
-    elseif(n==nrows144)
-        nowEndDate=nowstr;
-    end
-end
-loopstr2=strcat('Data is available for-',num2str(nrows144,4),'-dates-',...
-    'From-',nowStartDate,'-to-',nowEndDate');
-fprintf(fid,'%50s\n',loopstr2);
-rowTimes=datetime(dateArray);
-DateNumbers=datenum(rowTimes);
-RiceTT=table2timetable(RiceTable,'RowTimes','Date');
-RiceTT = addvars(RiceTT,DateNumbers);
-meanRiceVal=mean(RiceTT.Index);
-medianRiceVal=median(RiceTT.Index);
-meanRice=zeros(nrows144,1);
-medianRice=zeros(nrows144,1);
-for n=1:nrows144
-    meanRice(n,1)=meanRiceVal;
-    medianRice(n,1)=medianRiceVal;
-end
-RiceTT = addvars(RiceTT,meanRice,medianRice);
-SourceFile(144,1)="PPIRice.xlsx";
-Code(144,1)="WPU01230103";
-Desc(144,1)="PPIRice";
-Freq(144,1)="Monthly";
-StartYear(144,1)=2004;
-EndYear(144,1)=2025;
-SeasonalAdj(144,1)="No";
-BaseYear(144,1)=2004;
-NumObs(144,1)=258;
-FRObj.Desc=Desc;
-Chap(144,1)=19;
-Section(144,1)=19;
-Commodity(144,1)=1;
-% Calculate the Simple Stats
-itype=144;
-Data=RiceTT.Index;
-FRObj=FRObj.SimpleStats(Data,itype);
-% Smooth the Data
-ricesmooth = smoothdata(Data);
-P0=ricesmooth(1);
-PF=ricesmooth(258);
-RiceTT= addvars(RiceTT,ricesmooth);
-NYears=EndYear(144,1)-StartYear(144,1)+1;
-FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
-GrowthRateAll=FRObj.GrowthRateAll;
-SG144=100*GrowthRateAll(itype,1);
-FRObj.SG144=SG144;
-RecessionInfo(144,1)=icase;
-% Now pull of the Recession Probability data that matches the available
-% time points in the RiceTT
-RecessProbTT=FRObj.RecessProbTT;
-ishowrecession=FRObj.ishowrecession;
-if(ishowrecession>0)% Plot is missing 
-     [RiceTT,icase] = OverlapTimeLinesRev1(RiceTT,RecessProbTT);
-     FRObj.RiceTT=RiceTT;
-end
-FRObj.barval=100;
-FRObj.RiceTT=RiceTT;
-% Now plot this data
-titlestr='RiceIndex';
-PlotFredData(FRObj,RiceTT,itype,titlestr)
-% Add this table to the FredObj
-FRObj.RiceTT=RiceTT;
-titlestr=char(titlestr);
-figstr2=strcat(titlestr,'.png');
-figstr2=char(figstr2);
-FredPngList{144,1}=figstr2;
-% Now create the data for a cumilative distribution plot
-titlestr3='RiceIndex-CumilDist';
-titlestr3=char(titlestr3);
-figstr3=strcat(titlestr3,'.png');
-figstr3=char(figstr3);
-PlotCumilFredData(FRObj,itype,titlestr3);
-% Calculate the correlation
-ikind=1;
-[rho(24),~,numoverlap(24)] = CalculateCorrelation(UrbanHFTT,RiceTT,ikind,minCorrPts);
-dispstr=strcat('Price Correlation Between Urban Home Food and Rice Index-',num2str(rho(24)));
-disp(dispstr)
-FoodCorrTable(24,:) = {126,"UrbanHFTT",StartYear1,EndYear1,144,"RiceTT",2004,2025,rho(24),SG144,numoverlap(24)};
-
-%% Continue with PPI Citrus Fruit(WPU011101) (Monthly)  Chap 19-20
-loopstr='**********Start Looping through the available FRED data**********';
-fprintf(fid,'\n');
-fprintf(fid,'%50s\n',loopstr);
-eval(['cd ' fredpath(1:length(fredpath)-1)]);
-loopstr1='Process the PPI Citrus Fruits';
-fprintf(fid,'\n');
-fprintf(fid,'%50s\n',loopstr1);
-CitrusTable = readtable(fredfile145,'Sheet','Monthly');
-[nrows145,ncols145]=size(CitrusTable);
-dateArray=strings(nrows145,1);
-for n=1:nrows145
-    nowstr=string(CitrusTable.Date(n,1));
-    dateArray(n,1)=nowstr;
-    if(n==1)
-        nowStartDate=nowstr;
-    elseif(n==nrows145)
-        nowEndDate=nowstr;
-    end
-end
-loopstr2=strcat('Data is available for-',num2str(nrows145,4),'-dates-',...
-    'From-',nowStartDate,'-to-',nowEndDate');
-fprintf(fid,'%50s\n',loopstr2);
-rowTimes=datetime(dateArray);
-DateNumbers=datenum(rowTimes);
-PPICitrusTT=table2timetable(CitrusTable,'RowTimes','Date');
-PPICitrusTT = addvars(PPICitrusTT,DateNumbers);
-meanCitrusVal=mean(PPICitrusTT.Index);
-medianCitrusVal=median(PPICitrusTT.Index);
-meanCitrus=zeros(nrows145,1);
-medianCitrus=zeros(nrows145,1);
-for n=1:nrows145
-    meanCitrus(n,1)=meanCitrusVal;
-    medianCitrus(n,1)=medianCitrusVal;
-end
-PPICitrusTT = addvars(PPICitrusTT,meanCitrus,medianCitrus);
-SourceFile(145,1)="PPICitrusFruits.xlsx";
-Code(145,1)="WPU011101";
-Desc(145,1)="PPICitrusFruits";
-Freq(145,1)="Monthly";
-StartYear(145,1)=1947;
-EndYear(145,1)=2025;
-SeasonalAdj(145,1)="No";
-BaseYear(145,1)=1982;
-NumObs(145,1)=934;
-FRObj.Desc=Desc;
-Chap(145,1)=19;
-Section(145,1)=20;
-Commodity(145,1)=1;
-% Calculate the Simple Stats
-itype=145;
-Data=PPICitrusTT.Index;
-FRObj=FRObj.SimpleStats(Data,itype);
-% Smooth the Data
-citrussmooth = smoothdata(Data);
-P0=citrussmooth(1);
-PF=citrussmooth(934);
-PPICitrusTT= addvars(PPICitrusTT,citrussmooth);
-NYears=EndYear(145,1)-StartYear(145,1)+1;
-FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
-GrowthRateAll=FRObj.GrowthRateAll;
-SG145=100*GrowthRateAll(itype,1);
-FRObj.SG145=SG145;
-% Now pull of the Recession Probability data that matches the available
-% time points in the RiceTT
-RecessProbTT=FRObj.RecessProbTT;
-ishowrecession=FRObj.ishowrecession;
-if(ishowrecession>0)% Plot is missing 
-     [PPICitrusTT,icase] = OverlapTimeLinesRev1(PPICitrusTT,RecessProbTT);
-     FRObj.PPICitrusTT=PPICitrusTT;
-     RecessionInfo(145,1)=icase;
-end
-FRObj.barval=100;
-FRObj.PPICitrusTT=PPICitrusTT;
-% Now plot this data
-titlestr='CitrusFruitsIndex';
-PlotFredData(FRObj,PPICitrusTT,itype,titlestr)
-% Add this table to the FredObj
-FRObj.PPICitrusTT=PPICitrusTT;
-titlestr=char(titlestr);
-figstr2=strcat(titlestr,'.png');
-figstr2=char(figstr2);
-FredPngList{145,1}=figstr2;
-% Now create the data for a cumilaPPICitrusFruitsIndex-Cumiltive distribution plot
-titlestr3='CitrusFruitsIndex-CumilDist';
-titlestr3=char(titlestr3);
-figstr3=strcat(titlestr3,'.png');
-figstr3=char(figstr3);
-PlotCumilFredData(FRObj,itype,titlestr3);
-% Calculate the correlation
-ikind=1;
-[rho(25),~,numoverlap(25)] = CalculateCorrelation(UrbanHFTT,PPICitrusTT,ikind,minCorrPts);
-dispstr=strcat('Price Correlation Between Urban Home Food and CitrusFruits Index Index-',num2str(rho(24)));
-disp(dispstr)
-FoodCorrTable(25,:) = {126,"UrbanHFTT",StartYear1,EndYear1,145,"PPICitrusTT",1947,2025,rho(25),SG145,numoverlap(25)};
-
 %% Continue with the CoreSticky CPI Data (CORESTICKM159SFRBATL)(Monthly)
 % itype=2
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
@@ -2633,6 +911,17 @@ P0=scpismooth(1);
 PF=scpismooth(689);
 SCPITT= addvars(SCPITT,scpismooth);
 % Now plot this data
+% Now pull of the Recession Probability data that matches the available
+% time points in the CCTT
+RecessProbTT=FRObj.RecessProbTT;
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0)
+    [SCPITT,icase] = OverlapTimeLinesRev1(SCPITT,RecessProbTT);
+    FRObj.SCPITT=SCPITT;
+    RecessionInfo(9,1)=icase;
+end
+FRObj.barval=8;
+FRObj.SCPITT=SCPITT;
 titlestr='StickyCPI-1968-2025';
 PlotFredData(FRObj,SCPITT,itype,titlestr)
 % Add this data to the Fred Obj
@@ -2715,7 +1004,7 @@ figstr2=strcat(titlestr,'.png');
 figstr2=char(figstr2);
 FredPngList{3,1}=figstr2;
 
-%% Continue with the Delinquency Rate on Single Family Home Loans DRSFRMACBS (Chap 6 Section 6)
+%% Continue with the Delinquency Rate on Single Family Home Loans DRSFRMACBS (Chap 4 Section 1)
 % itype=4
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
 SingleHomeDelRateTable = readtable(fredfile4,'Sheet','Quarterly');
@@ -2954,7 +1243,6 @@ if(ishowrecession>0)
     FRObj.IPMANTT=IPMANTT;
     RecessionInfo(6,1)=icase;
 end
-
 FRObj.barval=60;
 FRObj.IPMANTT=IPMANTT;
 % Plot the data over time
@@ -3178,7 +1466,6 @@ if(ishowrecession>0)
     FRObj.CCTT=CCTT;
     RecessionInfo(9,1)=icase;
 end
-
 FRObj.barval=80;
 FRObj.CCTT=CCTT;
 % Plot this data
@@ -3266,7 +1553,7 @@ if(ishowrecession>0)
     FRObj.HouseSupplyTT=HouseSupplyTT;
     RecessionInfo(10,1)=icase;
 end
-FRObj.barval=30;
+FRObj.barval=60;
 FRObj.HouseSupplyTT=HouseSupplyTT;
 % Plot the data
 PlotFredData(FRObj,HouseSupplyTT,itype,titlestr)
@@ -3368,7 +1655,7 @@ figstr3=strcat(titlestr3,'.png');
 figstr3=char(figstr3);
 PlotCumilFredData(FRObj,itype,titlestr3)
 
-%% Continue with the U2 UnemploymentRate U2Rate
+%% Continue with the U2 UnemploymentRate U2Rate aka Job Losers
 %itype=12
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
 U2RateTable = readtable(fredfile12,'Sheet','Monthly');
@@ -3430,6 +1717,18 @@ u2smooth = smoothdata(Data);
 P0=u2smooth(1);
 PF=u2smooth(701);
 U2RateTT = addvars(U2RateTT,u2smooth);
+% Now pull of the Recession Probability data that matches the available
+% time points in the  U2RateTT
+RecessProbTT=FRObj.RecessProbTT;
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0)
+    [U2RateTT,icase] = OverlapTimeLinesRev1(U2RateTT,RecessProbTT);
+    FRObj.U2RateTT=U2RateTT;
+    RecessionInfo(12,1)=icase;
+end
+FRObj.barval=5;
+FRObj.U2RateTT=U2RateTT;
+% Plot Data
 PlotFredData(FRObj,U2RateTT,itype,titlestr)
 titlestr=char(titlestr);
 figstr2=strcat(titlestr,'.png');
@@ -4052,7 +2351,6 @@ Section(20,1)=3;
 FRObj.Chap=Chap;
 FRObj.Section=Section;
 FRObj.ManufacOpenTT=ManufacOpenTT;
-% Now plot this data
 itype=20;
 % Smooth the Data
 mansmooth = smoothdata(ManufacOpenTT.JTS3000JOL);
@@ -4062,6 +2360,18 @@ ManufacOpenTT= addvars(ManufacOpenTT,mansmooth);
 % Calculate the Simple Stats
 Data=ManufacOpenTT.JTS3000JOL;
 FRObj=FRObj.SimpleStats(Data,itype);
+% Now pull of the Recession Probability data that matches the available
+% time points in the Construction Job Openings
+RecessProbTT=FRObj.RecessProbTT;
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0)
+    [ManufacOpenTT,icase] = OverlapTimeLinesRev1(ManufacOpenTT,RecessProbTT);
+    FRObj.ManufacOpenTT=ManufacOpenTT;
+    RecessionInfo(20,1)=icase;
+end
+FRObj.barval=500;
+FRObj.ManufacOpenTT=ManufacOpenTT;
+% Plot the data
 titlestr='Manufacturing-Job-Openings-2000-2025';
 PlotFredData(FRObj,ManufacOpenTT,itype,titlestr)
 titlestr=char(titlestr);
@@ -4138,6 +2448,17 @@ profsmooth = smoothdata(ProfOpenTT.JTS540099JOL);
 P0=profsmooth(1);
 PF=profsmooth(293);
 ProfOpenTT= addvars(ProfOpenTT,profsmooth);
+% Now pull of the Recession Probability data that matches the available
+% time points in the Construction Job Openings
+RecessProbTT=FRObj.RecessProbTT;
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0)
+    [ProfOpenTT,icase] = OverlapTimeLinesRev1(ProfOpenTT,RecessProbTT);
+    FRObj.ProfOpenTT=ProfOpenTT;
+    RecessionInfo(21,1)=icase;
+end
+FRObj.barval=1000;
+FRObj.ProfOpenTT=ProfOpenTT;
 % Plot the Job Openings Vs Time
 PlotFredData(FRObj,ProfOpenTT,itype,titlestr)
 titlestr=char(titlestr);
@@ -4215,6 +2536,18 @@ hcaresmooth = smoothdata(HCareOpenTT.JTS6200JOL);
 P0=hcaresmooth(1);
 PF=hcaresmooth(293);
 HCareOpenTT= addvars(HCareOpenTT,hcaresmooth);
+% Plot the Health Care Job Openings
+% Now pull of the Recession Probability data that matches the available
+% time points in the Construction Job Openings
+RecessProbTT=FRObj.RecessProbTT;
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0)
+    [HCareOpenTT,icase] = OverlapTimeLinesRev1(HCareOpenTT,RecessProbTT);
+    FRObj.HCareOpenTT=HCareOpenTT;
+    RecessionInfo(22,1)=icase;
+end
+FRObj.barval=1000;
+FRObj.HCareOpenTT=HCareOpenTT;
 titlestr='HealthCare-Job-Openings-2000-2025';
 PlotFredData(FRObj,HCareOpenTT,itype,titlestr)
 titlestr=char(titlestr);
@@ -4290,6 +2623,19 @@ govsmooth = smoothdata(Data);
 P0=govsmooth(1);
 PF=govsmooth(293);
 GovOpenTT= addvars(GovOpenTT,govsmooth);
+% Plot the Government Job Openings
+% Now pull of the Recession Probability data that matches the available
+% time points in the Construction Job Openings
+RecessProbTT=FRObj.RecessProbTT;
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0)
+    [GovOpenTT,icase] = OverlapTimeLinesRev1(GovOpenTT,RecessProbTT);
+    FRObj.GovOpenTT=GovOpenTT;
+    RecessionInfo(23,1)=icase;
+end
+FRObj.barval=600;
+FRObj.GovOpenTT=GovOpenTT;
+% Plot the data
 titlestr='Govt-Job-Openings-2000-2025';
 PlotFredData(FRObj,GovOpenTT,itype,titlestr)
 titlestr=char(titlestr);
@@ -4374,7 +2720,7 @@ figstr2=strcat(titlestr,'.png');
 figstr2=char(figstr2);
 FredPngList{24,1}=figstr2;
 
-%% Continue with the 10 Year- 2 Year Fed Bond Rates
+%% Continue with the 10 Year Vs 2 Year Fed Bond Rates
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
 T10Y2YTable = readtable(fredfile25,'Sheet','Daily');
 [nrows25,~]=size(T10Y2YTable);
@@ -6361,7 +4707,7 @@ if(ishowrecession>0)%
      FRObj.HouseStartsTT=HouseStartsTT;
      RecessionInfo(48,1)=icase;
 end
-FRObj.barval=800;
+FRObj.barval=1200;
 FRObj.HouseStartsTT=HouseStartsTT;
 % Now plot this data
 itype=48;
@@ -7260,7 +5606,7 @@ if(ishowrecession>0)%
      FRObj.CompHousesTT=CompHousesTT;
      RecessionInfo(59,1)=icase;
 end
-FRObj.barval=500;
+FRObj.barval=1000;
 FRObj.CompHousesTT=CompHousesTT;
 % Plot Data
 titlestr='SingleFamilyHousesCompleted';
@@ -7700,7 +6046,7 @@ PF=salessmooth(401);
 UsedCarSalesTT = addvars(UsedCarSalesTT,salessmooth);
 NYears=EndYear(64,1)-StartYear(64,1)+1;
 FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
-GrowthRateAll=FRObj.GrowthRateAll;
+GrowthRateAll(itype,1)=FRObj.GrowthRateAll(itype,1);
 SG64=100*GrowthRateAll(itype,1);
 FRObj.SG64=SG64;
 % Calculate simple stats
@@ -12043,7 +10389,6 @@ if(ishowrecession>0)
 end
 FRObj.barval=200;
 FRObj.GlobalEnergyTT=GlobalEnergyTT;
-
 % Now plot this data
 titlestr='GlobalEnergyIndex';
 PlotFredData(FRObj,GlobalEnergyTT,itype,titlestr)
@@ -12618,6 +10963,2157 @@ ikind=2;
 dispstr=strcat('Price Correlation Between Urban Home Food and Sugar Prices-',num2str(rho(13)));
 disp(dispstr)
 FoodCorrTable(13,:) = {126,"UrbanHFTT",StartYear1,EndYear1,125,"SugarPriceTT",1992,2025,rho(13),SG125,numoverlap(13)};
+%% PPI for Food Manufacturing (PCU311311)(Monthly)
+% itype=127
+eval(['cd ' fredpath(1:length(fredpath)-1)]);
+PPIFoodTable = readtable(fredfile127,'Sheet','Monthly');
+[nrows127,ncols127]=size(PPIFoodTable);
+clear DateNumbers
+clear dateArray
+dateArray=strings(nrows127,1);
+for n=1:nrows127
+    nowstr=string(PPIFoodTable.Date(n,1));
+    dateArray(n,1)=nowstr;
+    if(n==1)
+        nowStartDate=nowstr;
+    elseif(n==nrows)
+        nowEndDate=nowstr;
+    end
+end
+rowTimes=datetime(dateArray);
+DateNumbers=datenum(rowTimes);
+loopstr1='Process the PPI Food Production Index';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr1);
+loopstr2=strcat('Data is available for-',num2str(nrows127,4),'-dates-',...
+    'From-',nowStartDate,'-to-',nowEndDate');
+fprintf(fid,'%50s\n',loopstr2);
+PPIFoodTT=table2timetable(PPIFoodTable,'RowTimes','Date');
+PPIFoodTT = addvars(PPIFoodTT,DateNumbers);
+PPIFoodmeanVal=mean(PPIFoodTT.Index);
+PPIFoodmedianVal=median(PPIFoodTT.Index);
+meanPPIFood=zeros(nrows127,1);
+medianPPIFood=zeros(nrows127,1);
+for n=1:nrows127
+    meanPPIFood(n,1)=PPIFoodmeanVal;
+    medianPPIFood(n,1)=PPIFoodmedianVal;
+end
+PPIFoodTT = addvars(PPIFoodTT,meanPPIFood,medianPPIFood);
+SourceFile(127,1)="PPIFoodManufacturing.xlsx";
+Code(127,1)="PCU311311";
+Desc(127,1)="PCIFoodPriceIndex";
+Freq(127,1)="Monthly";
+StartYear(127,1)=1984;
+EndYear(127,1)=2025;
+SeasonalAdj(127,1)="No";
+BaseYear(127,1)=1984;
+NumObs(127,1)=497;
+Chap(127,1)=19;
+Section(127,1)=2;
+itype=127;
+%Calculate the Simple Stats
+Data=PPIFoodTT.Index;
+FRObj=FRObj.SimpleStats(Data,itype);
+%Smooth the Data
+ppifoodsmooth = smoothdata(Data);
+P0=ppifoodsmooth(1);
+PF=ppifoodsmooth(497);
+PPIFoodTT= addvars(PPIFoodTT,ppifoodsmooth);
+NYears=EndYear(127,1)-StartYear(127,1)+1;
+FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
+GrowthRateAll=FRObj.GrowthRateAll;
+SG127=100*GrowthRateAll(itype,1);
+FRObj.SG127=SG127;
+% Now plot this data
+titlestr='PPI-Food-Production';
+PlotFredData(FRObj,PPIFoodTT,itype,titlestr)
+% Add this data to the Fred Obj
+FRObj.PPIFoodTT=PPIFoodTT;
+titlestr=char(titlestr);
+figstr2=strcat(titlestr,'.png');
+figstr2=char(figstr2);
+FredPngList{127,1}=figstr2;
+% Now create the data for a cumilative distribution plot
+titlestr3='PPI-FoodIndex-CumilDistribution';
+titlestr3=char(titlestr3);
+figstr3=strcat(titlestr3,'.png');
+figstr3=char(figstr3);
+PlotCumilFredData(FRObj,itype,titlestr3)
+% Now calculate the correlation between 
+datacol=1;
+minCorrPts=100;
+ikind=1;
+[rho(1),~,numoverlap(1)] = CalculateCorrelation(UrbanHFTT,PPIFoodTT,ikind,minCorrPts);
+dispstr=strcat('Price Correlation Between Urban Home Food and Food Production Costs-',num2str(rho(1)));
+disp(dispstr)
+FoodCorrTable(1,:) = {126,"UrbanHFTT",StartYear1,EndYear1,127,"PPIFoodTT",1984,2025,rho(1),SG127,numoverlap(1)};
+%% PPI for Diesel #2 Fuel (WPU057303)(Monthly)
+% itype=128
+eval(['cd ' fredpath(1:length(fredpath)-1)]);
+PPIDieselTable = readtable(fredfile128,'Sheet','Monthly');
+[nrows128,ncols128]=size(PPIDieselTable);
+clear DateNumbers
+clear dateArray
+dateArray=strings(nrows128,1);
+for n=1:nrows128
+    nowstr=string(PPIDieselTable.Date(n,1));
+    dateArray(n,1)=nowstr;
+    if(n==1)
+        nowStartDate=nowstr;
+    elseif(n==nrows)
+        nowEndDate=nowstr;
+    end
+end
+rowTimes=datetime(dateArray);
+DateNumbers=datenum(rowTimes);
+loopstr1='Process the PPI Diesel #2 Production Index';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr1);
+loopstr2=strcat('Data is available for-',num2str(nrows128,4),'-dates-',...
+    'From-',nowStartDate,'-to-',nowEndDate');
+fprintf(fid,'%50s\n',loopstr2);
+PPIDieselTT=table2timetable(PPIDieselTable,'RowTimes','Date');
+PPIDieselTT = addvars(PPIDieselTT,DateNumbers);
+PPIDieselmeanVal=mean(PPIDieselTT.Index);
+PPIDieselmedianVal=median(PPIDieselTT.Index);
+meanPPIDiesel=zeros(nrows128,1);
+medianPPIDiesel=zeros(nrows128,1);
+for n=1:nrows128
+    meanPPIDiesel(n,1)=PPIDieselmeanVal;
+    medianPPIDiesel(n,1)=PPIDieselmedianVal;
+end
+PPIDieselTT = addvars(PPIDieselTT,meanPPIDiesel,medianPPIDiesel);
+SourceFile(128,1)="PPIDiesel.xlsx";
+Code(128,1)="WPU057303";
+Desc(128,1)="PCIDieselPriceIndex";
+Freq(128,1)="Monthly";
+StartYear(128,1)=1973;
+EndYear(128,1)=2025;
+SeasonalAdj(128,1)="No";
+BaseYear(128,1)=1982;
+NumObs(128,1)=640;
+Chap(128,1)=19;
+Section(128,1)=3;
+itype=128;
+% Calculate the Simple Stats
+Data=PPIDieselTT.Index;
+FRObj=FRObj.SimpleStats(Data,itype);
+% Smooth the Data
+ppidieselsmooth = smoothdata(Data);
+P0=ppidieselsmooth(1);
+PF=ppidieselsmooth(640);
+PPIDieselTT= addvars(PPIDieselTT,ppidieselsmooth);
+NYears=EndYear(128,1)-StartYear(128,1)+1;
+FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
+GrowthRateAll=FRObj.GrowthRateAll;
+SG128=100*GrowthRateAll(itype,1);
+FRObj.SG128=SG128;
+% Now pull of the Recession Probability data that matches the available
+% time poiunts in the PPIDieselTT
+RecessProbTT=FRObj.RecessProbTT;
+ab=1;
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0)
+    [PPIDieselTT,icase] = OverlapTimeLinesRev1(PPIDieselTT,RecessProbTT);
+    FRObj.PPIDieselTT=PPIDieselTT;
+    RecessionInfo(128,1)=icase;
+end
+% Now plot this data
+FRObj.barval=100;
+titlestr='PPI-Diesel-Production';
+PlotFredData(FRObj,PPIDieselTT,itype,titlestr)
+% Add this data to the Fred Obj
+titlestr=char(titlestr);
+figstr2=strcat(titlestr,'.png');
+figstr2=char(figstr2);
+FredPngList{128,1}=figstr2;
+% Now create the data for a cumilative distribution plot
+titlestr3='PPI-DieselIndex-CumilDistribution';
+titlestr3=char(titlestr3);
+figstr3=strcat(titlestr3,'.png');
+figstr3=char(figstr3);
+PlotCumilFredData(FRObj,itype,titlestr3)
+% Now calculate the correlation between Food prices and Diesel Fuel
+datacol=1;
+minCorrPts=100;
+ikind=1;
+[rho(2),~,numoverlap(2)] = CalculateCorrelation(UrbanHFTT,PPIDieselTT,ikind,minCorrPts);
+ab=1;
+dispstr=strcat('Price Correlation Between Urban Home Food and Diesel Production Costs-',num2str(rho(2)));
+disp(dispstr)
+FoodCorrTable(2,:) = {126,"UrbanHFTT",StartYear1,EndYear1,128,"PPIDieselTT",1973,2025,rho(2),SG128,numoverlap(2)};
+
+%% Average Price For Beef Bologna (APU0000705121)(Monthly)
+% itype=129
+eval(['cd ' fredpath(1:length(fredpath)-1)]);
+BolognaTable = readtable(fredfile129,'Sheet','Monthly');
+[nrows129,ncols129]=size(BolognaTable);
+clear DateNumbers
+clear dateArray
+dateArray=strings(nrows129,1);
+for n=1:nrows129
+    nowstr=string(BolognaTable.Date(n,1));
+    dateArray(n,1)=nowstr;
+    if(n==1)
+        nowStartDate=nowstr;
+    elseif(n==nrows)
+        nowEndDate=nowstr;
+    end
+end
+rowTimes=datetime(dateArray);
+DateNumbers=datenum(rowTimes);
+loopstr1='Process the Average Beef Bologna Prices';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr1);
+loopstr2=strcat('Data is available for-',num2str(nrows129,4),'-dates-',...
+    'From-',nowStartDate,'-to-',nowEndDate');
+fprintf(fid,'%50s\n',loopstr2);
+BolognaTT=table2timetable(BolognaTable,'RowTimes','Date');
+BolognaTT = addvars(BolognaTT,DateNumbers);
+BolognameanVal=mean(BolognaTT.Price);
+BolognamedianVal=median(BolognaTT.Price);
+meanBologna=zeros(nrows129,1);
+medianBologna=zeros(nrows129,1);
+for n=1:nrows129
+    meanBologna(n,1)=BolognameanVal;
+    medianBologna(n,1)=BolognamedianVal;
+end
+BolognaTT = addvars(BolognaTT,meanBologna,medianBologna);
+SourceFile(129,1)="BolognaPrices.xlsx";
+Code(129,1)="APU0000705121";
+Desc(129,1)="MeanBolognaPrices";
+Freq(129,1)="Monthly";
+StartYear(129,1)=1980;
+EndYear(129,1)=2019;
+SeasonalAdj(129,1)="No";
+BaseYear(129,1)=1980;
+NumObs(129,1)=477;
+Chap(129,1)=19;
+Section(129,1)=4;
+itype=129;
+% Calculate the Simple Stats
+Data=BolognaTT.Price;
+FRObj=FRObj.SimpleStats(Data,itype);
+% Smooth the Data
+bolognasmooth = smoothdata(Data);
+P0=bolognasmooth(1);
+PF=bolognasmooth(477);
+BolognaTT= addvars(BolognaTT,bolognasmooth);
+NYears=EndYear(129,1)-StartYear(129,1)+1;
+FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
+GrowthRateAll=FRObj.GrowthRateAll;
+SG129=100*GrowthRateAll(itype,1);
+FRObj.SG129=SG129;
+% Now pull of the Recession Probability data that matches the available
+% time points in the PPIDieselTT
+RecessProbTT=FRObj.RecessProbTT;
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0)
+    [BolognaTT,icase] = OverlapTimeLinesRev1(BolognaTT,RecessProbTT);
+    FRObj.BolognaTT=BolognaTT;
+    RecessionInfo(129,1)=icase;
+end
+FRObj.barval=3;
+FRObj.BolognaTT=BolognaTT;
+% Now plot this data
+titlestr='BolognaPrices';
+PlotFredData(FRObj,BolognaTT,itype,titlestr)
+% Add this data to the Fred Obj
+FRObj.BolognaTT=BolognaTT;
+titlestr=char(titlestr);
+figstr2=strcat(titlestr,'.png');
+figstr2=char(figstr2);
+FredPngList{129,1}=figstr2;
+% Now create the data for a cumilative distribution plot
+titlestr3='BolognaPrices-CumilDistribution';
+titlestr3=char(titlestr3);
+figstr3=strcat(titlestr3,'.png');
+figstr3=char(figstr3);
+PlotCumilFredData(FRObj,itype,titlestr3)
+% Now calculate the correlation between Food prices and Bologna
+datacol=1;
+minCorrPts=100;
+ikind=2;
+[rho(3),~,numoverlap(3)] = CalculateCorrelation(UrbanHFTT,BolognaTT,ikind,minCorrPts);
+dispstr=strcat('Price Correlation Between Urban Home Food and Bologna-',num2str(rho(3)));
+disp(dispstr)
+FoodCorrTable(3,:) = {126,"UrbanHFTT",StartYear1,EndYear1,129,"BolognaTT",1980,2019,rho(3),SG129,numoverlap(3)};
+%% Avererage Price For Boneless Ham (APU0000704312)(Monthly)
+% itype=130
+eval(['cd ' fredpath(1:length(fredpath)-1)]);
+BonelessHamTable = readtable(fredfile130,'Sheet','Monthly');
+[nrows130,ncols130]=size(BonelessHamTable);
+clear DateNumbers
+clear dateArray
+dateArray=strings(nrows130,1);
+for n=1:nrows130
+    nowstr=string(BonelessHamTable.Date(n,1));
+    dateArray(n,1)=nowstr;
+    if(n==1)
+        nowStartDate=nowstr;
+    elseif(n==nrows)
+        nowEndDate=nowstr;
+    end
+end
+rowTimes=datetime(dateArray);
+DateNumbers=datenum(rowTimes);
+loopstr1='Process the Average BonelessHam Prices';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr1);
+loopstr2=strcat('Data is available for-',num2str(nrows130,4),'-dates-',...
+    'From-',nowStartDate,'-to-',nowEndDate');
+fprintf(fid,'%50s\n',loopstr2);
+BonelessHamTT=table2timetable(BonelessHamTable,'RowTimes','Date');
+BonelessHamTT = addvars(BonelessHamTT,DateNumbers);
+HammeanVal=mean(BonelessHamTT.Price);
+HammedianVal=median(BonelessHamTT.Price);
+meanHam=zeros(nrows130,1);
+medianHam=zeros(nrows130,1);
+for n=1:nrows130
+    meanHam(n,1)=HammeanVal;
+    medianHam(n,1)=HammedianVal;
+end
+BonelessHamTT = addvars(BonelessHamTT,meanHam,medianHam);
+SourceFile(130,1)="BonelessHamPrices.xlsx";
+Code(130,1)="APU0000704312";
+Desc(130,1)="MeanBonelessHamPrices";
+Freq(130,1)="Monthly";
+StartYear(130,1)=1991;
+EndYear(130,1)=2025;
+SeasonalAdj(130,1)="No";
+BaseYear(130,1)=1991;
+NumObs(130,1)=425;
+Chap(130,1)=19;
+Section(130,1)=5;
+itype=130;
+% Calculate the Simple Stats
+Data=BonelessHamTT.Price;
+FRObj=FRObj.SimpleStats(Data,itype);
+% Smooth the Data
+hamsmooth = smoothdata(Data);
+P0=hamsmooth(1);
+PF=hamsmooth(425);
+BonelessHamTT= addvars(BonelessHamTT,hamsmooth);
+NYears=EndYear(130,1)-StartYear(130,1)+1;
+FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
+GrowthRateAll=FRObj.GrowthRateAll;
+SG130=100*GrowthRateAll(itype,1);
+FRObj.SG130=SG130;
+% Now plot this data
+% Now pull of the Recession Probability data that matches the available
+% time points in the BonelessHamTT
+RecessProbTT=FRObj.RecessProbTT;
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0)
+    [BonelessHamTT,icase] = OverlapTimeLinesRev1(BonelessHamTT,RecessProbTT);
+    FRObj.BonelessHamTT=BonelessHamTT;
+    RecessionInfo(130,1)=icase;
+end
+FRObj.barval=4;
+FRObj.BonelessHamTT=BonelessHamTT;
+titlestr='BonelessHamPrices';
+PlotFredData(FRObj,BonelessHamTT,itype,titlestr)
+% Add this data to the Fred Obj
+FRObj.BonelessHamTT=BonelessHamTT;
+titlestr=char(titlestr);
+figstr2=strcat(titlestr,'.png');
+figstr2=char(figstr2);
+FredPngList{130,1}=figstr2;
+% Now create the data for a cumilative distribution plot
+titlestr3='BonelessHamPrices-CumilDistribution';
+titlestr3=char(titlestr3);
+figstr3=strcat(titlestr3,'.png');
+figstr3=char(figstr3);
+PlotCumilFredData(FRObj,itype,titlestr3)
+% Now calculate the correlation between Food prices and BonelessHam
+datacol=1;
+minCorrPts=100;
+ikind=2;
+[rho(4),~,numoverlap(4)] = CalculateCorrelation(UrbanHFTT,BonelessHamTT,ikind,minCorrPts);
+dispstr=strcat('Price Correlation Between Urban Home Food and Boneless Ham Prices-',num2str(rho(4)));
+disp(dispstr)
+FoodCorrTable(4,:) = {126,"UrbanHFTT",StartYear1,EndYear1,130,"BonelessHamTT",1991,2025,rho(4),SG130,numoverlap(4)};
+%% Average Price For BeefChuckRoast (APU0000703213)(Monthly)
+% itype=131
+eval(['cd ' fredpath(1:length(fredpath)-1)]);
+ChuckRoastTable = readtable(fredfile131,'Sheet','Monthly');
+[nrows131,ncols131]=size(ChuckRoastTable);
+clear DateNumbers
+clear dateArray
+dateArray=strings(nrows131,1);
+for n=1:nrows131
+    nowstr=string(ChuckRoastTable.Date(n,1));
+    dateArray(n,1)=nowstr;
+    if(n==1)
+        nowStartDate=nowstr;
+    elseif(n==nrows)
+        nowEndDate=nowstr;
+    end
+end
+rowTimes=datetime(dateArray);
+DateNumbers=datenum(rowTimes);
+loopstr1='Process the Average Boneless Chuck Roast Prices';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr1);
+loopstr2=strcat('Data is available for-',num2str(nrows131,4),'-dates-',...
+    'From-',nowStartDate,'-to-',nowEndDate');
+fprintf(fid,'%50s\n',loopstr2);
+ChuckRoastTT=table2timetable(ChuckRoastTable,'RowTimes','Date');
+ChuckRoastTT = addvars(ChuckRoastTT,DateNumbers);
+CRoastmeanVal=mean(ChuckRoastTT.Price);
+CRoastmedianVal=median(ChuckRoastTT.Price);
+meanCRoast=zeros(nrows131,1);
+medianCRoast=zeros(nrows131,1);
+for n=1:nrows131
+    meanCRoast(n,1)=CRoastmeanVal;
+    medianCRoast(n,1)=CRoastmedianVal;
+end
+ChuckRoastTT = addvars(ChuckRoastTT,meanCRoast,medianCRoast);
+SourceFile(131,1)="ChuckRoastPrices.xlsx";
+Code(131,1)="APU0000703213";
+Desc(131,1)="MeanBonelessChuckRoastPrices";
+Freq(131,1)="Monthly";
+StartYear(131,1)=1989;
+EndYear(131,1)=2025;
+SeasonalAdj(131,1)="No";
+BaseYear(131,1)=1989;
+NumObs(131,1)=449;
+Chap(131,1)=19;
+Section(131,1)=6;
+itype=131;
+% Calculate the Simple Stats
+Data=ChuckRoastTT.Price;
+FRObj=FRObj.SimpleStats(Data,itype);
+% Smooth the Data
+croastsmooth = smoothdata(Data);
+P0=croastsmooth(1);
+PF=croastsmooth(449);
+ChuckRoastTT= addvars(ChuckRoastTT,croastsmooth);
+NYears=EndYear(131,1)-StartYear(131,1)+1;
+FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
+GrowthRateAll=FRObj.GrowthRateAll;
+SG131=100*GrowthRateAll(itype,1);
+FRObj.SG131=SG131;
+% Now pull of the Recession Probability data that matches the available
+% time points in the ChuckRoastTT
+RecessProbTT=FRObj.RecessProbTT;
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0)
+    [ChuckRoastTT,icase] = OverlapTimeLinesRev1(ChuckRoastTT,RecessProbTT);
+    FRObj.ChuckRoastTT=ChuckRoastTT;
+    RecessionInfo(131,1)=icase;
+
+end
+FRObj.barval=4;
+FRObj.ChuckRoastTT=ChuckRoastTT;
+% Now plot this data
+titlestr='ChuckRoastPrices';
+PlotFredData(FRObj,ChuckRoastTT,itype,titlestr)
+% Add this data to the Fred Obj
+FRObj.ChuckRoastTT=ChuckRoastTT;
+titlestr=char(titlestr);
+figstr2=strcat(titlestr,'.png');
+figstr2=char(figstr2);
+FredPngList{131,1}=figstr2;
+% Now create the data for a cumilative distribution plot
+titlestr3='ChuckRoastPrices-CumilDistribution';
+titlestr3=char(titlestr3);
+figstr3=strcat(titlestr3,'.png');
+figstr3=char(figstr3);
+PlotCumilFredData(FRObj,itype,titlestr3)
+% Now calculate the correlation between Food prices and BonelessHam
+datacol=1;
+minCorrPts=100;
+ikind=2;
+[rho(5),~,numoverlap(5)] = CalculateCorrelation(UrbanHFTT,ChuckRoastTT,ikind,minCorrPts);
+dispstr=strcat('Price Correlation Between Urban Home Food and Chuck Roast Prices-',num2str(rho(5)));
+disp(dispstr)
+FoodCorrTable(5,:) = {126,"UrbanHFTT",StartYear1,EndYear1,131,"ChuckRoastTT",1989,2025,rho(5),SG131,numoverlap(5)};
+%% Average Price For Bacon For North East Region (APU0100704111)(Monthly)
+% itype=132
+eval(['cd ' fredpath(1:length(fredpath)-1)]);
+BaconTable = readtable(fredfile132,'Sheet','Monthly');
+[nrows132,ncols132]=size(BaconTable);
+clear DateNumbers
+clear dateArray
+dateArray=strings(nrows132,1);
+for n=1:nrows132
+    nowstr=string(BaconTable.Date(n,1));
+    dateArray(n,1)=nowstr;
+    if(n==1)
+        nowStartDate=nowstr;
+    elseif(n==nrows132)
+        nowEndDate=nowstr;
+    end
+end
+rowTimes=datetime(dateArray);
+DateNumbers=datenum(rowTimes);
+loopstr1='Process the Average Sliced Bacon Prices';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr1);
+loopstr2=strcat('Data is available for-',num2str(nrows132,4),'-dates-',...
+    'From-',nowStartDate,'-to-',nowEndDate');
+fprintf(fid,'%50s\n',loopstr2);
+BaconPriceTT=table2timetable(BaconTable,'RowTimes','Date');
+BaconPriceTT = addvars(BaconPriceTT,DateNumbers);
+BaconmeanVal=mean(BaconPriceTT.Price);
+BaconmedianVal=median(BaconPriceTT.Price);
+meanBacon=zeros(nrows132,1);
+medianBacon=zeros(nrows132,1);
+for n=1:nrows132
+    meanBacon(n,1)=BaconmeanVal;
+    medianBacon(n,1)=BaconmedianVal;
+end
+BaconPriceTT = addvars(BaconPriceTT,meanBacon,medianBacon);
+SourceFile(132,1)="BaconPrices.xlsx";
+Code(132,1)="APU0100704111";
+Desc(132,1)="MeanSliceBaconPrice";
+Freq(132,1)="Monthly";
+StartYear(132,1)=1980;
+EndYear(132,1)=2025;
+SeasonalAdj(132,1)="No";
+BaseYear(132,1)=1980;
+NumObs(132,1)=557;
+Chap(132,1)=19;
+Section(132,1)=7;
+itype=132;
+% Calculate the Simple Stats
+Data=BaconPriceTT.Price;
+FRObj=FRObj.SimpleStats(Data,itype);
+% Smooth the Data
+baconsmooth = smoothdata(Data);
+P0=baconsmooth(1);
+PF=baconsmooth(557);
+BaconPriceTT= addvars(BaconPriceTT,baconsmooth);
+NYears=EndYear(132,1)-StartYear(132,1)+1;
+FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
+GrowthRateAll=FRObj.GrowthRateAll;
+SG132=100*GrowthRateAll(itype,1);
+FRObj.SG132=SG132;
+% Now pull of the Recession Probability data that matches the available
+% time points in the BaconPriceTT
+RecessProbTT=FRObj.RecessProbTT;
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0)
+    [BaconPriceTT,icase] = OverlapTimeLinesRev1(BaconPriceTT,RecessProbTT);
+    FRObj.BaconPriceTT=BaconPriceTT;
+    RecessionInfo(132,1)=icase;
+
+end
+FRObj.barval=2;
+FRObj.BaconPriceTT=BaconPriceTT;
+% Now plot this data
+titlestr='BaconPrices';
+PlotFredData(FRObj,BaconPriceTT,itype,titlestr)
+% Add this data to the Fred Obj
+FRObj.BaconPriceTT=BaconPriceTT;
+titlestr=char(titlestr);
+figstr2=strcat(titlestr,'.png');
+figstr2=char(figstr2);
+FredPngList{132,1}=figstr2;
+% Now create the data for a cumilative distribution plot
+titlestr3='BaconPrices-CumilDistribution';
+titlestr3=char(titlestr3);
+figstr3=strcat(titlestr3,'.png');
+figstr3=char(figstr3);
+PlotCumilFredData(FRObj,itype,titlestr3)
+% Now calculate the correlation between Food prices and Slice Bacon
+datacol=1;
+minCorrPts=100;
+ikind=2;
+[rho(6),~,numoverlap(6)] = CalculateCorrelation(UrbanHFTT,BaconPriceTT,ikind,minCorrPts);
+dispstr=strcat('Price Correlation Between Urban Home Food and Bacon Prices-',num2str(rho(6)));
+disp(dispstr)
+FoodCorrTable(6,:) = {126,"UrbanHFTT",StartYear1,EndYear1,132,"BaconPriceTT",1980,2025,rho(6),SG132,numoverlap(6)};
+%% Average Index Of Soybeans (WPU01830131)(Monthly)
+% itype=133
+eval(['cd ' fredpath(1:length(fredpath)-1)]);
+SoybeanTable = readtable(fredfile133,'Sheet','Monthly');
+[nrows133,ncols133]=size(SoybeanTable);
+clear DateNumbers
+clear dateArray
+dateArray=strings(nrows133,1);
+for n=1:nrows133
+    nowstr=string(SoybeanTable.Date(n,1));
+    dateArray(n,1)=nowstr;
+    if(n==1)
+        nowStartDate=nowstr;
+    elseif(n==nrows133)
+        nowEndDate=nowstr;
+    end
+end
+rowTimes=datetime(dateArray);
+DateNumbers=datenum(rowTimes);
+loopstr1='Process the Global Soybean Price Index';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr1);
+loopstr2=strcat('Data is available for-',num2str(nrows133,4),'-dates-',...
+    'From-',nowStartDate,'-to-',nowEndDate');
+fprintf(fid,'%50s\n',loopstr2);
+SoybeanIndexTT=table2timetable(SoybeanTable,'RowTimes','Date');
+SoybeanIndexTT = addvars(SoybeanIndexTT,DateNumbers);
+SoybeanmeanVal=mean(SoybeanIndexTT.Index);
+SoybeanmedianVal=median(SoybeanIndexTT.Index);
+meanSoybean=zeros(nrows133,1);
+medianSoybean=zeros(nrows133,1);
+for n=1:nrows133
+    meanSoybean(n,1)=SoybeanmeanVal;
+    medianSoybean(n,1)=SoybeanmedianVal;
+end
+SoybeanIndexTT = addvars(SoybeanIndexTT,meanSoybean,medianSoybean);
+SourceFile(133,1)="SoybeanIndex.xlsx";
+Code(133,1)="WPU01830131";
+Desc(133,1)="MeanSoybeanIndex";
+Freq(133,1)="Monthly";
+StartYear(133,1)=1947;
+EndYear(133,1)=2025;
+SeasonalAdj(133,1)="No";
+BaseYear(133,1)=1982;
+NumObs(133,1)=952;
+Chap(133,1)=19;
+Section(133,1)=8;
+itype=133;
+% Calculate the Simple Stats
+Data=SoybeanIndexTT.Index;
+FRObj=FRObj.SimpleStats(Data,itype);
+% Smooth the Data
+soysmooth = smoothdata(Data);
+P0=soysmooth(1);
+PF=soysmooth(952);
+SoybeanIndexTT= addvars(SoybeanIndexTT,soysmooth);
+NYears=EndYear(133,1)-StartYear(133,1)+1;
+FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
+GrowthRateAll=FRObj.GrowthRateAll;
+SG133=100*GrowthRateAll(itype,1);
+FRObj.SG133=SG133;
+% Now pull of the Recession Probability data that matches the available
+% time points in the SoybeanIndexTT
+RecessProbTT=FRObj.RecessProbTT;
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0)
+    disp('start Soybean case)')
+    [SoybeanIndexTT,icase] = OverlapTimeLinesRev1(SoybeanIndexTT,RecessProbTT);
+    FRObj.SoybeanIndexTT=SoybeanIndexTT;
+    RecessionInfo(133,1)=icase;
+
+end
+FRObj.barval=100;
+FRObj.SoybeanIndexTT=SoybeanIndexTT;
+disp('Finished Soybean Case')
+% Now plot this data
+titlestr='SoybeanIndex';
+PlotFredData(FRObj,SoybeanIndexTT,itype,titlestr)
+% Add this data to the Fred Obj
+FRObj.SoybeanIndexTT=SoybeanIndexTT;
+titlestr=char(titlestr);
+figstr2=strcat(titlestr,'.png');
+figstr2=char(figstr2);
+FredPngList{133,1}=figstr2;
+% Now create the data for a cumilative distribution plot
+titlestr3='SoybeanIndex-CumilDistribution';
+titlestr3=char(titlestr3);
+figstr3=strcat(titlestr3,'.png');
+figstr3=char(figstr3);
+PlotCumilFredData(FRObj,itype,titlestr3)
+% Now calculate the correlation between Food prices and the Soybean Index
+datacol=1;
+minCorrPts=100;
+ikind=1;
+[rho(11),~,numoverlap(11)] = CalculateCorrelation(UrbanHFTT,SoybeanIndexTT,ikind,minCorrPts);
+dispstr=strcat('Price Correlation Between Urban Home Food and the Soybean Index-',num2str(rho(11)));
+disp(dispstr)
+FoodCorrTable(11,:) = {126,"UrbanHFTT",StartYear1,EndYear1,133,"SoybeanIndexTT",1952,2025,rho(11),SG133,numoverlap(11)};
+%% Continue with Flour Prices  (APU0000701111) (Monthly)  Chap 19-9
+loopstr='**********Start Looping through the available FRED data**********';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr);
+eval(['cd ' fredpath(1:length(fredpath)-1)]);
+loopstr1='Process the Flour Price Data For US Cities';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr1);
+FlourPriceTable = readtable(fredfile134,'Sheet','Monthly');
+[nrows134,ncols134]=size(FlourPriceTable);
+dateArray=strings(nrows134,1);
+for n=1:nrows134
+    nowstr=string(FlourPriceTable.Date(n,1));
+    dateArray(n,1)=nowstr;
+    if(n==1)
+        nowStartDate=nowstr;
+    elseif(n==nrows134)
+        nowEndDate=nowstr;
+    end
+end
+loopstr2=strcat('Data is available for-',num2str(nrows134,4),'-dates-',...
+    'From-',nowStartDate,'-to-',nowEndDate');
+fprintf(fid,'%50s\n',loopstr2);
+rowTimes=datetime(dateArray);
+DateNumbers=datenum(rowTimes);
+FlourPriceTT=table2timetable(FlourPriceTable,'RowTimes','Date');
+FlourPriceTT = addvars(FlourPriceTT,DateNumbers);
+meanFlourPriceVal=mean(FlourPriceTT.Price);
+medianFlourPriceVal=median(FlourPriceTT.Price);
+meanFlourPrice=zeros(nrows134,1);
+medianFlourPrice=zeros(nrows134,1);
+for n=1:nrows134
+    meanFlourPrice(n,1)=meanFlourPriceVal;
+    medianFlourPrice(n,1)=medianFlourPriceVal;
+end
+FlourPriceTT = addvars(FlourPriceTT,meanFlourPrice,medianFlourPrice);
+SourceFile(134,1)="FlourPrices.xlsx";
+Code(134,1)="APU0000701111";
+Desc(134,1)="FlourPrice-USD/lb";
+Freq(134,1)="Monthly";
+StartYear(134,1)=1980;
+EndYear(134,1)=2025;
+SeasonalAdj(134,1)="No";
+BaseYear(134,1)=1980;
+NumObs(134,1)=557;
+FRObj.Desc=Desc;
+Chap(134,1)=19;
+Section(134,1)=9;
+Commodity(134,1)=1;
+% Calculate the Simple Stats
+itype=134;
+Data=FlourPriceTT.Price;
+FRObj=FRObj.SimpleStats(Data,itype);
+% Smooth the Data
+floursmooth = smoothdata(Data);
+P0=floursmooth(1);
+PF=floursmooth(557);
+FlourPriceTT= addvars(FlourPriceTT,floursmooth);
+NYears=EndYear(134,1)-StartYear(134,1)+1;
+FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
+GrowthRateAll=FRObj.GrowthRateAll;
+SG134=100*GrowthRateAll(itype,1);
+FRObj.SG134=SG134;
+% Now pull of the Recession Probability data that matches the available
+% time points in the FlourPriceTT
+RecessProbTT=FRObj.RecessProbTT;
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0)
+    [FlourPriceTT,icase] = OverlapTimeLinesRev1(FlourPriceTT,RecessProbTT);
+    FRObj.FlourPriceTT=FlourPriceTT;
+    RecessionInfo(134,1)=icase;
+end
+FRObj.barval=1;
+FRObj.FlourPriceTT=FlourPriceTT;
+% Now plot this data
+titlestr='FlourPrice';
+PlotFredData(FRObj,FlourPriceTT,itype,titlestr)
+% Add this table to the FredObj
+FRObj.FlourPriceTT=FlourPriceTT;
+titlestr=char(titlestr);
+figstr2=strcat(titlestr,'.png');
+figstr2=char(figstr2);
+FredPngList{134,1}=figstr2;
+% Now create the data for a cumilative distribution plot
+titlestr3='FPrice-CumilDist';
+titlestr3=char(titlestr3);
+figstr3=strcat(titlestr3,'.png');
+figstr3=char(figstr3);
+PlotCumilFredData(FRObj,itype,titlestr3);
+% Calculate the correlation
+ikind=2;
+[rho(14),~,numoverlap(14)] = CalculateCorrelation(UrbanHFTT,FlourPriceTT,ikind,minCorrPts);
+dispstr=strcat('Price Correlation Between Urban Home Food and Flour Prices-',num2str(rho(14)));
+disp(dispstr)
+FoodCorrTable(14,:) = {126,"UrbanHFTT",StartYear1,EndYear1,134,"FlourPriceTT",1980,2025,rho(14),SG134,numoverlap(14)};
+
+%% Continue with Cooking Oil Price Index (WPU0278) (Monthly)  Chap 19-10
+loopstr='**********Start Looping through the available FRED data**********';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr);
+eval(['cd ' fredpath(1:length(fredpath)-1)]);
+loopstr1='Process the Cooking Oil Price Index';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr1);
+CookingOilTable = readtable(fredfile135,'Sheet','Monthly');
+[nrows135,ncols135]=size(CookingOilTable);
+dateArray=strings(nrows135,1);
+for n=1:nrows135
+    nowstr=string(CookingOilTable.Date(n,1));
+    dateArray(n,1)=nowstr;
+    if(n==1)
+        nowStartDate=nowstr;
+    elseif(n==nrows135)
+        nowEndDate=nowstr;
+    end
+end
+loopstr2=strcat('Data is available for-',num2str(nrows135,4),'-dates-',...
+    'From-',nowStartDate,'-to-',nowEndDate');
+fprintf(fid,'%50s\n',loopstr2);
+rowTimes=datetime(dateArray);
+DateNumbers=datenum(rowTimes);
+CookingOilTT=table2timetable(CookingOilTable,'RowTimes','Date');
+CookingOilTT = addvars(CookingOilTT,DateNumbers);
+meanCookingOilIndexVal=mean(CookingOilTT.Index);
+medianCookingOilIndexVal=median(CookingOilTT.Index);
+meanCookingOilIndex=zeros(nrows135,1);
+medianCookingOilIndex=zeros(nrows135,1);
+for n=1:nrows135
+    meanCookingOilIndex(n,1)=meanCookingOilIndexVal;
+    medianCookingOilIndex(n,1)=medianCookingOilIndexVal;
+end
+CookingOilTT = addvars(CookingOilTT,meanCookingOilIndex,medianCookingOilIndex);
+SourceFile(135,1)="CookingOilPriceIndex.xlsx";
+Code(135,1)="WPU0278";
+Desc(135,1)="CookingOilPriceIndex";
+Freq(135,1)="Monthly";
+StartYear(135,1)=1947;
+EndYear(135,1)=2025;
+SeasonalAdj(135,1)="No";
+BaseYear(135,1)=1982;
+NumObs(135,1)=953;
+FRObj.Desc=Desc;
+Chap(135,1)=19;
+Section(135,1)=10;
+Commodity(135,1)=1;
+% Calculate the Simple Stats
+itype=135;
+Data=CookingOilTT.Index;
+FRObj=FRObj.SimpleStats(Data,itype);
+% Smooth the Data
+coilsmooth = smoothdata(Data);
+P0=coilsmooth(1);
+PF=coilsmooth(953);
+CookingOilTT= addvars(CookingOilTT,coilsmooth);
+NYears=EndYear(135,1)-StartYear(135,1)+1;
+FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
+GrowthRateAll=FRObj.GrowthRateAll;
+SG135=100*GrowthRateAll(itype,1);
+FRObj.SG135=SG135;
+% Now pull of the Recession Probability data that matches the available
+% time points in the FlourPriceTT
+RecessProbTT=FRObj.RecessProbTT;
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0)
+    [CookingOilTT,icase] = OverlapTimeLinesRev1(CookingOilTT,RecessProbTT);
+    FRObj.CookingOilTT=CookingOilTT;
+    RecessionInfo(135,1)=icase;
+end
+FRObj.barval=100;
+FRObj.CookingOilTT=CookingOilTT;
+% Now plot this data
+titlestr='CookingOilIndex';
+PlotFredData(FRObj,CookingOilTT,itype,titlestr)
+% Add this table to the FredObj
+FRObj.CookingOilTT=CookingOilTT;
+titlestr=char(titlestr);
+figstr2=strcat(titlestr,'.png');
+figstr2=char(figstr2);
+FredPngList{135,1}=figstr2;
+% Now create the data for a cumilative distribution plot
+titlestr3='CookingOilIndex-CumilDist';
+titlestr3=char(titlestr3);
+figstr3=strcat(titlestr3,'.png');
+figstr3=char(figstr3);
+PlotCumilFredData(FRObj,itype,titlestr3);
+% Calculate the correlation
+ikind=1;
+minCorrPts=100;
+[rho(15),~,numoverlap(15)] = CalculateCorrelation(UrbanHFTT,CookingOilTT,ikind,minCorrPts);
+dispstr=strcat('Price Correlation Between Urban Home Food and Cooking Oil Index-',num2str(rho(15)));
+disp(dispstr)
+FoodCorrTable(15,:) = {126,"UrbanHFTT",StartYear1,EndYear1,135,"CookingOilTT",1947,2025,rho(15),SG135,numoverlap(15)};
+
+%% Continue with Whole Chicken Prices (APU0000706111) (Monthly)  Chap 19-11
+loopstr='**********Start Looping through the available FRED data**********';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr);
+eval(['cd ' fredpath(1:length(fredpath)-1)]);
+loopstr1='Process the Whole Chicken Prices';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr1);
+WholeChickenTable = readtable(fredfile136,'Sheet','Monthly');
+[nrows136,ncols136]=size(WholeChickenTable);
+dateArray=strings(nrows136,1);
+for n=1:nrows136
+    nowstr=string(WholeChickenTable.Date(n,1));
+    dateArray(n,1)=nowstr;
+    if(n==1)
+        nowStartDate=nowstr;
+    elseif(n==nrows136)
+        nowEndDate=nowstr;
+    end
+end
+loopstr2=strcat('Data is available for-',num2str(nrows136,4),'-dates-',...
+    'From-',nowStartDate,'-to-',nowEndDate');
+fprintf(fid,'%50s\n',loopstr2);
+rowTimes=datetime(dateArray);
+DateNumbers=datenum(rowTimes);
+WholeChickenTT=table2timetable(WholeChickenTable,'RowTimes','Date');
+WholeChickenTT = addvars(WholeChickenTT,DateNumbers);
+meanWChickenVal=mean(WholeChickenTT.Price);
+medianWChickenVal=median(WholeChickenTT.Price);
+meanWChickenPrice=zeros(nrows136,1);
+medianWChickenPrice=zeros(nrows136,1);
+for n=1:nrows136
+    meanWChickenPrice(n,1)=meanWChickenVal;
+    medianWChickenPrice(n,1)=medianWChickenVal;
+end
+WholeChickenTT = addvars(WholeChickenTT,meanWChickenPrice,medianWChickenPrice);
+SourceFile(136,1)="WholeChickenPrices.xlsx";
+Code(136,1)="APU0000706111";
+Desc(136,1)="WholeChickenPrices";
+Freq(136,1)="Monthly";
+StartYear(136,1)=1980;
+EndYear(136,1)=2025;
+SeasonalAdj(136,1)="No";
+BaseYear(136,1)=1980;
+NumObs(136,1)=557;
+FRObj.Desc=Desc;
+Chap(136,1)=19;
+Section(136,1)=11;
+Commodity(136,1)=1;
+% Calculate the Simple Stats
+itype=136;
+Data=WholeChickenTT.Price;
+FRObj=FRObj.SimpleStats(Data,itype);
+% Smooth the Data
+chicksmooth = smoothdata(Data);
+P0=chicksmooth(1);
+PF=chicksmooth(557);
+WholeChickenTT= addvars(WholeChickenTT,chicksmooth);
+NYears=EndYear(136,1)-StartYear(136,1)+1;
+FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
+GrowthRateAll=FRObj.GrowthRateAll;
+SG136=100*GrowthRateAll(itype,1);
+FRObj.SG136=SG136;
+% Now pull of the Recession Probability data that matches the available
+% time points in the WholeChickenTT
+RecessProbTT=FRObj.RecessProbTT;
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0)
+    [WholeChickenTT,icase] = OverlapTimeLinesRev1(WholeChickenTT,RecessProbTT);
+    FRObj.WholeChickenTT=WholeChickenTT;
+    RecessionInfo(136,1)=icase;
+end
+FRObj.barval=1;
+FRObj.WholeChickenTT=WholeChickenTT;
+% Now plot this data
+titlestr='WholeChickenPrices';
+PlotFredData(FRObj,WholeChickenTT,itype,titlestr)
+% Add this table to the FredObj
+FRObj.WholeChickenTT=WholeChickenTT;
+titlestr=char(titlestr);
+figstr2=strcat(titlestr,'.png');
+figstr2=char(figstr2);
+FredPngList{136,1}=figstr2;
+% Now create the data for a cumilative distribution plot
+titlestr3='WholeChickenPrices-CumilDist';
+titlestr3=char(titlestr3);
+figstr3=strcat(titlestr3,'.png');
+figstr3=char(figstr3);
+PlotCumilFredData(FRObj,itype,titlestr3);
+% Calculate the correlation
+ikind=2;
+[rho(16),~,numoverlap(16)] = CalculateCorrelation(UrbanHFTT,WholeChickenTT,ikind,minCorrPts);
+dispstr=strcat('Price Correlation Between Urban Home Food and Whole Chicken Prices-',num2str(rho(16)));
+disp(dispstr)
+FoodCorrTable(16,:) = {126,"UrbanHFTT",StartYear1,EndYear1,135,"WholeChickenTT",1980,2025,rho(16),SG136,numoverlap(16)};
+
+%% Continue with PPI Farm Products (WPU01) (Monthly)  Chap 19-12
+loopstr='**********Start Looping through the available FRED data**********';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr);
+eval(['cd ' fredpath(1:length(fredpath)-1)]);
+loopstr1='Process the PPI Farm Index';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr1);
+FarmProdcutsTable = readtable(fredfile137,'Sheet','Monthly');
+[nrows137,ncols137]=size(FarmProdcutsTable);
+dateArray=strings(nrows137,1);
+for n=1:nrows137
+    nowstr=string(FarmProdcutsTable.Date(n,1));
+    dateArray(n,1)=nowstr;
+    if(n==1)
+        nowStartDate=nowstr;
+    elseif(n==nrows137)
+        nowEndDate=nowstr;
+    end
+end
+loopstr2=strcat('Data is available for-',num2str(nrows137,4),'-dates-',...
+    'From-',nowStartDate,'-to-',nowEndDate');
+fprintf(fid,'%50s\n',loopstr2);
+rowTimes=datetime(dateArray);
+DateNumbers=datenum(rowTimes);
+FarmProductsTT=table2timetable(FarmProdcutsTable,'RowTimes','Date');
+FarmProductsTT = addvars(FarmProductsTT,DateNumbers);
+meanFPVal=mean(FarmProductsTT.Index);
+medianFPVal=median(FarmProductsTT.Index);
+meanFarmProducts=zeros(nrows137,1);
+medianFarmProducts=zeros(nrows137,1);
+for n=1:nrows137
+    meanFarmProducts(n,1)=meanFPVal;
+    medianFarmProducts(n,1)=medianFPVal;
+end
+FarmProductsTT = addvars(FarmProductsTT,meanFarmProducts,medianFarmProducts);
+SourceFile(137,1)="PPIFarmProducts.xlsx";
+Code(137,1)="WPU01";
+Desc(137,1)="PPIFarmProducts";
+Freq(137,1)="Monthly";
+StartYear(137,1)=1913;
+EndYear(137,1)=2025;
+SeasonalAdj(137,1)="No";
+BaseYear(137,1)=1982;
+NumObs(137,1)=1361;
+FRObj.Desc=Desc;
+Chap(137,1)=19;
+Section(137,1)=12;
+Commodity(137,1)=1;
+% Calculate the Simple Stats
+itype=137;
+Data=FarmProductsTT.Index;
+FRObj=FRObj.SimpleStats(Data,itype);
+% Smooth the Data
+farmsmooth = smoothdata(Data);
+P0=farmsmooth(1);
+PF=farmsmooth(1361);
+FarmProductsTT= addvars(FarmProductsTT,farmsmooth);
+NYears=EndYear(137,1)-StartYear(137,1)+1;
+FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
+GrowthRateAll=FRObj.GrowthRateAll;
+SG137=100*GrowthRateAll(itype,1);
+FRObj.SG137=SG137;
+% Now pull of the Recession Probability data that matches the available
+% time points in the WholeChickenTT
+RecessProbTT=FRObj.RecessProbTT;
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0)
+    [FarmProductsTT,icase] = OverlapTimeLinesRev1(FarmProductsTT,RecessProbTT);
+    FRObj.FarmProductsTT=FarmProductsTT;
+    RecessionInfo(137,1)=icase;
+end
+FRObj.barval=80;
+FRObj.FarmProductsTT=FarmProductsTT;
+% Now plot this data
+titlestr='FarmProductsIndex';
+PlotFredData(FRObj,FarmProductsTT,itype,titlestr)
+% Add this table to the FredObj
+FRObj.FarmProductsTT=FarmProductsTT;
+titlestr=char(titlestr);
+figstr2=strcat(titlestr,'.png');
+figstr2=char(figstr2);
+FredPngList{137,1}=figstr2;
+% Now create the data for a cumilative distribution plot
+titlestr3='FarmProductsIndex-CumilDist';
+titlestr3=char(titlestr3);
+figstr3=strcat(titlestr3,'.png');
+figstr3=char(figstr3);
+PlotCumilFredData(FRObj,itype,titlestr3);
+% Calculate the correlation
+ikind=1;
+minCorrPts=100;
+[rho(17),~,numoverlap(17)] = CalculateCorrelation(UrbanHFTT,FarmProductsTT,ikind,minCorrPts);
+dispstr=strcat('Price Correlation Between Urban Home Food and Farm Products Index-',num2str(rho(17)));
+disp(dispstr)
+FoodCorrTable(17,:) = {126,"UrbanHFTT",StartYear1,EndYear1,137,"FarmProductsTT",1913,2025,rho(17),SG137,numoverlap(17)};
+%% Continue with PPI Slaughter Cattle (WPU0131) (Monthly)  Chap 19-13
+loopstr='**********Start Looping through the available FRED data**********';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr);
+eval(['cd ' fredpath(1:length(fredpath)-1)]);
+loopstr1='Process the PPI Cattle Products';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr1);
+CattleTable = readtable(fredfile138,'Sheet','Monthly');
+[nrows138,ncols138]=size(CattleTable);
+dateArray=strings(nrows138,1);
+for n=1:nrows138
+    nowstr=string(CattleTable.Date(n,1));
+    dateArray(n,1)=nowstr;
+    if(n==1)
+        nowStartDate=nowstr;
+    elseif(n==nrows138)
+        nowEndDate=nowstr;
+    end
+end
+loopstr2=strcat('Data is available for-',num2str(nrows138,4),'-dates-',...
+    'From-',nowStartDate,'-to-',nowEndDate');
+fprintf(fid,'%50s\n',loopstr2);
+rowTimes=datetime(dateArray);
+DateNumbers=datenum(rowTimes);
+CattleTT=table2timetable(CattleTable,'RowTimes','Date');
+CattleTT = addvars(CattleTT,DateNumbers);
+meanCattleVal=mean(CattleTT.Index);
+medianCattleVal=median(CattleTT.Index);
+meanCattle=zeros(nrows138,1);
+medianCattle=zeros(nrows138,1);
+for n=1:nrows138
+    meanCattle(n,1)=meanCattleVal;
+    medianCattle(n,1)=medianCattleVal;
+end
+CattleTT = addvars(CattleTT,meanCattle,medianCattle);
+SourceFile(138,1)="PPICattle.xlsx";
+Code(138,1)="WPU0131";
+Desc(138,1)="PPISlaughterCattle";
+Freq(138,1)="Monthly";
+StartYear(138,1)=1947;
+EndYear(138,1)=2025;
+SeasonalAdj(138,1)="No";
+BaseYear(138,1)=1982;
+NumObs(138,1)=953;
+FRObj.Desc=Desc;
+Chap(138,1)=19;
+Section(138,1)=13;
+Commodity(138,1)=1;
+% Calculate the Simple Stats
+itype=138;
+Data=CattleTT.Index;
+FRObj=FRObj.SimpleStats(Data,itype);
+% Smooth the Data
+cattlesmooth = smoothdata(Data);
+P0=cattlesmooth(1);
+PF=cattlesmooth(953);
+CattleTT= addvars(CattleTT,cattlesmooth);
+NYears=EndYear(138,1)-StartYear(138,1)+1;
+FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
+GrowthRateAll=FRObj.GrowthRateAll;
+SG138=100*GrowthRateAll(itype,1);
+FRObj.SG138=SG138;
+% Now pull of the Recession Probability data that matches the available
+% time points in the CattleTT
+RecessProbTT=FRObj.RecessProbTT;
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0)
+    [CattleTT,icase] = OverlapTimeLinesRev1(CattleTT,RecessProbTT);
+    FRObj.CattleTT=CattleTT;
+    RecessionInfo(138,1)=icase;
+end
+FRObj.barval=120;
+FRObj.CattleTT=CattleTT;
+% Now plot this data
+titlestr='CattleIndex';
+PlotFredData(FRObj,CattleTT,itype,titlestr)
+% Add this table to the FredObj
+FRObj.CattleTT=CattleTT;
+titlestr=char(titlestr);
+figstr2=strcat(titlestr,'.png');
+figstr2=char(figstr2);
+FredPngList{138,1}=figstr2;
+% Now create the data for a cumilative distribution plot
+titlestr3='CattleIndex-CumilDist';
+titlestr3=char(titlestr3);
+figstr3=strcat(titlestr3,'.png');
+figstr3=char(figstr3);
+PlotCumilFredData(FRObj,itype,titlestr3);
+% Calculate the correlation
+ikind=1;
+[rho(18),~,numoverlap(18)] = CalculateCorrelation(UrbanHFTT,CattleTT,ikind,minCorrPts);
+dispstr=strcat('Price Correlation Between Urban Home Food and Cattle Index-',num2str(rho(18)));
+disp(dispstr)
+FoodCorrTable(18,:) = {126,"UrbanHFTT",StartYear1,EndYear1,138,"CattleTT",1947,2025,rho(18),SG138,numoverlap(18)};
+%% Continue with PPI Tomatoes (WPU01130217) (Monthly)  Chap 19-14
+loopstr='**********Start Looping through the available FRED data**********';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr);
+eval(['cd ' fredpath(1:length(fredpath)-1)]);
+loopstr1='Process the PPI Tomatoes';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr1);
+TomatoesTable = readtable(fredfile139,'Sheet','Monthly');
+[nrows139,ncols139]=size(TomatoesTable);
+dateArray=strings(nrows139,1);
+for n=1:nrows139
+    nowstr=string(TomatoesTable.Date(n,1));
+    dateArray(n,1)=nowstr;
+    if(n==1)
+        nowStartDate=nowstr;
+    elseif(n==nrows139)
+        nowEndDate=nowstr;
+    end
+end
+loopstr2=strcat('Data is available for-',num2str(nrows139,4),'-dates-',...
+    'From-',nowStartDate,'-to-',nowEndDate');
+fprintf(fid,'%50s\n',loopstr2);
+rowTimes=datetime(dateArray);
+DateNumbers=datenum(rowTimes);
+TomatoesTT=table2timetable(TomatoesTable,'RowTimes','Date');
+TomatoesTT = addvars(TomatoesTT,DateNumbers);
+meanTomatoesVal=mean(TomatoesTT.Index);
+medianTomatoesVal=median(TomatoesTT.Index);
+meanTomatoes=zeros(nrows139,1);
+medianTomatoes=zeros(nrows139,1);
+for n=1:nrows139
+    meanTomatoes(n,1)=meanTomatoesVal;
+    medianTomatoes(n,1)=medianTomatoesVal;
+end
+TomatoesTT = addvars(TomatoesTT,meanTomatoes,medianTomatoes);
+SourceFile(139,1)="PPITomatoes.xlsx";
+Code(139,1)="WPU01130217";
+Desc(139,1)="PPITomatoes";
+Freq(139,1)="Monthly";
+StartYear(139,1)=1947;
+EndYear(139,1)=2025;
+SeasonalAdj(139,1)="No";
+BaseYear(139,1)=1982;
+NumObs(139,1)=951;
+FRObj.Desc=Desc;
+Chap(139,1)=19;
+Section(139,1)=14;
+Commodity(139,1)=1;
+% Calculate the Simple Stats
+itype=139;
+Data=TomatoesTT.Index;
+FRObj=FRObj.SimpleStats(Data,itype);
+% Smooth the Data
+tomatoessmooth = smoothdata(Data);
+P0=tomatoessmooth(1);
+PF=tomatoessmooth(951);
+TomatoesTT= addvars(TomatoesTT,tomatoessmooth);
+NYears=EndYear(139,1)-StartYear(139,1)+1;
+FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
+GrowthRateAll=FRObj.GrowthRateAll;
+SG139=100*GrowthRateAll(itype,1);
+FRObj.SG139=SG139;
+% Now pull of the Recession Probability data that matches the available
+% time points in the CattleTT
+RecessProbTT=FRObj.RecessProbTT;
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0)
+    [TomatoesTT,icase] = OverlapTimeLinesRev1(TomatoesTT,RecessProbTT);
+    FRObj.TomatoesTT=TomatoesTT;
+    RecessionInfo(139,1)=icase;
+end
+FRObj.barval=200;
+FRObj.TomatoesTT=TomatoesTT;
+% Now plot this data
+titlestr='TomatoesIndex';
+PlotFredData(FRObj,TomatoesTT,itype,titlestr)
+% Add this table to the FredObj
+FRObj.TomatoesTT=TomatoesTT;
+titlestr=char(titlestr);
+figstr2=strcat(titlestr,'.png');
+figstr2=char(figstr2);
+FredPngList{139,1}=figstr2;
+% Now create the data for a cumilative distribution plot
+titlestr3='TomatoesIndex-CumilDist';
+titlestr3=char(titlestr3);
+figstr3=strcat(titlestr3,'.png');
+figstr3=char(figstr3);
+PlotCumilFredData(FRObj,itype,titlestr3);
+% Calculate the correlation
+ikind=1;
+[rho(19),~,numoverlap(19)] = CalculateCorrelation(UrbanHFTT,TomatoesTT,ikind,minCorrPts);
+dispstr=strcat('Price Correlation Between Urban Home Food and Tomatoes Index-',num2str(rho(19)));
+disp(dispstr)
+FoodCorrTable(19,:) = {126,"UrbanHFTT",StartYear1,EndYear1,139,"TomatoesTT",1947,2025,rho(19),SG139,numoverlap(19)};
+%% Continue with PPI Corn (WPU01220205) (Monthly)  Chap 19-15
+loopstr='**********Start Looping through the available FRED data**********';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr);
+eval(['cd ' fredpath(1:length(fredpath)-1)]);
+loopstr1='Process the PPI Corn';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr1);
+CornTable = readtable(fredfile140,'Sheet','Monthly');
+[nrows140,ncols140]=size(CornTable);
+dateArray=strings(nrows140,1);
+for n=1:nrows140
+    nowstr=string(CornTable.Date(n,1));
+    dateArray(n,1)=nowstr;
+    if(n==1)
+        nowStartDate=nowstr;
+    elseif(n==nrows140)
+        nowEndDate=nowstr;
+    end
+end
+loopstr2=strcat('Data is available for-',num2str(nrows140,4),'-dates-',...
+    'From-',nowStartDate,'-to-',nowEndDate');
+fprintf(fid,'%50s\n',loopstr2);
+rowTimes=datetime(dateArray);
+DateNumbers=datenum(rowTimes);
+CornTT=table2timetable(CornTable,'RowTimes','Date');
+CornTT = addvars(CornTT,DateNumbers);
+meanCornVal=mean(CornTT.Index);
+medianCornVal=median(CornTT.Index);
+meanCorn=zeros(nrows140,1);
+medianCorn=zeros(nrows140,1);
+for n=1:nrows140
+    meanCorn(n,1)=meanCornVal;
+    medianCorn(n,1)=medianCornVal;
+end
+CornTT = addvars(CornTT,meanCorn,medianCorn);
+SourceFile(140,1)="PPICorn.xlsx";
+Code(140,1)="WPU01220205";
+Desc(140,1)="PPICorn";
+Freq(140,1)="Monthly";
+StartYear(140,1)=1947;
+EndYear(140,1)=2025;
+SeasonalAdj(140,1)="No";
+BaseYear(140,1)=1982;
+NumObs(140,1)=953;
+FRObj.Desc=Desc;
+Chap(140,1)=19;
+Section(140,1)=15;
+Commodity(140,1)=1;
+% Calculate the Simple Stats
+itype=140;
+Data=CornTT.Index;
+FRObj=FRObj.SimpleStats(Data,itype);
+% Smooth the Data
+cornsmooth = smoothdata(Data);
+P0=cornsmooth(1);
+PF=cornsmooth(951);
+CornTT= addvars(CornTT,cornsmooth);
+NYears=EndYear(140,1)-StartYear(140,1)+1;
+FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
+GrowthRateAll=FRObj.GrowthRateAll;
+SG140=100*GrowthRateAll(itype,1);
+FRObj.SG140=SG140;
+% Now pull of the Recession Probability data that matches the available
+% time points in the CattleTT
+RecessProbTT=FRObj.RecessProbTT;
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0)
+    [CornTT,icase] = OverlapTimeLinesRev1(CornTT,RecessProbTT);
+    FRObj.CornTT=CornTT;
+    RecessionInfo(140,1)=icase;
+end
+FRObj.barval=100;
+FRObj.CornTT=CornTT;
+% Now plot this data
+titlestr='CornIndex';
+PlotFredData(FRObj,CornTT,itype,titlestr)
+% Add this table to the FredObj
+FRObj.CornTT=CornTT;
+titlestr=char(titlestr);
+figstr2=strcat(titlestr,'.png');
+figstr2=char(figstr2);
+FredPngList{140,1}=figstr2;
+% Now create the data for a cumilative distribution plot
+titlestr3='CornIndex-CumilDist';
+titlestr3=char(titlestr3);
+figstr3=strcat(titlestr3,'.png');
+figstr3=char(figstr3);
+PlotCumilFredData(FRObj,itype,titlestr3);
+% Calculate the correlation
+ikind=1;
+[rho(20),~,numoverlap(20)] = CalculateCorrelation(UrbanHFTT,CornTT,ikind,minCorrPts);
+dispstr=strcat('Price Correlation Between Urban Home Food and Corn Index-',num2str(rho(20)));
+disp(dispstr)
+FoodCorrTable(20,:) = {126,"UrbanHFTT",StartYear1,EndYear1,140,"CornTT",1947,2025,rho(20),SG140,numoverlap(20)};
+%% Continue with PPI Raw Milk (WPU01610102) (Monthly)  Chap 19-16
+loopstr='**********Start Looping through the available FRED data**********';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr);
+eval(['cd ' fredpath(1:length(fredpath)-1)]);
+loopstr1='Process the PPI Raw Milk';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr1);
+RawMilkTable = readtable(fredfile141,'Sheet','Monthly');
+[nrows141,ncols141]=size(RawMilkTable);
+dateArray=strings(nrows141,1);
+for n=1:nrows141
+    nowstr=string(RawMilkTable.Date(n,1));
+    dateArray(n,1)=nowstr;
+    if(n==1)
+        nowStartDate=nowstr;
+    elseif(n==nrows141)
+        nowEndDate=nowstr;
+    end
+end
+loopstr2=strcat('Data is available for-',num2str(nrows141,4),'-dates-',...
+    'From-',nowStartDate,'-to-',nowEndDate');
+fprintf(fid,'%50s\n',loopstr2);
+rowTimes=datetime(dateArray);
+DateNumbers=datenum(rowTimes);
+RawMilkTT=table2timetable(RawMilkTable,'RowTimes','Date');
+RawMilkTT = addvars(RawMilkTT,DateNumbers);
+meanRawMilkVal=mean(RawMilkTT.Index);
+medianRawMilkVal=median(RawMilkTT.Index);
+meanRawMilk=zeros(nrows141,1);
+medianRawMilk=zeros(nrows141,1);
+for n=1:nrows141
+    meanRawMilk(n,1)=meanRawMilkVal;
+    medianRawMilk(n,1)=medianRawMilkVal;
+end
+RawMilkTT = addvars(RawMilkTT,meanRawMilk,medianRawMilk);
+SourceFile(141,1)="PPIRawMilk.xlsx";
+Code(141,1)="WPU01610102";
+Desc(141,1)="PPIRawMilk";
+Freq(141,1)="Monthly";
+StartYear(141,1)=1973;
+EndYear(141,1)=2025;
+SeasonalAdj(141,1)="No";
+BaseYear(141,1)=1982;
+NumObs(141,1)=630;
+FRObj.Desc=Desc;
+Chap(141,1)=19;
+Section(141,1)=16;
+Commodity(141,1)=1;
+% Calculate the Simple Stats
+itype=141;
+Data=RawMilkTT.Index;
+FRObj=FRObj.SimpleStats(Data,itype);
+% Smooth the Data
+milksmooth = smoothdata(Data);
+P0=milksmooth(1);
+PF=milksmooth(630);
+RawMilkTT= addvars(RawMilkTT,milksmooth);
+NYears=EndYear(141,1)-StartYear(141,1)+1;
+FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
+GrowthRateAll=FRObj.GrowthRateAll;
+SG141=100*GrowthRateAll(itype,1);
+FRObj.SG141=SG141;
+% Now pull of the Recession Probability data that matches the available
+% time points in the RawMilkTT
+RecessProbTT=FRObj.RecessProbTT;
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0)
+     [RawMilkTT,icase] = OverlapTimeLinesRev1(RawMilkTT,RecessProbTT);
+     FRObj.RawMilkTT=RawMilkTT;
+     RecessionInfo(141,1)=icase;
+end
+FRObj.barval=50;
+FRObj.RawMilkTT=RawMilkTT;
+% Now plot this data
+titlestr='MilkIndex';
+PlotFredData(FRObj,RawMilkTT,itype,titlestr)
+% Add this table to the FredObj
+FRObj.RawMilkTT=RawMilkTT;
+titlestr=char(titlestr);
+figstr2=strcat(titlestr,'.png');
+figstr2=char(figstr2);
+FredPngList{141,1}=figstr2;
+% Now create the data for a cumilative distribution plot
+titlestr3='MilkIndex-CumilDist';
+titlestr3=char(titlestr3);
+figstr3=strcat(titlestr3,'.png');
+figstr3=char(figstr3);
+PlotCumilFredData(FRObj,itype,titlestr3);
+% Calculate the correlation
+ikind=1;
+[rho(21),~,numoverlap(21)] = CalculateCorrelation(UrbanHFTT,RawMilkTT,ikind,minCorrPts);
+dispstr=strcat('Price Correlation Between Urban Home Food and Raw Milk Index-',num2str(rho(21)));
+disp(dispstr)
+FoodCorrTable(21,:) = {126,"UrbanHFTT",StartYear1,EndYear1,141,"RawMilkTT",1973,2025,rho(21),SG141,numoverlap(21)};
+
+%% Continue with PPI Fruits and Mellons Vegetables and Nuts (WPU011) (Monthly)  Chap 19-17
+loopstr='**********Start Looping through the available FRED data**********';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr);
+eval(['cd ' fredpath(1:length(fredpath)-1)]);
+loopstr1='Process the PPI Fruits';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr1);
+FruitsTable = readtable(fredfile142,'Sheet','Monthly');
+[nrows142,ncols142]=size(FruitsTable);
+dateArray=strings(nrows142,1);
+for n=1:nrows142
+    nowstr=string(FruitsTable.Date(n,1));
+    dateArray(n,1)=nowstr;
+    if(n==1)
+        nowStartDate=nowstr;
+    elseif(n==nrows142)
+        nowEndDate=nowstr;
+    end
+end
+loopstr2=strcat('Data is available for-',num2str(nrows142,4),'-dates-',...
+    'From-',nowStartDate,'-to-',nowEndDate');
+fprintf(fid,'%50s\n',loopstr2);
+rowTimes=datetime(dateArray);
+DateNumbers=datenum(rowTimes);
+PCIFruitsTT=table2timetable(FruitsTable,'RowTimes','Date');
+PCIFruitsTT = addvars(PCIFruitsTT,DateNumbers);
+meanFruitsVal=mean(PCIFruitsTT.Index);
+medianFruitsVal=median(PCIFruitsTT.Index);
+meanFruits=zeros(nrows142,1);
+medianFruits=zeros(nrows142,1);
+for n=1:nrows142
+    meanFruits(n,1)=meanFruitsVal;
+    medianFruits(n,1)=medianFruitsVal;
+end
+PCIFruitsTT = addvars(PCIFruitsTT,meanFruits,medianFruits);
+SourceFile(142,1)="PPIFruits.xlsx";
+Code(142,1)="WPU011";
+Desc(142,1)="PPIFruits&Vegetables";
+Freq(142,1)="Monthly";
+StartYear(142,1)=1926;
+EndYear(142,1)=2025;
+SeasonalAdj(142,1)="No";
+BaseYear(142,1)=1982;
+NumObs(142,1)=1205;
+FRObj.Desc=Desc;
+Chap(142,1)=19;
+Section(142,1)=17;
+Commodity(142,1)=1;
+% Calculate the Simple Stats
+itype=142;
+Data=PCIFruitsTT.Index;
+FRObj=FRObj.SimpleStats(Data,itype);
+% Smooth the Data
+fruitsmooth = smoothdata(Data);
+P0=fruitsmooth(1);
+PF=fruitsmooth(1205);
+PCIFruitsTT= addvars(PCIFruitsTT,fruitsmooth);
+NYears=EndYear(142,1)-StartYear(142,1)+1;
+FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
+GrowthRateAll=FRObj.GrowthRateAll;
+SG142=100*GrowthRateAll(itype,1);
+FRObj.SG142=SG142;
+% Now pull of the Recession Probability data that matches the available
+% time points in the PCIFruitsTT
+RecessProbTT=FRObj.RecessProbTT;
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0)
+     [PCIFruitsTT,icase] = OverlapTimeLinesRev1(PCIFruitsTT,RecessProbTT);
+     FRObj.PCIFruitsTT=PCIFruitsTT;   
+     RecessionInfo(142,1)=icase;
+end
+FRObj.barval=100;
+FRObj.PCIFruitsTT=PCIFruitsTT;
+% Now plot this data
+titlestr='FruitsIndex';
+PlotFredData(FRObj,PCIFruitsTT,itype,titlestr)
+% Add this table to the FredObj
+FRObj.PCIFruitsTT=PCIFruitsTT;
+titlestr=char(titlestr);
+figstr2=strcat(titlestr,'.png');
+figstr2=char(figstr2);
+FredPngList{142,1}=figstr2;
+% Now create the data for a cumilative distribution plot
+titlestr3='FruitsIndex-CumilDist';
+titlestr3=char(titlestr3);
+figstr3=strcat(titlestr3,'.png');
+figstr3=char(figstr3);
+PlotCumilFredData(FRObj,itype,titlestr3);
+% Calculate the correlation
+ikind=1;
+[rho(22),~,numoverlap(22)] = CalculateCorrelation(UrbanHFTT,PCIFruitsTT,ikind,minCorrPts);
+dispstr=strcat('Price Correlation Between Urban Home Food and Fruit And Vegatable Index-',num2str(rho(22)));
+disp(dispstr)
+FoodCorrTable(22,:) = {126,"UrbanHFTT",StartYear1,EndYear1,142,"PCIFruitsTT",1926,2025,rho(22),SG142,numoverlap(22)};
+
+%% Continue with PPI Cabbage (WPU01130211) (Monthly)  Chap 19-18
+loopstr='**********Start Looping through the available FRED data**********';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr);
+eval(['cd ' fredpath(1:length(fredpath)-1)]);
+loopstr1='Process the PPI Cabbage';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr1);
+CabbageTable = readtable(fredfile143,'Sheet','Monthly');
+[nrows143,ncols143]=size(CabbageTable);
+dateArray=strings(nrows143,1);
+for n=1:nrows143
+    nowstr=string(CabbageTable.Date(n,1));
+    dateArray(n,1)=nowstr;
+    if(n==1)
+        nowStartDate=nowstr;
+    elseif(n==nrows143)
+        nowEndDate=nowstr;
+    end
+end
+loopstr2=strcat('Data is available for-',num2str(nrows143,4),'-dates-',...
+    'From-',nowStartDate,'-to-',nowEndDate');
+fprintf(fid,'%50s\n',loopstr2);
+rowTimes=datetime(dateArray);
+DateNumbers=datenum(rowTimes);
+PPICabbageTT=table2timetable(CabbageTable,'RowTimes','Date');
+PPICabbageTT = addvars(PPICabbageTT,DateNumbers);
+meanCabbageVal=mean(PPICabbageTT.Index);
+medianCabbageVal=median(PPICabbageTT.Index);
+meanCabbage=zeros(nrows143,1);
+medianCabbage=zeros(nrows143,1);
+for n=1:nrows143
+    meanCabbage(n,1)=meanCabbageVal;
+    medianCabbage(n,1)=medianCabbageVal;
+end
+PPICabbageTT = addvars(PPICabbageTT,meanCabbage,medianCabbage);
+SourceFile(143,1)="PPICabbage.xlsx";
+Code(143,1)="WPU01130211";
+Desc(143,1)="PPICabbage";
+Freq(143,1)="Monthly";
+StartYear(143,1)=1947;
+EndYear(143,1)=2025;
+SeasonalAdj(143,1)="No";
+BaseYear(143,1)=1982;
+NumObs(143,1)=951;
+FRObj.Desc=Desc;
+Chap(143,1)=19;
+Section(143,1)=18;
+Commodity(143,1)=1;
+% Calculate the Simple Stats
+itype=143;
+Data=PPICabbageTT.Index;
+FRObj=FRObj.SimpleStats(Data,itype);
+% Smooth the Data
+cabbagesmooth = smoothdata(Data);
+P0=cabbagesmooth(1);
+PF=cabbagesmooth(951);
+PPICabbageTT= addvars(PPICabbageTT,cabbagesmooth);
+NYears=EndYear(143,1)-StartYear(143,1)+1;
+FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
+GrowthRateAll=FRObj.GrowthRateAll;
+SG143=100*GrowthRateAll(itype,1);
+FRObj.SG143=SG143;
+% Now pull of the Recession Probability data that matches the available
+% time points in the PPICabageTT
+RecessProbTT=FRObj.RecessProbTT;
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0)% Plot is missing 
+     [PPICabbageTT,icase] = OverlapTimeLinesRev1(PPICabbageTT,RecessProbTT);
+     FRObj.PPICabbageTT=PPICabbageTT;
+     RecessionInfo(143,1)=icase;
+end
+FRObj.barval=200;
+FRObj.PPICabbageTT=PPICabbageTT;
+% Now plot this data
+titlestr='CabbageIndex';
+PlotFredData(FRObj,PPICabbageTT,itype,titlestr)
+% Add this table to the FredObj
+FRObj.PPICabbageTT=PPICabbageTT;
+titlestr=char(titlestr);
+figstr2=strcat(titlestr,'.png');
+figstr2=char(figstr2);
+FredPngList{143,1}=figstr2;
+% Now create the data for a cumilative distribution plot
+titlestr3='CabbageIndex-CumilDist';
+titlestr3=char(titlestr3);
+figstr3=strcat(titlestr3,'.png');
+figstr3=char(figstr3);
+PlotCumilFredData(FRObj,itype,titlestr3);
+% Calculate the correlation
+ikind=1;
+[rho(23),~,numoverlap(23)] = CalculateCorrelation(UrbanHFTT,PPICabbageTT,ikind,minCorrPts);
+dispstr=strcat('Price Correlation Between Urban Home Food and Cabbage Index-',num2str(rho(23)));
+disp(dispstr)
+FoodCorrTable(23,:) = {126,"UrbanHFTT",StartYear1,EndYear1,143,"PCICabbageTT",1947,2025,rho(23),SG143,numoverlap(23)};
+% Continue with PPI Rice (WPU01230103) (Monthly)  Chap 19-19
+loopstr='**********Start Looping through the available FRED data**********';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr);
+eval(['cd ' fredpath(1:length(fredpath)-1)]);
+loopstr1='Process the PPI Rice';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr1);
+RiceTable = readtable(fredfile144,'Sheet','Monthly');
+[nrows144,ncols144]=size(RiceTable);
+dateArray=strings(nrows144,1);
+for n=1:nrows144
+    nowstr=string(RiceTable.Date(n,1));
+    dateArray(n,1)=nowstr;
+    if(n==1)
+        nowStartDate=nowstr;
+    elseif(n==nrows144)
+        nowEndDate=nowstr;
+    end
+end
+loopstr2=strcat('Data is available for-',num2str(nrows144,4),'-dates-',...
+    'From-',nowStartDate,'-to-',nowEndDate');
+fprintf(fid,'%50s\n',loopstr2);
+rowTimes=datetime(dateArray);
+DateNumbers=datenum(rowTimes);
+RiceTT=table2timetable(RiceTable,'RowTimes','Date');
+RiceTT = addvars(RiceTT,DateNumbers);
+meanRiceVal=mean(RiceTT.Index);
+medianRiceVal=median(RiceTT.Index);
+meanRice=zeros(nrows144,1);
+medianRice=zeros(nrows144,1);
+for n=1:nrows144
+    meanRice(n,1)=meanRiceVal;
+    medianRice(n,1)=medianRiceVal;
+end
+RiceTT = addvars(RiceTT,meanRice,medianRice);
+SourceFile(144,1)="PPIRice.xlsx";
+Code(144,1)="WPU01230103";
+Desc(144,1)="PPIRice";
+Freq(144,1)="Monthly";
+StartYear(144,1)=2004;
+EndYear(144,1)=2025;
+SeasonalAdj(144,1)="No";
+BaseYear(144,1)=2004;
+NumObs(144,1)=258;
+FRObj.Desc=Desc;
+Chap(144,1)=19;
+Section(144,1)=19;
+Commodity(144,1)=1;
+% Calculate the Simple Stats
+itype=144;
+Data=RiceTT.Index;
+FRObj=FRObj.SimpleStats(Data,itype);
+% Smooth the Data
+ricesmooth = smoothdata(Data);
+P0=ricesmooth(1);
+PF=ricesmooth(258);
+RiceTT= addvars(RiceTT,ricesmooth);
+NYears=EndYear(144,1)-StartYear(144,1)+1;
+FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
+GrowthRateAll=FRObj.GrowthRateAll;
+SG144=100*GrowthRateAll(itype,1);
+FRObj.SG144=SG144;
+RecessionInfo(144,1)=icase;
+% Now pull of the Recession Probability data that matches the available
+% time points in the RiceTT
+RecessProbTT=FRObj.RecessProbTT;
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0)% Plot is missing 
+     [RiceTT,icase] = OverlapTimeLinesRev1(RiceTT,RecessProbTT);
+     FRObj.RiceTT=RiceTT;
+end
+FRObj.barval=100;
+FRObj.RiceTT=RiceTT;
+% Now plot this data
+titlestr='RiceIndex';
+PlotFredData(FRObj,RiceTT,itype,titlestr)
+% Add this table to the FredObj
+FRObj.RiceTT=RiceTT;
+titlestr=char(titlestr);
+figstr2=strcat(titlestr,'.png');
+figstr2=char(figstr2);
+FredPngList{144,1}=figstr2;
+% Now create the data for a cumilative distribution plot
+titlestr3='RiceIndex-CumilDist';
+titlestr3=char(titlestr3);
+figstr3=strcat(titlestr3,'.png');
+figstr3=char(figstr3);
+PlotCumilFredData(FRObj,itype,titlestr3);
+% Calculate the correlation
+ikind=1;
+[rho(24),~,numoverlap(24)] = CalculateCorrelation(UrbanHFTT,RiceTT,ikind,minCorrPts);
+dispstr=strcat('Price Correlation Between Urban Home Food and Rice Index-',num2str(rho(24)));
+disp(dispstr)
+FoodCorrTable(24,:) = {126,"UrbanHFTT",StartYear1,EndYear1,144,"RiceTT",2004,2025,rho(24),SG144,numoverlap(24)};
+%% Continue with PPI Citrus Fruit(WPU011101) (Monthly)  Chap 19-20
+loopstr='**********Start Looping through the available FRED data**********';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr);
+eval(['cd ' fredpath(1:length(fredpath)-1)]);
+loopstr1='Process the PPI Citrus Fruits';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr1);
+CitrusTable = readtable(fredfile145,'Sheet','Monthly');
+[nrows145,ncols145]=size(CitrusTable);
+dateArray=strings(nrows145,1);
+for n=1:nrows145
+    nowstr=string(CitrusTable.Date(n,1));
+    dateArray(n,1)=nowstr;
+    if(n==1)
+        nowStartDate=nowstr;
+    elseif(n==nrows145)
+        nowEndDate=nowstr;
+    end
+end
+loopstr2=strcat('Data is available for-',num2str(nrows145,4),'-dates-',...
+    'From-',nowStartDate,'-to-',nowEndDate');
+fprintf(fid,'%50s\n',loopstr2);
+rowTimes=datetime(dateArray);
+DateNumbers=datenum(rowTimes);
+PPICitrusTT=table2timetable(CitrusTable,'RowTimes','Date');
+PPICitrusTT = addvars(PPICitrusTT,DateNumbers);
+meanCitrusVal=mean(PPICitrusTT.Index);
+medianCitrusVal=median(PPICitrusTT.Index);
+meanCitrus=zeros(nrows145,1);
+medianCitrus=zeros(nrows145,1);
+for n=1:nrows145
+    meanCitrus(n,1)=meanCitrusVal;
+    medianCitrus(n,1)=medianCitrusVal;
+end
+PPICitrusTT = addvars(PPICitrusTT,meanCitrus,medianCitrus);
+SourceFile(145,1)="PPICitrusFruits.xlsx";
+Code(145,1)="WPU011101";
+Desc(145,1)="PPICitrusFruits";
+Freq(145,1)="Monthly";
+StartYear(145,1)=1947;
+EndYear(145,1)=2025;
+SeasonalAdj(145,1)="No";
+BaseYear(145,1)=1982;
+NumObs(145,1)=934;
+FRObj.Desc=Desc;
+Chap(145,1)=19;
+Section(145,1)=20;
+Commodity(145,1)=1;
+% Calculate the Simple Stats
+itype=145;
+Data=PPICitrusTT.Index;
+FRObj=FRObj.SimpleStats(Data,itype);
+% Smooth the Data
+citrussmooth = smoothdata(Data);
+P0=citrussmooth(1);
+PF=citrussmooth(934);
+PPICitrusTT= addvars(PPICitrusTT,citrussmooth);
+NYears=EndYear(145,1)-StartYear(145,1)+1;
+FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
+GrowthRateAll=FRObj.GrowthRateAll;
+SG145=100*GrowthRateAll(itype,1);
+FRObj.SG145=SG145;
+% Now pull of the Recession Probability data that matches the available
+% time points in the RiceTT
+RecessProbTT=FRObj.RecessProbTT;
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0)% Plot is missing 
+     [PPICitrusTT,icase] = OverlapTimeLinesRev1(PPICitrusTT,RecessProbTT);
+     FRObj.PPICitrusTT=PPICitrusTT;
+     RecessionInfo(145,1)=icase;
+end
+FRObj.barval=100;
+FRObj.PPICitrusTT=PPICitrusTT;
+% Now plot this data
+titlestr='CitrusFruitsIndex';
+PlotFredData(FRObj,PPICitrusTT,itype,titlestr)
+% Add this table to the FredObj
+FRObj.PPICitrusTT=PPICitrusTT;
+titlestr=char(titlestr);
+figstr2=strcat(titlestr,'.png');
+figstr2=char(figstr2);
+FredPngList{145,1}=figstr2;
+% Now create the data for a cumilaPPICitrusFruitsIndex-Cumiltive distribution plot
+titlestr3='CitrusFruitsIndex-CumilDist';
+titlestr3=char(titlestr3);
+figstr3=strcat(titlestr3,'.png');
+figstr3=char(figstr3);
+PlotCumilFredData(FRObj,itype,titlestr3);
+% Calculate the correlation
+ikind=1;
+[rho(25),~,numoverlap(25)] = CalculateCorrelation(UrbanHFTT,PPICitrusTT,ikind,minCorrPts);
+dispstr=strcat('Price Correlation Between Urban Home Food and CitrusFruits Index Index-',num2str(rho(24)));
+disp(dispstr)
+FoodCorrTable(25,:) = {126,"UrbanHFTT",StartYear1,EndYear1,145,"PPICitrusTT",1947,2025,rho(25),SG145,numoverlap(25)};
+%% Light Truck Sales(ALTSALES) Monthly
+% itype=147
+eval(['cd ' fredpath(1:length(fredpath)-1)]);
+AltSalesTable = readtable(fredfile147,'Sheet','Monthly');
+[nrows147,ncols147]=size(AltSalesTable);
+clear DateNumbers
+clear dateArray
+dateArray=strings(nrows147,1);
+for n=1:nrows147
+    nowstr=string(AltSalesTable.Date(n,1));
+    dateArray(n,1)=nowstr;
+    if(n==1)
+        nowStartDate=nowstr;
+    elseif(n==nrows147)
+        nowEndDate=nowstr;
+    end
+end
+rowTimes=datetime(dateArray);
+DateNumbers=datenum(rowTimes);
+loopstr1='Process the The Sales for Light Trucks';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr1);
+loopstr2=strcat('Data is available for-',num2str(nrows147,4),'-dates-',...
+    'From-',nowStartDate,'-to-',nowEndDate');
+fprintf(fid,'%50s\n',loopstr2);
+AltSalesTT=table2timetable(AltSalesTable,'RowTimes','Date');
+AltSalesTT = addvars(AltSalesTT,DateNumbers);
+UnitsmeanVal=mean(AltSalesTT.Units);
+UnitsmedianVal=median(AltSalesTT.Units);
+meanUnits=zeros(nrows147,1);
+medianUnits=zeros(nrows147,1);
+for n=1:nrows147
+    meanUnits(n,1)=UnitsmeanVal;
+    medianUnits(n,1)=UnitsmedianVal;
+end
+AltSalesTT = addvars(AltSalesTT,meanUnits,medianUnits);
+SourceFile(147,1)="ALTSALES.xlsx";
+Code(147,1)="ALTSALES";
+Desc(147,1)="LightTruckSales";
+Freq(147,1)="Monthly";
+StartYear(147,1)=1976;
+EndYear(147,1)=2025;
+SeasonalAdj(147,1)="Yes";
+BaseYear(147,1)=1976;
+NumObs(147,1)=606;
+Chap(147,1)=7;
+Section(147,1)=19;
+itype=147;
+% Calculate the Simple Stats
+Data=AltSalesTT.Units;
+FRObj=FRObj.SimpleStats(Data,itype);
+% Smooth the Data
+trkunitssmooth = smoothdata(Data);
+P0=trkunitssmooth(1);
+PF=trkunitssmooth(605);
+AltSalesTT= addvars(AltSalesTT,trkunitssmooth);
+NYears=EndYear(147,1)-StartYear(147,1)+1;
+FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
+GrowthRateAll=FRObj.GrowthRateAll;
+SG147=100*GrowthRateAll(itype,1);
+FRObj.SG147=SG147;
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0)
+    [AltSalesTT,icase] = OverlapTimeLinesRev1(AltSalesTT,RecessProbTT);
+    FRObj.AltSalesTT=AltSalesTT;
+    RecessionInfo(147,1)=icase;
+end
+% Now plot this data
+FRObj.barval=15;
+% Now plot this data
+titlestr='LightTruck-Sales';
+PlotFredData(FRObj,AltSalesTT,itype,titlestr)
+% Add this data to the Fred Obj
+FRObj.AltSalesTT=AltSalesTT;
+titlestr=char(titlestr);
+figstr2=strcat(titlestr,'.png');
+figstr2=char(figstr2);
+FredPngList{147,1}=figstr2;
+% Now create the data for a cumilative distribution plot
+titlestr3='LightTruck-CumilDistribution';
+titlestr3=char(titlestr3);
+figstr3=strcat(titlestr3,'.png');
+figstr3=char(figstr3);
+PlotCumilFredData(FRObj,itype,titlestr3)
+ab=1;
+%% Start with The Personal Savings Rate Data (PSAVERT) (Monthly)  Chap 16-6
+% Itype=148
+loopstr='**********Start Looping through the available FRED data**********';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr);
+eval(['cd ' fredpath(1:length(fredpath)-1)]);
+loopstr1='Process the Personal Savings Rate Data';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr1);
+PersonalSavingsTable = readtable(fredfile148,'Sheet','Monthly');
+[nrows148,~]=size(PersonalSavingsTable);
+dateArray=strings(nrows148,1);
+for n=1:nrows148
+    nowstr=string(PersonalSavingsTable.Date(n,1));
+    dateArray(n,1)=nowstr;
+    if(n==1)
+        nowStartDate=nowstr;
+    elseif(n==nrows148)
+        nowEndDate=nowstr;
+    end
+end
+loopstr2=strcat('Data is available for-',num2str(nrows148,4),'-dates-',...
+    'From-',nowStartDate,'-to-',nowEndDate');
+fprintf(fid,'%50s\n',loopstr2);
+rowTimes=datetime(dateArray);
+DateNumbers=datenum(rowTimes);
+PSaveTT=table2timetable(PersonalSavingsTable,'RowTimes','Date');
+PSaveTT = addvars(PSaveTT,DateNumbers);
+meanPSaveVal=mean(PSaveTT.Rate);
+medianPSaveVal=mean(PSaveTT.Rate);
+meanrate=zeros(nrows148,1);
+medianrate=zeros(nrows148,1);
+for n=1:nrows148
+    meanrate(n,1)=meanPSaveVal;
+    medianrate(n,1)=medianPSaveVal;
+end
+PSaveTT = addvars(PSaveTT,meanrate,medianrate);
+SourceFile(148,1)="PSAVERT.xlsx";
+Code(148,1)="PSAVERT";
+Desc(148,1)="Personal Savings Rate";
+Freq(148,1)="Monthly";
+StartYear(148,1)=1959;
+EndYear(148,1)=2026;
+SeasonalAdj(148,1)="Yes";
+BaseYear(148,1)=1959;
+NumObs(148,1)=810;
+FRObj.Desc=Desc;
+Chap(148,1)=6;
+Section(148,1)=16;
+% Calculate the Simple Stats
+itype=148;
+Data=PSaveTT.Rate;
+FRObj=FRObj.SimpleStats(Data,itype);
+NYears=EndYear(148,1)-StartYear(148,1)+1;
+FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
+GrowthRateAll=FRObj.GrowthRateAll;
+SG148=100*GrowthRateAll(itype,1);
+FRObj.SG148=SG148;
+% Smooth the Data
+psavesmooth = smoothdata(Data);
+P0=psavesmooth(1);
+PF=psavesmooth(810);
+PSaveTT= addvars(PSaveTT,psavesmooth);
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0)
+    [PSaveTT,icase] = OverlapTimeLinesRev1(PSaveTT,RecessProbTT);
+    FRObj.PSaveTT=PSaveTT;
+    RecessionInfo(148,1)=icase;
+end
+% Now plot this data
+FRObj.barval=5;
+FRObj.PSaveTT=PSaveTT;
+% Now plot this data
+titlestr='PersonalSavingsRate';
+PlotFredData(FRObj,PSaveTT,itype,titlestr)
+% Add this table to the FredObj
+titlestr=char(titlestr);
+figstr2=strcat(titlestr,'.png');
+figstr2=char(figstr2);
+FredPngList{1,1}=figstr2;
+% Now create the data for a cumilative distribution plot
+titlestr3='PSaveCumilDist.png';
+titlest3=char(titlestr3);
+figstr3=strcat(titlestr3,'.png');
+figstr3=char(figstr3);
+PlotCumilFredData(FRObj,itype,titlestr3)
+%% Continue with All Manufacturing Employees (PSAVERT) (Monthly)  Chap 11-2
+% Itype=149
+loopstr='**********Start Looping through the available FRED data**********';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr);
+eval(['cd ' fredpath(1:length(fredpath)-1)]);
+loopstr1='Process the Personal Savings Rate Data';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr1);
+ManEmployTable = readtable(fredfile149,'Sheet','Monthly');
+[nrows149,ncols]=size(ManEmployTable);
+dateArray=strings(nrows149,1);
+for n=1:nrows149
+    nowstr=string(ManEmployTable.Date(n,1));
+    dateArray(n,1)=nowstr;
+    if(n==1)
+        nowStartDate=nowstr;
+    elseif(n==nrows149)
+        nowEndDate=nowstr;
+    end
+end
+loopstr2=strcat('Data is available for-',num2str(nrows149,4),'-dates-',...
+    'From-',nowStartDate,'-to-',nowEndDate');
+fprintf(fid,'%50s\n',loopstr2);
+rowTimes=datetime(dateArray);
+DateNumbers=datenum(rowTimes);
+ManEmpTT=table2timetable(ManEmployTable,'RowTimes','Date');
+ManEmpTT = addvars(ManEmpTT,DateNumbers);
+meanWorkersVal=mean(ManEmpTT.Workers);
+medianWorkersVal=mean(ManEmpTT.Workers);
+meanworkers=zeros(nrows149,1);
+medianworkers=zeros(nrows149,1);
+for n=1:nrows149
+    meanworkers(n,1)=meanWorkersVal/1000;
+    medianworkers(n,1)=medianWorkersVal/1000;
+end
+ManEmpTT = addvars(ManEmpTT,meanworkers,medianworkers);
+SourceFile(149,1)="MANEMP.xlsx";
+Code(149,1)="MANEMP";
+Desc(149,1)="All Manufacturing Workers";
+Freq(149,1)="Monthly";
+StartYear(149,1)=1939;
+EndYear(149,1)=2026;
+SeasonalAdj(149,1)="Yes";
+BaseYear(149,1)=1939;
+NumObs(149,1)=1050;
+FRObj.Desc=Desc;
+Chap(149,1)=11;
+Section(149,1)=2;
+% Calculate the Simple Stats
+itype=149;
+Data=ManEmpTT.Workers/1000;% Convert to Millions
+FRObj=FRObj.SimpleStats(Data,itype);
+NYears=EndYear(149,1)-StartYear(149,1)+1;
+FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
+GrowthRateAll=FRObj.GrowthRateAll;
+SG149=100*GrowthRateAll(itype,1);
+FRObj.SG149=SG149;
+% Smooth the Data
+workersmooth = smoothdata(Data);
+P0=workersmooth(1);
+PF=workersmooth(1050);
+ManEmpTT= addvars(ManEmpTT,workersmooth);
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0)
+    [ManEmpTT,icase] = OverlapTimeLinesRev1(ManEmpTT,RecessProbTT);
+    FRObj.ManEmpTT=ManEmpTT;
+    RecessionInfo(149,1)=icase;
+end
+% Now plot this data
+FRObj.barval=10;
+FRObj.ManEmpTT=ManEmpTT;
+% Now plot this data
+titlestr='ManufacturingEmployment';
+PlotFredData(FRObj,ManEmpTT,itype,titlestr)
+% Add this table to the FredObj
+titlestr=char(titlestr);
+figstr2=strcat(titlestr,'.png');
+figstr2=char(figstr2);
+FredPngList{149,1}=figstr2;
+% Now create the data for a cumilative distribution plot
+titlestr3='ManufacturingEmployment-CumilDist';
+titlest3=char(titlestr3);
+figstr3=strcat(titlestr3,'.png');
+figstr3=char(figstr3);
+PlotCumilFredData(FRObj,itype,titlestr3)
+
+%% Continue with All Manufacturing Inventory to Sales (MNFCTRIRSA)(Monthly)  Chap 11-3
+% Itype=150
+loopstr='**********Start Looping through the available FRED data**********';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr);
+eval(['cd ' fredpath(1:length(fredpath)-1)]);
+loopstr1='Process the Manufacturing Inventory To Sales Ratio';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr1);
+ManInventoryTable = readtable(fredfile150,'Sheet','Monthly');
+[nrows150,ncols]=size(ManInventoryTable);
+dateArray=strings(nrows150,1);
+for n=1:nrows150
+    nowstr=string(ManInventoryTable.Date(n,1));
+    dateArray(n,1)=nowstr;
+    if(n==1)
+        nowStartDate=nowstr;
+    elseif(n==nrows150)
+        nowEndDate=nowstr;
+    end
+end
+loopstr2=strcat('Data is available for-',num2str(nrows150,4),'-dates-',...
+    'From-',nowStartDate,'-to-',nowEndDate');
+fprintf(fid,'%50s\n',loopstr2);
+rowTimes=datetime(dateArray);
+DateNumbers=datenum(rowTimes);
+ManInventoryToSalesTT=table2timetable(ManInventoryTable,'RowTimes','Date');
+ManInventoryToSalesTT = addvars(ManInventoryToSalesTT,DateNumbers);
+meanInventoryVal=mean(ManInventoryToSalesTT.Ratio);
+medianInventoryVal=mean(ManInventoryToSalesTT.Ratio);
+meanManInventory=zeros(nrows150,1);
+medianManInventory=zeros(nrows150,1);
+for n=1:nrows150
+    meanManInventory(n,1)=meanInventoryVal;
+    medianManInventory(n,1)=medianInventoryVal;
+end
+ManInventoryToSalesTT = addvars(ManInventoryToSalesTT,meanManInventory,medianManInventory);
+SourceFile(150,1)="ManInventoryToSales.xlsx";
+Code(150,1)="MNFCTRIRSA";
+Desc(150,1)="Manufacturing Inventory To Sales";
+Freq(150,1)="Monthly";
+StartYear(150,1)=1992;
+EndYear(150,1)=2025;
+SeasonalAdj(150,1)="Yes";
+BaseYear(150,1)=1992;
+NumObs(150,1)=413;
+FRObj.Desc=Desc;
+Chap(150,1)=11;
+Section(150,1)=3;
+% Calculate the Simple Stats
+itype=150;
+Data=ManInventoryToSalesTT.Ratio;
+FRObj=FRObj.SimpleStats(Data,itype);
+NYears=EndYear(150,1)-StartYear(150,1)+1;
+FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
+GrowthRateAll=FRObj.GrowthRateAll;
+SG150=100*GrowthRateAll(itype,1);
+FRObj.SG150=SG150;
+% Smooth the Data
+maninvsmooth = smoothdata(Data);
+P0=maninvsmooth(1);
+PF=maninvsmooth(413);
+ManInventoryToSalesTT= addvars(ManInventoryToSalesTT,maninvsmooth);
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0)
+    [ManInventoryToSalesTT,icase] = OverlapTimeLinesRev1(ManInventoryToSalesTT,RecessProbTT);
+    FRObj.ManInventoryToSalesTT=ManInventoryToSalesTT;
+    RecessionInfo(150,1)=icase;
+end
+% Now plot this data
+FRObj.barval=1.5;
+FRObj.ManInventoryToSalesTT=ManInventoryToSalesTT;
+% Now plot this data
+titlestr='ManufacturingInventoryToSales';
+PlotFredData(FRObj,ManInventoryToSalesTT,itype,titlestr)
+% Add this table to the FredObj
+titlestr=char(titlestr);
+figstr2=strcat(titlestr,'.png');
+figstr2=char(figstr2);
+FredPngList{149,1}=figstr2;
+% Now create the data for a cumilative distribution plot
+titlestr3='ManufacturingInv-CumilDist';
+titlest3=char(titlestr3);
+figstr3=strcat(titlestr3,'.png');
+figstr3=char(figstr3);
+PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Create a Catalog table to hold key data extracted from the FRED database
 Catalog = table(Code,Desc,Freq,StartYear,EndYear,SeasonalAdj,BaseYear,NumObs,Chap,Section,Commodity);
@@ -12649,13 +13145,17 @@ actionstr='save';
 % end
 varstr='FRObj FoodCorrTable';
 qualstr='-v7.3';
-TableName='ImportedFredData144.mat';
+TableName='ImportedFredData147.mat';
 [cmdString]=MyStrcatV73(actionstr,TableName,varstr,qualstr);
 eval(cmdString);
 wrtstr1=strcat('Wrote Imported Fred Data To File-',TableName);
 disp(wrtstr1);
 %fprintf(fid,'%30s\n',wrtstr1);
-
+% Write Food Correlation Table to an Excel File
+eval(['cd ' excelpath(1:length(excelpath)-1)]);
+writetable(FoodCorrTable,'FoodCorrTable.xlsx')
+disptr=strcat('Wrote Food Correlation Table to Excel File-','FoodCorrTable.xlsx');
+disp(dispstr)
 %% Run Close out
 fprintf(fid,'\n');
 disp('Run Completed');
