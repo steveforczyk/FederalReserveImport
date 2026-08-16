@@ -43,164 +43,12 @@ tiffpath='D:\Investing2\FRED_Data\Tiff_Files\';
 pdfpath='K:\Investing2\PDF_Files]';
 govjpegpath='K:\Investing2\gov_jpeg\';
 matpath='K:\Investing2\MAT_Files\';
-% Populate list of Fred Data files to be imported
 fredpath='K:\Investing2\FRED_Data\';
-fredfile1='UNRATE-1948-2024.xlsx';
-fredfile2='CORESTICKM159SFRBATL.xlsx';
-fredfile3='CIVPART-1948-2025.xlsx';
-fredfile4='DelinquencyRateSingleHomes-1991-2025.xlsx';
-fredfile5='HomeOwnership-1965-2025.xlsx';
-fredfile6='IPMAN-1972-2025.xlsx';
-fredfile7='RealMedianHouseholdIncome.xlsx';
-fredfile8='CBOE-VIX.xlsx';
-fredfile9='ConsumerConfidence-1978-2025.xlsx';
-fredfile10='HouseInventory.xlsx';
-fredfile11='Fed10YearBondYields.xlsx';
-fredfile12='U2Rate-1967-2025.xlsx';
-fredfile13='RealGDP-1947-2025.xlsx';
-fredfile14='RealGDPPerCap-1947-2025.xlsx';
-fredfile15='Fed2YearBondYields.xlsx';
-fredfile16='InitialUnemploymentClaims.xlsx';
-fredfile17='ContinuedUnemploymentClaims.xlsx';
-fredfile18='TotalNonFarmJobOpen-2000-2025.xlsx';
-fredfile19='ConstructionJobOpenings-2000-2025.xlsx';
-fredfile20='ManufacturingJobOpenings-2000-2025.xlsx';
-fredfile21='ProfJobOpen.xlsx';
-fredfile22='HealthCareJobOpenings.xlsx';
-fredfile23='GovJobOpenings.xlsx';
-fredfile24='RealMedianPersonalIncome.xlsx';
-fredfile25='T10Y2Y-1976-2025.xlsx';
-fredfile26='VISASMIDNSA-2014-2025.xlsx';
-fredfile27='CaseShillerHousePriceIndex.xlsx';
-fredfile28='MedianWeeklyWage.xlsx';
-fredfile29='FYGDP-1930-2023.xlsx';
-fredfile30='PublicDebtvsGDP-1966-2025.xlsx';
-fredfile31='BudgetSurplus.xlsx';
-fredfile32='NetFedOutlays.xlsx';
-fredfile33='FederalReceipts.xlsx';
-fredfile34='FederalPublicDebt.xlsx';
-fredfile35='FedInterestPctGDP.xlsx';
-fredfile36='TreasuryDebt.xlsx';
-fredfile37='DomesticAutoInventories.xlsx';
-fredfile38='ForeignAutoSales.xlsx';
-fredfile39='TotalVehicleSales.xlsx';
-fredfile40='DomesticAutoProduction.xlsx';
-fredfile41='AutoExports.xlsx';
-fredfile42='VehicleMilesTravelled.xlsx';
-fredfile43='FreightTransportIndex.xlsx';
-fredfile44='RailCarloads.xlsx';
-fredfile45='AirlineLoadfactor.xlsx';
-fredfile46='ASM.xlsx';
-fredfile47='PipelinePetrol.xlsx';
-fredfile48='HouseStarts.xlsx';
-fredfile49='MDSP.xlsx';
-fredfile50='VacantHousingUnits.xlsx';
-fredfile51='USPatents.xlsx';
-fredfile52='TCU.xlsx';
-fredfile53='IPSemiconductors.xlsx';
-fredfile54='IPDefense.xlsx';
-fredfile55='TotalRevenueAllHospitals.xlsx';
-fredfile56='PharmaceuticalPriceIndex.xlsx';
-fredfile57='ProducerPriceIndex.xlsx';
-fredfile58='FlexCPIIndex.xlsx';
-fredfile59='COMPU1USA.xlsx';
-fredfile60='AdvanceRetailSales.xlsx';
-fredfile61='ECommerceRSales.xlsx';
-fredfile62='InventoryToSales.xlsx';
-fredfile63='RetailInventories.xlsx';
-fredfile64='UsedCarSales.xlsx';
-fredfile65='RestaurantSales.xlsx';
-fredfile66='FurnitureSales.xlsx';
-fredfile67='ManufacturingSales.xlsx';
-fredfile68='NewCarSales.xlsx';
-fredfile69='FullServeRestaurants.xlsx';
-fredfile70='RetailGasSales.xlsx';
-fredfile71='RetailAutoParts.xlsx';
-fredfile72='LeadingIndex.xlsx';
-fredfile73='InferredRecessionDates.xlsx';
-fredfile74='CoincidentEconomicActivity.xlsx';
-fredfile75='BalanceSheets.xlsx';
-fredfile76='CreditCardDebt.xlsx';
-fredfile77='LoanPerformance.xlsx';
-fredfile78='Population.xlsx';
-fredfile79='TotalHouseHolds.xlsx';
-fredfile80='POP55.xlsx';
-fredfile81='POP-25-54.xlsx';
-fredfile82='FamiliesWithChildren.xlsx';
-fredfile83='BlackPop.xlsx';
-fredfile84='WhitePop.xlsx';
-fredfile85='HispanicPop.xlsx';
-fredfile86='FemaleEmploymentRatio.xlsx';
-fredfile87='CBOENasdaqVolatility.xlsx';
-fredfile88='LeadingIndexUSA.xlsx';
-fredfile89='Fed3MonthBondYields.xlsx';
-fredfile90='TDSP.xlsx';
-fredfile91='CDSP.xlsx';
-fredfile92='RealDisposableIncome.xlsx';
-fredfile93='PCE.xlsx';
-fredfile94='DAUTOSAAR.xlsx';
-fredfile95='USSTHPI.xlsx';
-fredfile96='RCCCBBALTOT.xlsx';
-fredfile97='RCMFLOORIG.xlsx';
-fredfile98='PastDueMortgages.xlsx';
-fredfile99='CreditScore50.xlsx';
-fredfile100='HomeEquityLines.xlsx';
-fredfile101='USDToPoundSterling.xlsx';
-fredfile102='NominalBroadUSDollarIndex.xlsx';
-fredfile103='JapaneseYenToUSD.xlsx';
-fredfile104='StockMarketCapitalization.xlsx';
-fredfile105='CPI_All.xlsx';
-fredfile106='GrossNationalIncome.xlsx';
-fredfile107='GASREGW.xlsx';
-fredfile108='DCOILBRENTEU.xlsx';
-fredfile109='EggPrices.xlsx';
-fredfile110='GroundBeefPrices.xlsx';
-fredfile111='ElectricityPrices.xlsx';
-fredfile112='WestTexasIntermediateCrude.xlsx';
-fredfile113='HenryHubNaturalGasPrices.xlsx';
-fredfile114='GlobalCopperPrice.xlsx';
-fredfile115='DieselPrices.xlsx';
-fredfile116='JetFuelPrices.xlsx';
-fredfile117='GlobalAluminumPrice.xlsx';
-fredfile118='CocoaPrice.xlsx';
-fredfile119='GlobalEnergyPrice.xlsx';
-fredfile120='BreadPrice.xlsx';
-fredfile121='WheatPrices.xlsx';
-fredfile122='UraniumPrices.xlsx';
-fredfile123='NickelPrices.xlsx';
-fredfile124='RubberPrices.xlsx';
-fredfile125='SugarPrices.xlsx';
-fredfile126='CPIUrbanFoodAtHome.xlsx';
-fredfile127='PPIFoodManufacturing.xlsx';
-fredfile128='PPIDiesel.xlsx';
-fredfile129='BolognaPrices.xlsx';
-fredfile130='BonelessHamPrices.xlsx';
-fredfile131='ChuckRoastPrices.xlsx';
-fredfile132='BaconPrices.xlsx';
-fredfile133='SoybeanIndex.xlsx';
-fredfile134='FlourPrice.xlsx';
-fredfile135='CookingOilPriceIndex.xlsx';
-fredfile136='WholeChickenPrices.xlsx';
-fredfile137='PPIFarmProducts.xlsx';
-fredfile138='PPICattle.xlsx';
-fredfile139='PPITomatoes.xlsx';
-fredfile140='PPICorn.xlsx';
-fredfile141='PPIRawMilk.xlsx';
-fredfile142='PPIFruits.xlsx';
-fredfile143='PPICabbage.xlsx';
-fredfile144='PPIRice.xlsx';
-fredfile145='PPICitrusFruits.xlsx';
-fredfile146='RecessProb.xlsx';
-fredfile147='ALTSALES.xlsx';
-fredfile148='PSAVERT.xlsx';
-fredfile149='MANEMP.xlsx';
-fredfile150='ManInventoryToSales.xlsx';
-fredfile151='ManufacturersInventories.xlsx';
-fredfile152='DurableGoodsOrders.xlsx';
+
 iCreatePDFReport=1;
 iTechCounter=0;
 icapture=1;
-pdffilename='FredDataImport152A.pdf';
+pdffilename='FredDataImport152E.pdf';
 dataYear=2025;
 tic;
 %% Call some routines that will create nice plot window sizes and locations
@@ -361,9 +209,8 @@ numoverlap=zeros(25,1);
 RecessionInfo=zeros(152,1);
 % Start with loading some items that need to be available immediately
 % For this reason they are done "Out of order"
-%% Get the Inferred Recession Dates(JHDUSRGDPBR)-could be useful immediately
+%% Get the Inferred Recession Dates(JHDUSRGDPBR)-must be done here to add recssions bars in later plots
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-%InferRecessionDatesTable = readtable(fredfile73,'Sheet','Quarterly');
 InferRecessionDatesTable = readtable(FRObj.fredfile73,'Sheet','Quarterly');
 [nrows73,~]=size(InferRecessionDatesTable);
 clear DateNumbers dateArray
@@ -434,7 +281,7 @@ FredPngList{73,1}=figstr2;
 
 %% Get the Smoothed Recession Probabilities(RECPROUSM156N)-could be useful immediately
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-RecessProbTable = readtable(fredfile146,'Sheet','Monthly');
+RecessProbTable = readtable(FRObj.fredfile146,'Sheet','Monthly');
 [nrows146,~]=size(RecessProbTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows146,1);
@@ -518,7 +365,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 % imported
 % itype=126
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-UrbanHomeFoodTable = readtable(fredfile126,'Sheet','Monthly');
+UrbanHomeFoodTable = readtable(FRObj.fredfile126,'Sheet','Monthly');
 [nrows126,ncols126]=size(UrbanHomeFoodTable);
 clear DateNumbers
 clear dateArray
@@ -593,180 +440,6 @@ titlestr3=char(titlestr3);
 figstr3=strcat(titlestr3,'.png');
 figstr3=char(figstr3);
 PlotCumilFredData(FRObj,itype,titlestr3)
-%% Start with Durable Goods Orders(Monthly) (UMDMNO) Chap 11-5
-% Itype=152
-loopstr='**********Start Looping through the available FRED data**********';
-fprintf(fid,'\n');
-fprintf(fid,'%50s\n',loopstr);
-eval(['cd ' fredpath(1:length(fredpath)-1)]);
-loopstr1='Process the Durable Goods Orders';
-fprintf(fid,'\n');
-fprintf(fid,'%50s\n',loopstr1);
-DurableGoodsTable = readtable(fredfile152,'Sheet','Monthly');
-[nrows152,~]=size(DurableGoodsTable);
-dateArray=strings(nrows152,1);
-for n=1:nrows152
-    nowstr=string(DurableGoodsTable.Date(n,1));
-    dateArray(n,1)=nowstr;
-    if(n==1)
-        nowStartDate=nowstr;
-    elseif(n==nrows152)
-        nowEndDate=nowstr;
-    end
-end
-loopstr2=strcat('Data is available for-',num2str(nrows152,4),'-dates-',...
-    'From-',nowStartDate,'-to-',nowEndDate');
-fprintf(fid,'%50s\n',loopstr2);
-rowTimes=datetime(dateArray);
-DateNumbers=datenum(rowTimes);
-DurableGoodsTT=table2timetable(DurableGoodsTable,'RowTimes','Date');
-DurableGoodsTT = addvars(DurableGoodsTT,DateNumbers);
-meanDGoodsVal=mean(DurableGoodsTT.Orders);
-medianDGoodsVal=mean(DurableGoodsTT.Orders);
-meanDGoods=zeros(nrows152,1);
-medianDGoods=zeros(nrows152,1);
-for n=1:nrows152
-    meanDGoods(n,1)=meanDGoodsVal;
-    medianDGoods(n,1)=medianDGoodsVal;
-end
-DurableGoodsTT = addvars(DurableGoodsTT,meanDGoods,medianDGoods);
-SourceFile(152,1)="DurableGoodsOrders.xlsx";
-Code(152,1)="UMDMNO";
-Desc(152,1)="Durable Goods Orders";
-Freq(152,1)="Monthly";
-StartYear(152,1)=1992;
-EndYear(152,1)=2025;
-SeasonalAdj(152,1)="No";
-BaseYear(152,1)=1992;
-NumObs(152,1)=413;
-FRObj.Desc=Desc;
-Chap(152,1)=11;
-Section(152,1)=5;
-% Calculate the Simple Stats
-itype=152;
-Data=DurableGoodsTT.Orders/1000;
-FRObj=FRObj.SimpleStats(Data,itype);
-NYears=EndYear(152,1)-StartYear(152,1)+1;
-FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
-GrowthRateAll=FRObj.GrowthRateAll;
-SG152=100*GrowthRateAll(itype,1);
-FRObj.SG152=SG152;
-% Smooth the Data
-goodsmooth = smoothdata(Data);
-P0=goodsmooth(1);
-PF=goodsmooth(413);
-DurableGoodsTT= addvars(DurableGoodsTT,goodsmooth);
-ishowrecession=FRObj.ishowrecession;
-if(ishowrecession>0)
-    [DurableGoodsTT,icase] = OverlapTimeLinesRev1(DurableGoodsTT,RecessProbTT);
-    FRObj.DurableGoodsTT=DurableGoodsTT;
-    RecessionInfo(152,1)=icase;
-end
-% Now plot this data
-FRObj.barval=200;
-FRObj.DurableGoodsTT=DurableGoodsTT;
-% Now plot this data
-titlestr='DurableGoodsOrders';
-PlotFredData(FRObj,DurableGoodsTT,itype,titlestr)
-% Add this table to the FredObj
-titlestr=char(titlestr);
-figstr2=strcat(titlestr,'.png');
-figstr2=char(figstr2);
-FredPngList{1,1}=figstr2;
-% Now create the data for a cumilative distribution plot
-titlestr3='DurableGoods-CumilDist';
-titlest3=char(titlestr3);
-figstr3=strcat(titlestr3,'.png');
-figstr3=char(figstr3);
-PlotCumilFredData(FRObj,itype,titlestr3)
-%% Start with The Manufacturers Inventories (MNFCTRIMSA) (Monthly)  Chap 11-4
-% Itype=151
-% This underlying data set seems to have the wrong data in the Fred
-% Database
-loopstr='**********Start Looping through the available FRED data**********';
-fprintf(fid,'\n');
-fprintf(fid,'%50s\n',loopstr);
-eval(['cd ' fredpath(1:length(fredpath)-1)]);
-loopstr1='Process the Manufacturers Inventory';
-fprintf(fid,'\n');
-fprintf(fid,'%50s\n',loopstr1);
-ManuInvTable = readtable(fredfile151,'Sheet','Monthly');
-[nrows151,~]=size(ManuInvTable);
-dateArray=strings(nrows151,1);
-for n=1:nrows151
-    nowstr=string(ManuInvTable.Date(n,1));
-    dateArray(n,1)=nowstr;
-    if(n==1)
-        nowStartDate=nowstr;
-    elseif(n==nrows151)
-        nowEndDate=nowstr;
-    end
-end
-loopstr2=strcat('Data is available for-',num2str(nrows151,4),'-dates-',...
-    'From-',nowStartDate,'-to-',nowEndDate');
-fprintf(fid,'%50s\n',loopstr2);
-rowTimes=datetime(dateArray);
-DateNumbers=datenum(rowTimes);
-ManuInventoryTT=table2timetable(ManuInvTable,'RowTimes','Date');
-ManuInventoryTT = addvars(ManuInventoryTT,DateNumbers);
-meanManuInvVal=mean(ManuInventoryTT.Inventories/1000);
-medianManuInvVal=median(ManuInventoryTT.Inventories/1000);
-meanInventory=zeros(nrows151,1);
-medianInventory=zeros(nrows151,1);
-for n=1:nrows151
-    meanInventory(n,1)=meanManuInvVal;
-    medianInventory(n,1)=medianManuInvVal;
-end
-ManuInventoryTT = addvars(ManuInventoryTT,meanInventory,medianInventory);
-SourceFile(151,1)="ManufacturersInventories.xlsx";
-Code(151,1)="MNFCTRIMSA";
-Desc(151,1)="Manufacturing Inventories";
-Freq(151,1)="Monthly";
-StartYear(151,1)=1992;
-EndYear(151,1)=2025;
-SeasonalAdj(151,1)="Yes";
-BaseYear(151,1)=1992;
-NumObs(151,1)=413;
-FRObj.Desc=Desc;
-Chap(151,1)=11;
-Section(151,1)=4;
-% Calculate the Simple Stats
-itype=151;
-Data=ManuInventoryTT.Inventories/1000;
-FRObj=FRObj.SimpleStats(Data,itype);
-NYears=EndYear(151,1)-StartYear(151,1)+1;
-FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
-GrowthRateAll=FRObj.GrowthRateAll;
-SG151=100*GrowthRateAll(itype,1);
-FRObj.SG151=SG151;
-% Smooth the Data
-mfacsmooth = smoothdata(Data);
-P0=mfacsmooth(1);
-PF=mfacsmooth(413);
-ManuInventoryTT= addvars(ManuInventoryTT,mfacsmooth);
-ishowrecession=FRObj.ishowrecession;
-if(ishowrecession>0)
-    [ManuInventoryTT,icase] = OverlapTimeLinesRev1(ManuInventoryTT,RecessProbTT);
-    FRObj.ManuInventoryTT=ManuInventoryTT;
-    RecessionInfo(151,1)=icase;
-end
-% Now plot this data
-FRObj.barval=500;
-FRObj.ManuInventoryTT=ManuInventoryTT;
-% Now plot this data
-titlestr='ManufacturingInventories';
-PlotFredData(FRObj,ManuInventoryTT,itype,titlestr)
-% Add this table to the FredObj
-titlestr=char(titlestr);
-figstr2=strcat(titlestr,'.png');
-figstr2=char(figstr2);
-FredPngList{1,1}=figstr2;
-% Now create the data for a cumilative distribution plot
-titlestr3='ManufacturingInvCumilDist';
-titlest3=char(titlestr3);
-figstr3=strcat(titlestr3,'.png');
-figstr3=char(figstr3);
-PlotCumilFredData(FRObj,itype,titlestr3)
 % Next work on importing most of the tables (>100 tables)
 %% Start with The Unemployment Data (UNRATE) (Monthly)  Chap 3-1
 loopstr='**********Start Looping through the available FRED data**********';
@@ -776,7 +449,7 @@ eval(['cd ' fredpath(1:length(fredpath)-1)]);
 loopstr1='Process the Unemployment Rate Data';
 fprintf(fid,'\n');
 fprintf(fid,'%50s\n',loopstr1);
-UnrateTable = readtable(fredfile1,'Sheet','Monthly');
+UnrateTable = readtable(FRObj.fredfile1,'Sheet','Monthly');
 [nrows,ncols]=size(UnrateTable);
 dateArray=strings(nrows,1);
 for n=1:nrows
@@ -857,7 +530,7 @@ FoodCorrTable = table('Size',sz,'VariableTypes',varTypes,'VariableNames',varName
 %% Continue with the CoreSticky CPI Data (CORESTICKM159SFRBATL)(Monthly)
 % itype=2
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-SCPITable = readtable(fredfile2,'Sheet','Monthly');
+SCPITable = readtable(FRObj.fredfile2,'Sheet','Monthly');
 [nrows2,ncols2]=size(SCPITable);
 clear DateNumbers
 clear dateArray
@@ -940,7 +613,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 %% Continue with the Labor force Participation Rate (CIVPart) (Chap 3 Section 2)
 % itype=3
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-ParticipationTable = readtable(fredfile3,'Sheet','Monthly');
+ParticipationTable = readtable(FRObj.fredfile3,'Sheet','Monthly');
 [nrows3,~]=size(ParticipationTable);
 clear DateNumbers
 clear dateArray
@@ -1007,7 +680,7 @@ FredPngList{3,1}=figstr2;
 %% Continue with the Delinquency Rate on Single Family Home Loans DRSFRMACBS (Chap 4 Section 1)
 % itype=4
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-SingleHomeDelRateTable = readtable(fredfile4,'Sheet','Quarterly');
+SingleHomeDelRateTable = readtable(FRObj.fredfile4,'Sheet','Quarterly');
 [nrows4,~]=size(SingleHomeDelRateTable);
 clear DateNumbers
 clear dateArray
@@ -1091,7 +764,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 %% Continue with the Home Ownership Rate  (Chap 6 Section 1)
 % itype=5
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-HomeOwnershipTable = readtable(fredfile5,'Sheet','Quarterly');
+HomeOwnershipTable = readtable(FRObj.fredfile5,'Sheet','Quarterly');
 [nrows5,~]=size(HomeOwnershipTable);
 clear DateNumbers
 clear dateArray
@@ -1174,7 +847,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 %% Continue with the Industrial ManufacturingProduction (IPMAN) (Chapter 11 Section 1)
 %itype=6
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-IPMANTable = readtable(fredfile6,'Sheet','Monthly');
+IPMANTable = readtable(FRObj.fredfile6,'Sheet','Monthly');
 [nrows6,~]=size(IPMANTable);
 clear DateNumbers
 clear dateArray
@@ -1263,7 +936,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 %% Continue with the Real Median Household Income
 % itype=7
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-RealMedianHouseholdIncomeTable = readtable(fredfile7,'Sheet','Annual');
+RealMedianHouseholdIncomeTable = readtable(FRObj.fredfile7,'Sheet','Annual');
 [nrows7,~]=size(RealMedianHouseholdIncomeTable);
 clear DateNumbers
 clear dateArray
@@ -1329,7 +1002,7 @@ FRObj.RealMedHouseIncTT=RealMedHouseIncTT;
 %% Continue with the CBOE Volitility Index (VIXCLS)
 % itype=8
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-VixTable = readtable(fredfile8,'Sheet','Daily');
+VixTable = readtable(FRObj.fredfile8,'Sheet','Daily');
 [nrows8,~]=size(VixTable);
 clear DateNumbers
 clear dateArray
@@ -1401,7 +1074,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 %% Continue with the Consumer Sentiment Index itype=9
 % itype=9
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-CCTable = readtable(fredfile9,'Sheet','Monthly');
+CCTable = readtable(FRObj.fredfile9,'Sheet','Monthly');
 [nrows9,ncols9]=size(CCTable);
 clear DateNumbers
 clear dateArray
@@ -1481,12 +1154,11 @@ titlest3=char(titlestr3);
 figstr3=strcat(titlestr3,'.png');
 figstr3=char(figstr3);
 PlotCumilFredData(FRObj,itype,titlestr3)
-
 % Add Chapter 6 Section 2
 %% Continue with the Home Inventory -Days on Market(MEDDAYONMARUS)
 % itype=10
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-HouseSupplyTable = readtable(fredfile10,'Sheet','Monthly');
+HouseSupplyTable = readtable(FRObj.fredfile10,'Sheet','Monthly');
 [nrows10,~]=size(HouseSupplyTable);
 clear DateNumbers
 clear dateArray
@@ -1572,7 +1244,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 %% Continue with the Fed 10 Year Bond Rate
 % itype=11
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-Fed10YearBondsTable = readtable(fredfile11,'Sheet','Monthly');
+Fed10YearBondsTable = readtable(FRObj.fredfile11,'Sheet','Monthly');
 [nrows11,~]=size(Fed10YearBondsTable);
 clear DateNumbers
 clear dateArray
@@ -1658,7 +1330,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 %% Continue with the U2 UnemploymentRate U2Rate aka Job Losers
 %itype=12
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-U2RateTable = readtable(fredfile12,'Sheet','Monthly');
+U2RateTable = readtable(FRObj.fredfile12,'Sheet','Monthly');
 [nrows12,~]=size(U2RateTable);
 clear DateNumbers
 clear dateArray
@@ -1745,7 +1417,7 @@ fprintf(fid,'\n');
 %% Continue with the Real GDP
 % itype=13
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-GDPTable = readtable(fredfile13,'Sheet','Quarterly');
+GDPTable = readtable(FRObj.fredfile13,'Sheet','Quarterly');
 [nrows13,~]=size(GDPTable);
 clear DateNumbers
 clear dateArray
@@ -1825,7 +1497,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 %% A939RX0Q048SBEA
 % itype=14
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-GDPPerCapTable = readtable(fredfile14,'Sheet','Quarterly');
+GDPPerCapTable = readtable(FRObj.fredfile14,'Sheet','Quarterly');
 [nrows14,~]=size(GDPPerCapTable);
 clear DateNumbers
 clear dateArray
@@ -1904,7 +1576,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 %% Continue with the Fed 2 Year Bond Yields
 % itype=15
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-Fed2YearBondsTable = readtable(fredfile15,'Sheet','Daily');
+Fed2YearBondsTable = readtable(FRObj.fredfile15,'Sheet','Daily');
 [nrows15,~]=size(Fed2YearBondsTable);
 clear DateNumbers
 clear dateArray
@@ -1983,7 +1655,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 %% Continue with the Initial UnemploymentClaims ICSA)
 % itype=16
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-InitialUnemploymentTable = readtable(fredfile16,'Sheet','Weekly');
+InitialUnemploymentTable = readtable(FRObj.fredfile16,'Sheet','Weekly');
 [nrows16,~]=size(InitialUnemploymentTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows16,1);
@@ -2054,7 +1726,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with the Continued UnemploymentClaims (CCSA)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-ContinueUnemploymentTable = readtable(fredfile17,'Sheet','Weekly');
+ContinueUnemploymentTable = readtable(FRObj.fredfile17,'Sheet','Weekly');
 [nrows17,~]=size(ContinueUnemploymentTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows17,1);
@@ -2127,7 +1799,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 %% Continue with the Total Non Farm Job Openings (JTSJOL)
 % itype=18
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-TotalNFJOpenTable = readtable(fredfile18,'Sheet','Monthly');
+TotalNFJOpenTable = readtable(FRObj.fredfile18,'Sheet','Monthly');
 [nrows18,~]=size(TotalNFJOpenTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows18,1);
@@ -2212,7 +1884,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with the Construction Job Openings (JTS2300JOL)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-ConstructionOpenTable = readtable(fredfile19,'Sheet','Monthly');
+ConstructionOpenTable = readtable(FRObj.fredfile19,'Sheet','Monthly');
 [nrows19,~]=size(ConstructionOpenTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows19,1);
@@ -2299,7 +1971,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with the Manufacturing Job Openings (JTS3000JOL)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-ManufacOpenTable = readtable(fredfile20,'Sheet','Monthly');
+ManufacOpenTable = readtable(FRObj.fredfile20,'Sheet','Monthly');
 [nrows20,~]=size(ManufacOpenTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows20,1);
@@ -2387,7 +2059,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with the Professional Job Openings (JTS540099JOL)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-ProfOpenTable = readtable(fredfile21,'Sheet','Monthly');
+ProfOpenTable = readtable(FRObj.fredfile21,'Sheet','Monthly');
 [nrows21,~]=size(ProfOpenTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows21,1);
@@ -2474,7 +2146,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with the Health Care Job Openings
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-HCareOpenTable = readtable(fredfile22,'Sheet','Monthly');
+HCareOpenTable = readtable(FRObj.fredfile22,'Sheet','Monthly');
 [nrows22,~]=size(HCareOpenTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows22,1);
@@ -2563,7 +2235,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with the Government Job Openings (JTS9000JOL)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-GovOpenTable = readtable(fredfile23,'Sheet','Monthly');
+GovOpenTable = readtable(FRObj.fredfile23,'Sheet','Monthly');
 [nrows23,~]=size(GovOpenTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows23,1);
@@ -2651,7 +2323,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with the Real Median Personal Income  
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-RealMedianPersIncomeTable = readtable(fredfile24,'Sheet','Annual');
+RealMedianPersIncomeTable = readtable(FRObj.fredfile24,'Sheet','Annual');
 [nrows24,~]=size(RealMedianPersIncomeTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows24,1);
@@ -2722,7 +2394,7 @@ FredPngList{24,1}=figstr2;
 
 %% Continue with the 10 Year Vs 2 Year Fed Bond Rates
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-T10Y2YTable = readtable(fredfile25,'Sheet','Daily');
+T10Y2YTable = readtable(FRObj.fredfile25,'Sheet','Daily');
 [nrows25,~]=size(T10Y2YTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows25,1);
@@ -2809,7 +2481,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with the VISA Spending Momentum Discretionary
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-VisaDiscTable = readtable(fredfile26,'Sheet','Monthly');
+VisaDiscTable = readtable(FRObj.fredfile26,'Sheet','Monthly');
 [nrows26,~]=size(VisaDiscTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows26,1);
@@ -2880,7 +2552,7 @@ FredPngList{26,1}=figstr2;
 
 %% Continue with the Case Shiller House Price Index (Not Seasonally Adjusted)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-CaseShillerTable = readtable(fredfile27,'Sheet','Monthly');
+CaseShillerTable = readtable(FRObj.fredfile27,'Sheet','Monthly');
 [nrows27,~]=size(CaseShillerTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows27,1);
@@ -2974,7 +2646,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with Median Weekly Earnings (LES1252881600Q)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-WeeklyWageTable = readtable(fredfile28,'Sheet','Quarterly');
+WeeklyWageTable = readtable(FRObj.fredfile28,'Sheet','Quarterly');
 [nrows28,~]=size(WeeklyWageTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows28,1);
@@ -3063,7 +2735,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with Fiscal Year GDP (FYGDP)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-FYGDPTable = readtable(fredfile29,'Sheet','Annual');
+FYGDPTable = readtable(FRObj.fredfile29,'Sheet','Annual');
 [nrows29,~]=size(FYGDPTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows29,1);
@@ -3131,7 +2803,7 @@ FredPngList{29,1}=figstr2;
 
 %% Continue with Public Debt as Function of GDP (GFDEGDQ188S)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-PublicDebtGDPTable = readtable(fredfile30,'Sheet','Quarterly');
+PublicDebtGDPTable = readtable(FRObj.fredfile30,'Sheet','Quarterly');
 [nrows30,~]=size(PublicDebtGDPTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows30,1);
@@ -3210,7 +2882,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with Budget Surplus as Function of  (MTSDS133FMS)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-BudgetSurplusTable = readtable(fredfile31,'Sheet','Monthly');
+BudgetSurplusTable = readtable(FRObj.fredfile31,'Sheet','Monthly');
 [nrows31,~]=size(BudgetSurplusTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows31,1);
@@ -3314,7 +2986,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with Net Federal Outlays as PCT Of GDP (FYONGDA188S)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-NetFedOutlayTable = readtable(fredfile32,'Sheet','Annual');
+NetFedOutlayTable = readtable(FRObj.fredfile32,'Sheet','Annual');
 [nrows32,~]=size(NetFedOutlayTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows32,1);
@@ -3383,7 +3055,7 @@ FredPngList{32,1}=figstr2;
 
 %% Continue with Federal Receipts as PCT Of GDP (FYFRGDA188S)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-FedReceiptsTable = readtable(fredfile33,'Sheet','Annual');
+FedReceiptsTable = readtable(FRObj.fredfile33,'Sheet','Annual');
 [nrows33,~]=size(FedReceiptsTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows33,1);
@@ -3454,7 +3126,7 @@ FredPngList{33,1}=figstr2;
 
 %% Continue with Federal Public Debt as (FYGFDPUN)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-FedPublicDebtTable = readtable(fredfile34,'Sheet','Quarterly');
+FedPublicDebtTable = readtable(FRObj.fredfile34,'Sheet','Quarterly');
 [nrows34,~]=size(FedPublicDebtTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows34,1);
@@ -3535,7 +3207,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with Federal Interest Payments Vs GDP (FYOIGDA188S)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-FedGDPInterestTable = readtable(fredfile35,'Sheet','Annual');
+FedGDPInterestTable = readtable(FRObj.fredfile35,'Sheet','Annual');
 [nrows35,~]=size(FedGDPInterestTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows35,1);
@@ -3605,7 +3277,7 @@ FredPngList{35,1}=figstr2;
 
 %% Continue with Federal Treasury Debt Vs GDP (MVMTD027MNFRBDAL)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-TreasuryDebtTable = readtable(fredfile36,'Sheet','Monthly');
+TreasuryDebtTable = readtable(FRObj.fredfile36,'Sheet','Monthly');
 [nrows36,~]=size(TreasuryDebtTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows36,1);
@@ -3688,7 +3360,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with Domestic Auto Inventories (AUINSA)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-DomAutoInvTable = readtable(fredfile37,'Sheet','Monthly');
+DomAutoInvTable = readtable(FRObj.fredfile37,'Sheet','Monthly');
 [nrows37,~]=size(DomAutoInvTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows37,1);
@@ -3777,7 +3449,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with Foreign Auto Sales (FAUTOSAAR)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-ForeignAutoSalesTable = readtable(fredfile38,'Sheet','Monthly');
+ForeignAutoSalesTable = readtable(FRObj.fredfile38,'Sheet','Monthly');
 [nrows38,~]=size(ForeignAutoSalesTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows38,1);
@@ -3863,7 +3535,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with Total Vehicle Sales (TOTALSA)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-TotVehSalesTable = readtable(fredfile39,'Sheet','Monthly');
+TotVehSalesTable = readtable(FRObj.fredfile39,'Sheet','Monthly');
 [nrows39,~]=size(TotVehSalesTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows39,1);
@@ -3949,7 +3621,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with Domestic Auto Production (DAUPSA)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-DomesticAutoProdTable = readtable(fredfile40,'Sheet','Monthly');
+DomesticAutoProdTable = readtable(FRObj.fredfile40,'Sheet','Monthly');
 [nrows40,~]=size(DomesticAutoProdTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows40,1);
@@ -4026,7 +3698,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with Auto Exports (AUENSA)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-AutoExportsTable = readtable(fredfile41,'Sheet','Monthly');
+AutoExportsTable = readtable(FRObj.fredfile41,'Sheet','Monthly');
 [nrows41,~]=size(AutoExportsTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows41,1);
@@ -4105,7 +3777,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with Vehicle Miles Travelled (TRFVOLUSM227NFWA)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-VehicleMilesTable = readtable(fredfile42,'Sheet','Monthly');
+VehicleMilesTable = readtable(FRObj.fredfile42,'Sheet','Monthly');
 [nrows42,~]=size(VehicleMilesTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows42,1);
@@ -4198,7 +3870,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with FreightTransportIndex (TSIFRGHT)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-FreightIndexTable = readtable(fredfile43,'Sheet','Monthly');
+FreightIndexTable = readtable(FRObj.fredfile43,'Sheet','Monthly');
 [nrows43,~]=size(FreightIndexTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows43,1);
@@ -4281,7 +3953,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with RailCarLoads (RAILFRTCARLOADSD11)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-RailCarTable = readtable(fredfile44,'Sheet','Monthly');
+RailCarTable = readtable(FRObj.fredfile44,'Sheet','Monthly');
 [nrows44,~]=size(RailCarTable);
 clear DateNumbers
 clear dateArray
@@ -4373,7 +4045,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with Airline Load factors (LOADFACTOR)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-AirLoadTable = readtable(fredfile45,'Sheet','Monthly');
+AirLoadTable = readtable(FRObj.fredfile45,'Sheet','Monthly');
 [nrows45,~]=size(AirLoadTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows45,1);
@@ -4465,7 +4137,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with Available Seat Miles (ASM)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-ASMTable = readtable(fredfile46,'Sheet','Monthly');
+ASMTable = readtable(FRObj.fredfile46,'Sheet','Monthly');
 [nrows46,~]=size(ASMTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows46,1);
@@ -4557,7 +4229,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with PipelinePetrol Movement (PETROLEUMD11)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-PetrolTable = readtable(fredfile47,'Sheet','Monthly');
+PetrolTable = readtable(FRObj.fredfile47,'Sheet','Monthly');
 [nrows47,~]=size(PetrolTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows47,1);
@@ -4648,7 +4320,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with Housing Starts (HOUST1F)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-HouseStartsTable = readtable(fredfile48,'Sheet','Monthly');
+HouseStartsTable = readtable(FRObj.fredfile48,'Sheet','Monthly');
 [nrows48,~]=size(HouseStartsTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows48,1);
@@ -4739,7 +4411,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with Mortgage Debt Service Payments (MDSP)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-MDSPTable = readtable(fredfile49,'Sheet','Quarterly');
+MDSPTable = readtable(FRObj.fredfile49,'Sheet','Quarterly');
 [nrows49,~]=size(MDSPTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows49,1);
@@ -4814,7 +4486,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with Vacant Housing Units (EVACANTUSQ176N)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-VacHouseUnitsTable = readtable(fredfile50,'Sheet','Quarterly');
+VacHouseUnitsTable = readtable(FRObj.fredfile50,'Sheet','Quarterly');
 [nrows50,~]=size(VacHouseUnitsTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows50,1);
@@ -4875,7 +4547,7 @@ FredPngList{50,1}=figstr2;
 
 %% Continue with US Granted Patents (PATENTUSALLTOTAL)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-USPatentsTable = readtable(fredfile51,'Sheet','Annual');
+USPatentsTable = readtable(FRObj.fredfile51,'Sheet','Annual');
 [nrows51,~]=size(USPatentsTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows51,1);
@@ -4944,7 +4616,7 @@ FredPngList{51,1}=figstr2;
 
 %% Continue with Total Capacity Utilization (TCU)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-TCUTable = readtable(fredfile52,'Sheet','Monthly');
+TCUTable = readtable(FRObj.fredfile52,'Sheet','Monthly');
 [nrows52,~]=size(TCUTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows52,1);
@@ -5032,7 +4704,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with Semiconductor Production Index (IPG3344S)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-SemiconductorsTable = readtable(fredfile53,'Sheet','Monthly');
+SemiconductorsTable = readtable(FRObj.fredfile53,'Sheet','Monthly');
 [nrows53,~]=size(SemiconductorsTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows53,1);
@@ -5124,7 +4796,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with Defense Production Index (IPB52300S)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-DefenseTable = readtable(fredfile54,'Sheet','Monthly');
+DefenseTable = readtable(FRObj.fredfile54,'Sheet','Monthly');
 [nrows54,~]=size(DefenseTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows54,1);
@@ -5215,7 +4887,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with Total Hospital Revenue (REV622ALLEST144QSA)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-TotHospRevenueTable = readtable(fredfile55,'Sheet','Quarterly');
+TotHospRevenueTable = readtable(FRObj.fredfile55,'Sheet','Quarterly');
 [nrows55,~]=size(TotHospRevenueTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows55,1);
@@ -5284,7 +4956,7 @@ FredPngList{55,1}=figstr2;
 
 %% Continue with PharmaPriceIndex (PHMEPRPIHCSA)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-PharmaPriceTable = readtable(fredfile56,'Sheet','Annual');
+PharmaPriceTable = readtable(FRObj.fredfile56,'Sheet','Annual');
 [nrows56,~]=size(PharmaPriceTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows56,1);
@@ -5345,7 +5017,7 @@ FredPngList{56,1}=figstr2;
 
 %% Continue with ProducePriceIndex (PPIACO)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-PPITable = readtable(fredfile57,'Sheet','Monthly');
+PPITable = readtable(FRObj.fredfile57,'Sheet','Monthly');
 [nrows57,~]=size(PPITable);
 clear DateNumbers dateArray
 dateArray=strings(nrows57,1);
@@ -5437,7 +5109,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with Flexible Consumer Price Index (FLEXCPIM159SFRBATL)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-FlexCPITable = readtable(fredfile58,'Sheet','Monthly');
+FlexCPITable = readtable(FRObj.fredfile58,'Sheet','Monthly');
 [nrows58,~]=size(FlexCPITable);
 clear DateNumbers dateArray
 dateArray=strings(nrows58,1);
@@ -5531,7 +5203,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with Single Family Homes Completed (COMPU1USA)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-CompHousesTable = readtable(fredfile59,'Sheet','Monthly');
+CompHousesTable = readtable(FRObj.fredfile59,'Sheet','Monthly');
 [nrows59,~]=size(CompHousesTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows59,1);
@@ -5624,7 +5296,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with Advance Retail Sales (RSXFS)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-AdvanceRetailSalesTable = readtable(fredfile60,'Sheet','Monthly');
+AdvanceRetailSalesTable = readtable(FRObj.fredfile60,'Sheet','Monthly');
 [nrows60,~]=size(AdvanceRetailSalesTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows60,1);
@@ -5718,7 +5390,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with ECommerceRetailSales (ECOMSA)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-ECommRSalesTable = readtable(fredfile61,'Sheet','Quarterly');
+ECommRSalesTable = readtable(FRObj.fredfile61,'Sheet','Quarterly');
 [nrows61,~]=size(ECommRSalesTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows61,1);
@@ -5800,7 +5472,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with InventoryToSales (RETAILIRSA)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-InventoryTable = readtable(fredfile62,'Sheet','Monthly');
+InventoryTable = readtable(FRObj.fredfile62,'Sheet','Monthly');
 [nrows62,~]=size(InventoryTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows62,1);
@@ -5890,7 +5562,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with Retail Inventories (RETAILIMSA)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-RetailInvenTable = readtable(fredfile63,'Sheet','Monthly');
+RetailInvenTable = readtable(FRObj.fredfile63,'Sheet','Monthly');
 [nrows63,~]=size(RetailInvenTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows63,1);
@@ -5985,7 +5657,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with Retail Sales Of Used Cars (MRTSSM44112USN)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-UsedCarTable = readtable(fredfile64,'Sheet','Monthly');
+UsedCarTable = readtable(FRObj.fredfile64,'Sheet','Monthly');
 [nrows64,~]=size(UsedCarTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows64,1);
@@ -6079,7 +5751,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with Restaurant Sales(MRTSSM7225USN)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-RestaurantSalesTable = readtable(fredfile65,'Sheet','Monthly');
+RestaurantSalesTable = readtable(FRObj.fredfile65,'Sheet','Monthly');
 [nrows65,~]=size(RestaurantSalesTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows65,1);
@@ -6173,7 +5845,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with Furniture Sales(RSFHFS)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-FurnitureSalesTable = readtable(fredfile66,'Sheet','Monthly');
+FurnitureSalesTable = readtable(FRObj.fredfile66,'Sheet','Monthly');
 [nrows66,~]=size(FurnitureSalesTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows66,1);
@@ -6267,7 +5939,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with Manufacturing Sales(CMRMTSPL)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-ManufacturingSalesTable = readtable(fredfile67,'Sheet','Monthly');
+ManufacturingSalesTable = readtable(FRObj.fredfile67,'Sheet','Monthly');
 [nrows67,~]=size(ManufacturingSalesTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows67,1);
@@ -6361,7 +6033,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with Dealer Sales Of New Cars (MRTSSM44111USN)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-NewCarTable = readtable(fredfile68,'Sheet','Monthly');
+NewCarTable = readtable(FRObj.fredfile68,'Sheet','Monthly');
 [nrows68,~]=size(UsedCarTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows68,1);
@@ -6454,7 +6126,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with Full Serve Restaurants Sales (SM722511USN)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-FullServeRestaurantsTable = readtable(fredfile69,'Sheet','Monthly');
+FullServeRestaurantsTable = readtable(FRObj.fredfile69,'Sheet','Monthly');
 [nrows69,~]=size(FullServeRestaurantsTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows69,1);
@@ -6547,7 +6219,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with Retail Gas Sales (MRTSSM447USN)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-GasSalesTable = readtable(fredfile70,'Sheet','Monthly');
+GasSalesTable = readtable(FRObj.fredfile70,'Sheet','Monthly');
 [nrows70,~]=size(GasSalesTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows70,1);
@@ -6640,7 +6312,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with Retail Auto Parts (MRTSSM441USS)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-AutoPartsTable = readtable(fredfile71,'Sheet','Monthly');
+AutoPartsTable = readtable(FRObj.fredfile71,'Sheet','Monthly');
 [nrows71,~]=size(GasSalesTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows71,1);
@@ -6733,7 +6405,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with Leading Indicator(USSLIND)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-LeadIndexTable = readtable(fredfile72,'Sheet','Monthly');
+LeadIndexTable = readtable(FRObj.fredfile72,'Sheet','Monthly');
 [nrows72,~]=size(LeadIndexTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows72,1);
@@ -6819,7 +6491,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with CoIncident Economic Indicators(USPHCI)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-CoEconomicActivityTable = readtable(fredfile74,'Sheet','Monthly');
+CoEconomicActivityTable = readtable(FRObj.fredfile74,'Sheet','Monthly');
 [nrows74,~]=size(CoEconomicActivityTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows74,1);
@@ -6896,7 +6568,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with Bank Balance Sheets(QBPBSTAS)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-BalanceSheetsTable = readtable(fredfile75,'Sheet','Quarterly');
+BalanceSheetsTable = readtable(FRObj.fredfile75,'Sheet','Quarterly');
 [nrows75,~]=size(BalanceSheetsTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows75,1);
@@ -6980,7 +6652,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with CreditCardDebt(QBPBSTASLNINDVCRD)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-CreditCardTable = readtable(fredfile76,'Sheet','Quarterly');
+CreditCardTable = readtable(FRObj.fredfile76,'Sheet','Quarterly');
 [nrows76,~]=size(CreditCardTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows76,1);
@@ -7061,7 +6733,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with Loan Performance(QBPLNTLNNCUR)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-LoanPerfTable = readtable(fredfile77,'Sheet','Quarterly');
+LoanPerfTable = readtable(FRObj.fredfile77,'Sheet','Quarterly');
 [nrows77,~]=size(LoanPerfTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows77,1);
@@ -7137,7 +6809,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with US Population(POPTHM)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-PopulationTable = readtable(fredfile78,'Sheet','Monthly');
+PopulationTable = readtable(FRObj.fredfile78,'Sheet','Monthly');
 [nrows78,~]=size(PopulationTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows78,1);
@@ -7210,7 +6882,7 @@ FredPngList{78,1}=figstr2;
 
 %% Continue with Total HouseHolds (TTLHH)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-TotHouseHoldsTable = readtable(fredfile79,'Sheet','Annual');
+TotHouseHoldsTable = readtable(FRObj.fredfile79,'Sheet','Annual');
 [nrows79,~]=size(TotHouseHoldsTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows79,1);
@@ -7280,7 +6952,7 @@ FredPngList{79,1}=figstr2;
 
 %% Continue with US Population 55 and over (LNU00024230)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-POP55Table = readtable(fredfile80,'Sheet','Monthly');
+POP55Table = readtable(FRObj.fredfile80,'Sheet','Monthly');
 [nrows80,~]=size(POP55Table);
 clear DateNumbers dateArray
 dateArray=strings(nrows80,1);
@@ -7353,7 +7025,7 @@ FredPngList{80,1}=figstr2;
 
 %% Continue with US Population between 25 and 54 (LNU00000060)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-POP2554Table = readtable(fredfile81,'Sheet','Monthly');
+POP2554Table = readtable(FRObj.fredfile81,'Sheet','Monthly');
 [nrows81,~]=size(POP2554Table);
 clear DateNumbers dateArray
 dateArray=strings(nrows81,1);
@@ -7426,7 +7098,7 @@ FredPngList{81,1}=figstr2;
 
 %% Continue with US Families With Children Under 18 (TTLFMCU)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-FamWChildTable = readtable(fredfile82,'Sheet','Annual');
+FamWChildTable = readtable(FRObj.fredfile82,'Sheet','Annual');
 [nrows82,~]=size(FamWChildTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows82,1);
@@ -7496,7 +7168,7 @@ FredPngList{82,1}=figstr2;
 
 %% Continue with US Black Population (LNU00000006)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-BlackPopTable = readtable(fredfile83,'Sheet','Monthly');
+BlackPopTable = readtable(FRObj.fredfile83,'Sheet','Monthly');
 [nrows83,~]=size(BlackPopTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows83,1);
@@ -7569,7 +7241,7 @@ FredPngList{83,1}=figstr2;
 
 %% Continue with US White Population (LNU00000003)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-WhitePopTable = readtable(fredfile84,'Sheet','Monthly');
+WhitePopTable = readtable(FRObj.fredfile84,'Sheet','Monthly');
 [nrows84,~]=size(WhitePopTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows84,1);
@@ -7642,7 +7314,7 @@ FredPngList{84,1}=figstr2;
 
 %% Continue with US Hispanic Population ( LNU00000009)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-HispanicPopTable = readtable(fredfile85,'Sheet','Monthly');
+HispanicPopTable = readtable(FRObj.fredfile85,'Sheet','Monthly');
 [nrows85,~]=size(HispanicPopTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows85,1);
@@ -7715,7 +7387,7 @@ FredPngList{85,1}=figstr2;
 
 %% Continue with US Female Employment Ratio (LNS12300002)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-FemaleERatioTable = readtable(fredfile86,'Sheet','Monthly');
+FemaleERatioTable = readtable(FRObj.fredfile86,'Sheet','Monthly');
 [nrows86,~]=size(FemaleERatioTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows86,1);
@@ -7809,7 +7481,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with US CBO Nasdaq Volatility (VXNCLS)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-CBOENasdaqVolTable = readtable(fredfile87,'Sheet','Daily');
+CBOENasdaqVolTable = readtable(FRObj.fredfile87,'Sheet','Daily');
 [nrows87,~]=size(CBOENasdaqVolTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows87,1);
@@ -7885,7 +7557,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with Leading Index Of US (USSLIND)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-LeadingIndexTable = readtable(fredfile88,'Sheet','Monthly');
+LeadingIndexTable = readtable(FRObj.fredfile88,'Sheet','Monthly');
 [nrows88,~]=size(LeadingIndexTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows88,1);
@@ -7957,7 +7629,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with the Fed 3 Month Bond Yields
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-Fed3MonthBondsTable = readtable(fredfile89,'Sheet','Daily');
+Fed3MonthBondsTable = readtable(FRObj.fredfile89,'Sheet','Daily');
 [nrows89,~]=size(Fed3MonthBondsTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows89,1);
@@ -8033,7 +7705,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with the Household Debt Service Payments (TDSP)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-TDSPTable = readtable(fredfile90,'Sheet','Quarterly');
+TDSPTable = readtable(FRObj.fredfile90,'Sheet','Quarterly');
 [nrows90,~]=size(TDSPTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows90,1);
@@ -8104,7 +7776,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with the Consumer Debt Service Payments (CDSP)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-CDSPTable = readtable(fredfile91,'Sheet','Quarterly');
+CDSPTable = readtable(FRObj.fredfile91,'Sheet','Quarterly');
 [nrows91,~]=size(CDSPTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows91,1);
@@ -8175,7 +7847,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with the Real Disposible Income (DSPIC96)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-RDIncTable = readtable(fredfile92,'Sheet','Monthly');
+RDIncTable = readtable(FRObj.fredfile92,'Sheet','Monthly');
 [nrows92,~]=size(RDIncTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows92,1);
@@ -8262,7 +7934,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with the Personal Consumption Expenditures (PCE)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-PCETable = readtable(fredfile93,'Sheet','Monthly');
+PCETable = readtable(FRObj.fredfile93,'Sheet','Monthly');
 [nrows93,~]=size(PCETable);
 clear DateNumbers dateArray
 dateArray=strings(nrows93,1);
@@ -8338,7 +8010,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with the Domestic Auto Sales (DAUTOSAAR)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-DAUTOTable = readtable(fredfile94,'Sheet','Monthly');
+DAUTOTable = readtable(FRObj.fredfile94,'Sheet','Monthly');
 [nrows94,~]=size(DAUTOTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows94,1);
@@ -8423,7 +8095,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 
 %% Continue with the HomePriceIndex (USSTHPI)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-THPITable = readtable(fredfile95,'Sheet','Quarterly');
+THPITable = readtable(FRObj.fredfile95,'Sheet','Quarterly');
 [nrows95,~]=size(THPITable);
 clear DateNumbers dateArray
 dateArray=strings(nrows95,1);
@@ -8493,7 +8165,7 @@ FredPngList{95,1}=figstr2;
 
 %% Continue with the Credit Card Balances (RCCCBBALTOT)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-CCBALTable = readtable(fredfile96,'Sheet','Quarterly');
+CCBALTable = readtable(FRObj.fredfile96,'Sheet','Quarterly');
 [nrows96,~]=size(CCBALTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows96,1);
@@ -8560,7 +8232,7 @@ FredPngList{96,1}=figstr2;
 
 %% Continue with the Large Bank Loan Originations (RCMFLOORIG)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-LBANKLORTable = readtable(fredfile97,'Sheet','Quarterly');
+LBANKLORTable = readtable(FRObj.fredfile97,'Sheet','Quarterly');
 [nrows97,~]=size(LBANKLORTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows97,1);
@@ -8627,7 +8299,7 @@ FredPngList{97,1}=figstr2;
 
 %% Continue with the Past Due  (RCMFLBBALDPDPCT30P)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-PastDueMorTable = readtable(fredfile98,'Sheet','Quarterly');
+PastDueMorTable = readtable(FRObj.fredfile98,'Sheet','Quarterly');
 [nrows98,~]=size(PastDueMorTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows98,1);
@@ -8685,7 +8357,7 @@ FredPngList{98,1}=figstr2;
 
 %% Continue with Consumer Credit Scores 50th Ptile (RCCCBSCOREPCT50)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-CreditScoreTable = readtable(fredfile99,'Sheet','Quarterly');
+CreditScoreTable = readtable(FRObj.fredfile99,'Sheet','Quarterly');
 [nrows99,~]=size(CreditScoreTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows99,1);
@@ -8743,7 +8415,7 @@ FredPngList{99,1}=figstr2;
 
 %% Continue with HomeEquityLines (QBPBSTASLNREALHOMEQ)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-HomeEquityTable = readtable(fredfile100,'Sheet','Quarterly');
+HomeEquityTable = readtable(FRObj.fredfile100,'Sheet','Quarterly');
 [nrows100,~]=size(HomeEquityTable);
 clear DateNumbers dateArray
 dateArray=strings(nrows100,1);
@@ -8809,7 +8481,7 @@ FredPngList{100,1}=figstr2;
 %% Continue with the Conversion Rate of USD To Pound Sterling (DEXUSUK)(Daily)
 itype=101;
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-USDPoundsTable = readtable(fredfile101,'Sheet','Daily');
+USDPoundsTable = readtable(FRObj.fredfile101,'Sheet','Daily');
 [nrows101,ncols101]=size(USDPoundsTable);
 clear DateNumbers
 clear dateArray
@@ -8880,7 +8552,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 %% Continue with the Conversion Rate of USD To Broad Market Currencies (DTWEXBGS)(Daily)
 itype=102;
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-USDBroadIndexTable = readtable(fredfile102,'Sheet','Daily');
+USDBroadIndexTable = readtable(FRObj.fredfile102,'Sheet','Daily');
 [nrows102,ncols102]=size(USDBroadIndexTable);
 clear DateNumbers
 clear dateArray
@@ -8952,7 +8624,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 %% Continue with the Conversion Rate of Japanese Yen To USD (DEXJPUS)(Daily)
 itype=103;
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-JapYenUSDTable = readtable(fredfile103,'Sheet','Daily');
+JapYenUSDTable = readtable(FRObj.fredfile103,'Sheet','Daily');
 [nrows103,ncols103]=size(JapYenUSDTable);
 clear DateNumbers
 clear dateArray
@@ -9023,7 +8695,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 %% Continue with the Stock Market Capitilization vs GDP (DDDM01USA156NWDB)(Annual)
 itype=104;
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-StockMktCapTable = readtable(fredfile104,'Sheet','Annual');
+StockMktCapTable = readtable(FRObj.fredfile104,'Sheet','Annual');
 [nrows104,ncols104]=size(StockMktCapTable);
 clear DateNumbers
 clear dateArray
@@ -9090,7 +8762,7 @@ ab=1;
 %  Continue with the Consumer Price Index All Items (CPALTT01USM657N)(monthly)
 itype=105;
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-CPIAllTable = readtable(fredfile105,'Sheet','Monthly');
+CPIAllTable = readtable(FRObj.fredfile105,'Sheet','Monthly');
 [nrows105,ncols105]=size(CPIAllTable);
 clear DateNumbers
 clear dateArray
@@ -9173,7 +8845,7 @@ PlotCumilFredData(FRObj,itype,titlestr3)
 %% Continue with the GrossNationalIncome (MKTGNIUSA646NWDB)(Annual)
 itype=106;
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-GNATIncTable = readtable(fredfile106,'Sheet','Annual');
+GNATIncTable = readtable(FRObj.fredfile106,'Sheet','Annual');
 [nrows106,ncols106]=size(GNATIncTable);
 clear DateNumbers
 clear dateArray
@@ -9243,7 +8915,7 @@ eval(['cd ' fredpath(1:length(fredpath)-1)]);
 loopstr1='Process the GASREGW Data';
 fprintf(fid,'\n');
 fprintf(fid,'%50s\n',loopstr1);
-GASREGTable = readtable(fredfile107,'Sheet','Weekly');
+GASREGTable = readtable(FRObj.fredfile107,'Sheet','Weekly');
 [nrows107,ncols107]=size(GASREGTable);
 dateArray=strings(nrows107,1);
 for n=1:nrows107
@@ -9317,7 +8989,7 @@ eval(['cd ' fredpath(1:length(fredpath)-1)]);
 loopstr1='Process the DCOILBRENTEU Data';
 fprintf(fid,'\n');
 fprintf(fid,'%50s\n',loopstr1);
-BrentEUTable = readtable(fredfile108,'Sheet','Daily');
+BrentEUTable = readtable(FRObj.fredfile108,'Sheet','Daily');
 [nrows108,ncols108]=size(BrentEUTable);
 dateArray=strings(nrows108,1);
 for n=1:nrows108
@@ -9391,7 +9063,7 @@ eval(['cd ' fredpath(1:length(fredpath)-1)]);
 loopstr1='Process the EggPrice Data';
 fprintf(fid,'\n');
 fprintf(fid,'%50s\n',loopstr1);
-EggPriceTable = readtable(fredfile109,'Sheet','Monthly');
+EggPriceTable = readtable(FRObj.fredfile109,'Sheet','Monthly');
 [nrows109,ncols109]=size(EggPriceTable);
 dateArray=strings(nrows109,1);
 for n=1:nrows109
@@ -9490,7 +9162,7 @@ eval(['cd ' fredpath(1:length(fredpath)-1)]);
 loopstr1='Process the Ground Beef Price Data';
 fprintf(fid,'\n');
 fprintf(fid,'%50s\n',loopstr1);
-GroundBeefPriceTable = readtable(fredfile110,'Sheet','Monthly');
+GroundBeefPriceTable = readtable(FRObj.fredfile110,'Sheet','Monthly');
 [nrows110,ncols110]=size(GroundBeefPriceTable);
 dateArray=strings(nrows110,1);
 for n=1:nrows110
@@ -9590,7 +9262,7 @@ eval(['cd ' fredpath(1:length(fredpath)-1)]);
 loopstr1='Process the Electricity Price Data';
 fprintf(fid,'\n');
 fprintf(fid,'%50s\n',loopstr1);
-ElectricityPriceTable = readtable(fredfile111,'Sheet','Monthly');
+ElectricityPriceTable = readtable(FRObj.fredfile111,'Sheet','Monthly');
 [nrows111,ncols111]=size(ElectricityPriceTable);
 dateArray=strings(nrows111,1);
 for n=1:nrows111
@@ -9689,7 +9361,7 @@ eval(['cd ' fredpath(1:length(fredpath)-1)]);
 loopstr1='Process the West Texas Intermediate Crude Price Data';
 fprintf(fid,'\n');
 fprintf(fid,'%50s\n',loopstr1);
-WestTexasCrudeTable = readtable(fredfile112,'Sheet','Monthly');
+WestTexasCrudeTable = readtable(FRObj.fredfile112,'Sheet','Monthly');
 [nrows112,ncols112]=size(WestTexasCrudeTable);
 dateArray=strings(nrows112,1);
 for n=1:nrows112
@@ -9779,7 +9451,7 @@ eval(['cd ' fredpath(1:length(fredpath)-1)]);
 loopstr1='Process the Henry Hub Natural Gas Prices Data';
 fprintf(fid,'\n');
 fprintf(fid,'%50s\n',loopstr1);
-HHubNatGasPriceTable = readtable(fredfile113,'Sheet','Daily');
+HHubNatGasPriceTable = readtable(FRObj.fredfile113,'Sheet','Daily');
 [nrows113,ncols113]=size(HHubNatGasPriceTable);
 dateArray=strings(nrows113,1);
 for n=1:nrows113
@@ -9868,7 +9540,7 @@ eval(['cd ' fredpath(1:length(fredpath)-1)]);
 loopstr1='Process the Copper Price Data';
 fprintf(fid,'\n');
 fprintf(fid,'%50s\n',loopstr1);
-CopperPriceTable = readtable(fredfile114,'Sheet','Monthly');
+CopperPriceTable = readtable(FRObj.fredfile114,'Sheet','Monthly');
 [nrows114,ncols114]=size(CopperPriceTable);
 dateArray=strings(nrows114,1);
 for n=1:nrows114
@@ -9957,7 +9629,7 @@ eval(['cd ' fredpath(1:length(fredpath)-1)]);
 loopstr1='Process the Diesel Price Data';
 fprintf(fid,'\n');
 fprintf(fid,'%50s\n',loopstr1);
-DieselPriceTable = readtable(fredfile115,'Sheet','Weekly');
+DieselPriceTable = readtable(FRObj.fredfile115,'Sheet','Weekly');
 [nrows115,ncols115]=size(DieselPriceTable);
 dateArray=strings(nrows115,1);
 for n=1:nrows115
@@ -10046,7 +9718,7 @@ eval(['cd ' fredpath(1:length(fredpath)-1)]);
 loopstr1='Process the Jet FuelPrice Data';
 fprintf(fid,'\n');
 fprintf(fid,'%50s\n',loopstr1);
-JetFuelPriceTable = readtable(fredfile116,'Sheet','Weekly');
+JetFuelPriceTable = readtable(FRObj.fredfile116,'Sheet','Weekly');
 [nrows116,ncols116]=size(JetFuelPriceTable);
 dateArray=strings(nrows116,1);
 for n=1:nrows116
@@ -10136,7 +9808,7 @@ eval(['cd ' fredpath(1:length(fredpath)-1)]);
 loopstr1='Process the Aluminum Price Data';
 fprintf(fid,'\n');
 fprintf(fid,'%50s\n',loopstr1);
-AluminumTable = readtable(fredfile117,'Sheet','Monthly');
+AluminumTable = readtable(FRObj.fredfile117,'Sheet','Monthly');
 [nrows117,ncols117]=size(AluminumTable);
 dateArray=strings(nrows117,1);
 for n=1:nrows117
@@ -10225,7 +9897,7 @@ eval(['cd ' fredpath(1:length(fredpath)-1)]);
 loopstr1='Process the Cocoa Price Data';
 fprintf(fid,'\n');
 fprintf(fid,'%50s\n',loopstr1);
-CocoaTable = readtable(fredfile118,'Sheet','Monthly');
+CocoaTable = readtable(FRObj.fredfile118,'Sheet','Monthly');
 [nrows118,ncols118]=size(CocoaTable);
 dateArray=strings(nrows118,1);
 for n=1:nrows118
@@ -10324,7 +9996,7 @@ eval(['cd ' fredpath(1:length(fredpath)-1)]);
 loopstr1='Process the Global Energy Price Index Data';
 fprintf(fid,'\n');
 fprintf(fid,'%50s\n',loopstr1);
-GlobalEnergyTable = readtable(fredfile119,'Sheet','Monthly');
+GlobalEnergyTable = readtable(FRObj.fredfile119,'Sheet','Monthly');
 [nrows119,ncols119]=size(GlobalEnergyTable);
 dateArray=strings(nrows119,1);
 for n=1:nrows119
@@ -10414,7 +10086,7 @@ eval(['cd ' fredpath(1:length(fredpath)-1)]);
 loopstr1='Process the Bread Price Data';
 fprintf(fid,'\n');
 fprintf(fid,'%50s\n',loopstr1);
-BreadPriceTable = readtable(fredfile120,'Sheet','Monthly');
+BreadPriceTable = readtable(FRObj.fredfile120,'Sheet','Monthly');
 [nrows120,ncols120]=size(BreadPriceTable);
 dateArray=strings(nrows120,1);
 for n=1:nrows120
@@ -10513,7 +10185,7 @@ eval(['cd ' fredpath(1:length(fredpath)-1)]);
 loopstr1='Process the Wheat Price Data';
 fprintf(fid,'\n');
 fprintf(fid,'%50s\n',loopstr1);
-WheatPriceTable = readtable(fredfile121,'Sheet','Monthly');
+WheatPriceTable = readtable(FRObj.fredfile121,'Sheet','Monthly');
 [nrows121,ncols121]=size(WheatPriceTable);
 dateArray=strings(nrows121,1);
 for n=1:nrows121
@@ -10607,7 +10279,7 @@ eval(['cd ' fredpath(1:length(fredpath)-1)]);
 loopstr1='Process the Uranium Price Data';
 fprintf(fid,'\n');
 fprintf(fid,'%50s\n',loopstr1);
-UraniumPriceTable = readtable(fredfile122,'Sheet','Monthly');
+UraniumPriceTable = readtable(FRObj.fredfile122,'Sheet','Monthly');
 [nrows122,ncols122]=size(UraniumPriceTable);
 dateArray=strings(nrows122,1);
 for n=1:nrows122
@@ -10697,7 +10369,7 @@ eval(['cd ' fredpath(1:length(fredpath)-1)]);
 loopstr1='Process the Nickel Price Data';
 fprintf(fid,'\n');
 fprintf(fid,'%50s\n',loopstr1);
-NickelPriceTable = readtable(fredfile123,'Sheet','Monthly');
+NickelPriceTable = readtable(FRObj.fredfile123,'Sheet','Monthly');
 [nrows123,ncols123]=size(NickelPriceTable);
 dateArray=strings(nrows123,1);
 for n=1:nrows123
@@ -10786,7 +10458,7 @@ eval(['cd ' fredpath(1:length(fredpath)-1)]);
 loopstr1='Process the Rubber Price Data';
 fprintf(fid,'\n');
 fprintf(fid,'%50s\n',loopstr1);
-RubberPriceTable = readtable(fredfile124,'Sheet','Monthly');
+RubberPriceTable = readtable(FRObj.fredfile124,'Sheet','Monthly');
 [nrows124,ncols124]=size(RubberPriceTable);
 dateArray=strings(nrows124,1);
 for n=1:nrows124
@@ -10876,7 +10548,7 @@ eval(['cd ' fredpath(1:length(fredpath)-1)]);
 loopstr1='Process the Sugar Price Data';
 fprintf(fid,'\n');
 fprintf(fid,'%50s\n',loopstr1);
-SugarPriceTable = readtable(fredfile125,'Sheet','Monthly');
+SugarPriceTable = readtable(FRObj.fredfile125,'Sheet','Monthly');
 [nrows125,ncols125]=size(SugarPriceTable);
 dateArray=strings(nrows125,1);
 for n=1:nrows125
@@ -10966,7 +10638,7 @@ FoodCorrTable(13,:) = {126,"UrbanHFTT",StartYear1,EndYear1,125,"SugarPriceTT",19
 %% PPI for Food Manufacturing (PCU311311)(Monthly)
 % itype=127
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-PPIFoodTable = readtable(fredfile127,'Sheet','Monthly');
+PPIFoodTable = readtable(FRObj.fredfile127,'Sheet','Monthly');
 [nrows127,ncols127]=size(PPIFoodTable);
 clear DateNumbers
 clear dateArray
@@ -11050,7 +10722,7 @@ FoodCorrTable(1,:) = {126,"UrbanHFTT",StartYear1,EndYear1,127,"PPIFoodTT",1984,2
 %% PPI for Diesel #2 Fuel (WPU057303)(Monthly)
 % itype=128
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-PPIDieselTable = readtable(fredfile128,'Sheet','Monthly');
+PPIDieselTable = readtable(FRObj.fredfile128,'Sheet','Monthly');
 [nrows128,ncols128]=size(PPIDieselTable);
 clear DateNumbers
 clear dateArray
@@ -11146,7 +10818,7 @@ FoodCorrTable(2,:) = {126,"UrbanHFTT",StartYear1,EndYear1,128,"PPIDieselTT",1973
 %% Average Price For Beef Bologna (APU0000705121)(Monthly)
 % itype=129
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-BolognaTable = readtable(fredfile129,'Sheet','Monthly');
+BolognaTable = readtable(FRObj.fredfile129,'Sheet','Monthly');
 [nrows129,ncols129]=size(BolognaTable);
 clear DateNumbers
 clear dateArray
@@ -11241,7 +10913,7 @@ FoodCorrTable(3,:) = {126,"UrbanHFTT",StartYear1,EndYear1,129,"BolognaTT",1980,2
 %% Avererage Price For Boneless Ham (APU0000704312)(Monthly)
 % itype=130
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-BonelessHamTable = readtable(fredfile130,'Sheet','Monthly');
+BonelessHamTable = readtable(FRObj.fredfile130,'Sheet','Monthly');
 [nrows130,ncols130]=size(BonelessHamTable);
 clear DateNumbers
 clear dateArray
@@ -11336,7 +11008,7 @@ FoodCorrTable(4,:) = {126,"UrbanHFTT",StartYear1,EndYear1,130,"BonelessHamTT",19
 %% Average Price For BeefChuckRoast (APU0000703213)(Monthly)
 % itype=131
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-ChuckRoastTable = readtable(fredfile131,'Sheet','Monthly');
+ChuckRoastTable = readtable(FRObj.fredfile131,'Sheet','Monthly');
 [nrows131,ncols131]=size(ChuckRoastTable);
 clear DateNumbers
 clear dateArray
@@ -11432,7 +11104,7 @@ FoodCorrTable(5,:) = {126,"UrbanHFTT",StartYear1,EndYear1,131,"ChuckRoastTT",198
 %% Average Price For Bacon For North East Region (APU0100704111)(Monthly)
 % itype=132
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-BaconTable = readtable(fredfile132,'Sheet','Monthly');
+BaconTable = readtable(FRObj.fredfile132,'Sheet','Monthly');
 [nrows132,ncols132]=size(BaconTable);
 clear DateNumbers
 clear dateArray
@@ -11528,7 +11200,7 @@ FoodCorrTable(6,:) = {126,"UrbanHFTT",StartYear1,EndYear1,132,"BaconPriceTT",198
 %% Average Index Of Soybeans (WPU01830131)(Monthly)
 % itype=133
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-SoybeanTable = readtable(fredfile133,'Sheet','Monthly');
+SoybeanTable = readtable(FRObj.fredfile133,'Sheet','Monthly');
 [nrows133,ncols133]=size(SoybeanTable);
 clear DateNumbers
 clear dateArray
@@ -11631,7 +11303,7 @@ eval(['cd ' fredpath(1:length(fredpath)-1)]);
 loopstr1='Process the Flour Price Data For US Cities';
 fprintf(fid,'\n');
 fprintf(fid,'%50s\n',loopstr1);
-FlourPriceTable = readtable(fredfile134,'Sheet','Monthly');
+FlourPriceTable = readtable(FRObj.fredfile134,'Sheet','Monthly');
 [nrows134,ncols134]=size(FlourPriceTable);
 dateArray=strings(nrows134,1);
 for n=1:nrows134
@@ -11727,7 +11399,7 @@ eval(['cd ' fredpath(1:length(fredpath)-1)]);
 loopstr1='Process the Cooking Oil Price Index';
 fprintf(fid,'\n');
 fprintf(fid,'%50s\n',loopstr1);
-CookingOilTable = readtable(fredfile135,'Sheet','Monthly');
+CookingOilTable = readtable(FRObj.fredfile135,'Sheet','Monthly');
 [nrows135,ncols135]=size(CookingOilTable);
 dateArray=strings(nrows135,1);
 for n=1:nrows135
@@ -11824,7 +11496,7 @@ eval(['cd ' fredpath(1:length(fredpath)-1)]);
 loopstr1='Process the Whole Chicken Prices';
 fprintf(fid,'\n');
 fprintf(fid,'%50s\n',loopstr1);
-WholeChickenTable = readtable(fredfile136,'Sheet','Monthly');
+WholeChickenTable = readtable(FRObj.fredfile136,'Sheet','Monthly');
 [nrows136,ncols136]=size(WholeChickenTable);
 dateArray=strings(nrows136,1);
 for n=1:nrows136
@@ -11920,7 +11592,7 @@ eval(['cd ' fredpath(1:length(fredpath)-1)]);
 loopstr1='Process the PPI Farm Index';
 fprintf(fid,'\n');
 fprintf(fid,'%50s\n',loopstr1);
-FarmProdcutsTable = readtable(fredfile137,'Sheet','Monthly');
+FarmProdcutsTable = readtable(FRObj.fredfile137,'Sheet','Monthly');
 [nrows137,ncols137]=size(FarmProdcutsTable);
 dateArray=strings(nrows137,1);
 for n=1:nrows137
@@ -12016,7 +11688,7 @@ eval(['cd ' fredpath(1:length(fredpath)-1)]);
 loopstr1='Process the PPI Cattle Products';
 fprintf(fid,'\n');
 fprintf(fid,'%50s\n',loopstr1);
-CattleTable = readtable(fredfile138,'Sheet','Monthly');
+CattleTable = readtable(FRObj.fredfile138,'Sheet','Monthly');
 [nrows138,ncols138]=size(CattleTable);
 dateArray=strings(nrows138,1);
 for n=1:nrows138
@@ -12111,7 +11783,7 @@ eval(['cd ' fredpath(1:length(fredpath)-1)]);
 loopstr1='Process the PPI Tomatoes';
 fprintf(fid,'\n');
 fprintf(fid,'%50s\n',loopstr1);
-TomatoesTable = readtable(fredfile139,'Sheet','Monthly');
+TomatoesTable = readtable(FRObj.fredfile139,'Sheet','Monthly');
 [nrows139,ncols139]=size(TomatoesTable);
 dateArray=strings(nrows139,1);
 for n=1:nrows139
@@ -12206,7 +11878,7 @@ eval(['cd ' fredpath(1:length(fredpath)-1)]);
 loopstr1='Process the PPI Corn';
 fprintf(fid,'\n');
 fprintf(fid,'%50s\n',loopstr1);
-CornTable = readtable(fredfile140,'Sheet','Monthly');
+CornTable = readtable(FRObj.fredfile140,'Sheet','Monthly');
 [nrows140,ncols140]=size(CornTable);
 dateArray=strings(nrows140,1);
 for n=1:nrows140
@@ -12301,7 +11973,7 @@ eval(['cd ' fredpath(1:length(fredpath)-1)]);
 loopstr1='Process the PPI Raw Milk';
 fprintf(fid,'\n');
 fprintf(fid,'%50s\n',loopstr1);
-RawMilkTable = readtable(fredfile141,'Sheet','Monthly');
+RawMilkTable = readtable(FRObj.fredfile141,'Sheet','Monthly');
 [nrows141,ncols141]=size(RawMilkTable);
 dateArray=strings(nrows141,1);
 for n=1:nrows141
@@ -12397,7 +12069,7 @@ eval(['cd ' fredpath(1:length(fredpath)-1)]);
 loopstr1='Process the PPI Fruits';
 fprintf(fid,'\n');
 fprintf(fid,'%50s\n',loopstr1);
-FruitsTable = readtable(fredfile142,'Sheet','Monthly');
+FruitsTable = readtable(FRObj.fredfile142,'Sheet','Monthly');
 [nrows142,ncols142]=size(FruitsTable);
 dateArray=strings(nrows142,1);
 for n=1:nrows142
@@ -12493,7 +12165,7 @@ eval(['cd ' fredpath(1:length(fredpath)-1)]);
 loopstr1='Process the PPI Cabbage';
 fprintf(fid,'\n');
 fprintf(fid,'%50s\n',loopstr1);
-CabbageTable = readtable(fredfile143,'Sheet','Monthly');
+CabbageTable = readtable(FRObj.fredfile143,'Sheet','Monthly');
 [nrows143,ncols143]=size(CabbageTable);
 dateArray=strings(nrows143,1);
 for n=1:nrows143
@@ -12588,7 +12260,7 @@ eval(['cd ' fredpath(1:length(fredpath)-1)]);
 loopstr1='Process the PPI Rice';
 fprintf(fid,'\n');
 fprintf(fid,'%50s\n',loopstr1);
-RiceTable = readtable(fredfile144,'Sheet','Monthly');
+RiceTable = readtable(FRObj.fredfile144,'Sheet','Monthly');
 [nrows144,ncols144]=size(RiceTable);
 dateArray=strings(nrows144,1);
 for n=1:nrows144
@@ -12683,7 +12355,7 @@ eval(['cd ' fredpath(1:length(fredpath)-1)]);
 loopstr1='Process the PPI Citrus Fruits';
 fprintf(fid,'\n');
 fprintf(fid,'%50s\n',loopstr1);
-CitrusTable = readtable(fredfile145,'Sheet','Monthly');
+CitrusTable = readtable(FRObj.fredfile145,'Sheet','Monthly');
 [nrows145,ncols145]=size(CitrusTable);
 dateArray=strings(nrows145,1);
 for n=1:nrows145
@@ -12773,7 +12445,7 @@ FoodCorrTable(25,:) = {126,"UrbanHFTT",StartYear1,EndYear1,145,"PPICitrusTT",194
 %% Light Truck Sales(ALTSALES) Monthly
 % itype=147
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
-AltSalesTable = readtable(fredfile147,'Sheet','Monthly');
+AltSalesTable = readtable(FRObj.fredfile147,'Sheet','Monthly');
 [nrows147,ncols147]=size(AltSalesTable);
 clear DateNumbers
 clear dateArray
@@ -12864,7 +12536,7 @@ eval(['cd ' fredpath(1:length(fredpath)-1)]);
 loopstr1='Process the Personal Savings Rate Data';
 fprintf(fid,'\n');
 fprintf(fid,'%50s\n',loopstr1);
-PersonalSavingsTable = readtable(fredfile148,'Sheet','Monthly');
+PersonalSavingsTable = readtable(FRObj.fredfile148,'Sheet','Monthly');
 [nrows148,~]=size(PersonalSavingsTable);
 dateArray=strings(nrows148,1);
 for n=1:nrows148
@@ -12925,7 +12597,7 @@ if(ishowrecession>0)
     RecessionInfo(148,1)=icase;
 end
 % Now plot this data
-FRObj.barval=5;
+FRObj.barval=10;
 FRObj.PSaveTT=PSaveTT;
 % Now plot this data
 titlestr='PersonalSavingsRate';
@@ -12950,7 +12622,7 @@ eval(['cd ' fredpath(1:length(fredpath)-1)]);
 loopstr1='Process the Personal Savings Rate Data';
 fprintf(fid,'\n');
 fprintf(fid,'%50s\n',loopstr1);
-ManEmployTable = readtable(fredfile149,'Sheet','Monthly');
+ManEmployTable = readtable(FRObj.fredfile149,'Sheet','Monthly');
 [nrows149,ncols]=size(ManEmployTable);
 dateArray=strings(nrows149,1);
 for n=1:nrows149
@@ -13037,7 +12709,7 @@ eval(['cd ' fredpath(1:length(fredpath)-1)]);
 loopstr1='Process the Manufacturing Inventory To Sales Ratio';
 fprintf(fid,'\n');
 fprintf(fid,'%50s\n',loopstr1);
-ManInventoryTable = readtable(fredfile150,'Sheet','Monthly');
+ManInventoryTable = readtable(FRObj.fredfile150,'Sheet','Monthly');
 [nrows150,ncols]=size(ManInventoryTable);
 dateArray=strings(nrows150,1);
 for n=1:nrows150
@@ -13114,7 +12786,183 @@ titlest3=char(titlestr3);
 figstr3=strcat(titlestr3,'.png');
 figstr3=char(figstr3);
 PlotCumilFredData(FRObj,itype,titlestr3)
-
+% Start with The Manufacturers Inventories (MNFCTRIMSA) (Monthly)  Chap 11-4
+% Itype=151
+% This underlying data set seems to have the wrong data in the Fred
+% Database
+loopstr='**********Start Looping through the available FRED data**********';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr);
+eval(['cd ' fredpath(1:length(fredpath)-1)]);
+loopstr1='Process the Manufacturers Inventory';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr1);
+ManuInvTable = readtable(FRObj.fredfile151,'Sheet','Monthly');
+[nrows151,~]=size(ManuInvTable);
+dateArray=strings(nrows151,1);
+for n=1:nrows151
+    nowstr=string(ManuInvTable.Date(n,1));
+    dateArray(n,1)=nowstr;
+    if(n==1)
+        nowStartDate=nowstr;
+    elseif(n==nrows151)
+        nowEndDate=nowstr;
+    end
+end
+loopstr2=strcat('Data is available for-',num2str(nrows151,4),'-dates-',...
+    'From-',nowStartDate,'-to-',nowEndDate');
+fprintf(fid,'%50s\n',loopstr2);
+rowTimes=datetime(dateArray);
+DateNumbers=datenum(rowTimes);
+ManuInventoryTT=table2timetable(ManuInvTable,'RowTimes','Date');
+ManuInventoryTT = addvars(ManuInventoryTT,DateNumbers);
+meanManuInvVal=mean(ManuInventoryTT.Inventories/1000);
+medianManuInvVal=median(ManuInventoryTT.Inventories/1000);
+meanInventory=zeros(nrows151,1);
+medianInventory=zeros(nrows151,1);
+for n=1:nrows151
+    meanInventory(n,1)=meanManuInvVal;
+    medianInventory(n,1)=medianManuInvVal;
+end
+ManuInventoryTT = addvars(ManuInventoryTT,meanInventory,medianInventory);
+SourceFile(151,1)="ManufacturersInventories.xlsx";
+Code(151,1)="MNFCTRIMSA";
+Desc(151,1)="Manufacturing Inventories";
+Freq(151,1)="Monthly";
+StartYear(151,1)=1992;
+EndYear(151,1)=2025;
+SeasonalAdj(151,1)="Yes";
+BaseYear(151,1)=1992;
+NumObs(151,1)=413;
+FRObj.Desc=Desc;
+Chap(151,1)=11;
+Section(151,1)=4;
+% Calculate the Simple Stats
+itype=151;
+Data=ManuInventoryTT.Inventories/1000;
+FRObj=FRObj.SimpleStats(Data,itype);
+NYears=EndYear(151,1)-StartYear(151,1)+1;
+FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
+GrowthRateAll=FRObj.GrowthRateAll;
+SG151=100*GrowthRateAll(itype,1);
+FRObj.SG151=SG151;
+% Smooth the Data
+mfacsmooth = smoothdata(Data);
+P0=mfacsmooth(1);
+PF=mfacsmooth(413);
+ManuInventoryTT= addvars(ManuInventoryTT,mfacsmooth);
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0)
+    [ManuInventoryTT,icase] = OverlapTimeLinesRev1(ManuInventoryTT,RecessProbTT);
+    FRObj.ManuInventoryTT=ManuInventoryTT;
+    RecessionInfo(151,1)=icase;
+end
+% Now plot this data
+FRObj.barval=500;
+FRObj.ManuInventoryTT=ManuInventoryTT;
+% Now plot this data
+titlestr='ManufacturingInventories';
+PlotFredData(FRObj,ManuInventoryTT,itype,titlestr)
+% Add this table to the FredObj
+titlestr=char(titlestr);
+figstr2=strcat(titlestr,'.png');
+figstr2=char(figstr2);
+FredPngList{1,1}=figstr2;
+% Now create the data for a cumilative distribution plot
+titlestr3='ManufacturingInvCumilDist';
+titlest3=char(titlestr3);
+figstr3=strcat(titlestr3,'.png');
+figstr3=char(figstr3);
+PlotCumilFredData(FRObj,itype,titlestr3)
+%% Start with Durable Goods Orders(Monthly) (UMDMNO) Chap 11-5
+% Itype=152
+loopstr='**********Start Looping through the available FRED data**********';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr);
+eval(['cd ' fredpath(1:length(fredpath)-1)]);
+loopstr1='Process the Durable Goods Orders';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr1);
+DurableGoodsTable = readtable(FRObj.fredfile152,'Sheet','Monthly');
+[nrows152,~]=size(DurableGoodsTable);
+dateArray=strings(nrows152,1);
+for n=1:nrows152
+    nowstr=string(DurableGoodsTable.Date(n,1));
+    dateArray(n,1)=nowstr;
+    if(n==1)
+        nowStartDate=nowstr;
+    elseif(n==nrows152)
+        nowEndDate=nowstr;
+    end
+end
+loopstr2=strcat('Data is available for-',num2str(nrows152,4),'-dates-',...
+    'From-',nowStartDate,'-to-',nowEndDate');
+fprintf(fid,'%50s\n',loopstr2);
+rowTimes=datetime(dateArray);
+DateNumbers=datenum(rowTimes);
+DurableGoodsTT=table2timetable(DurableGoodsTable,'RowTimes','Date');
+DurableGoodsTT = addvars(DurableGoodsTT,DateNumbers);
+meanDGoodsVal=mean(DurableGoodsTT.Orders);
+medianDGoodsVal=mean(DurableGoodsTT.Orders);
+meanDGoods=zeros(nrows152,1);
+medianDGoods=zeros(nrows152,1);
+for n=1:nrows152
+    meanDGoods(n,1)=meanDGoodsVal;
+    medianDGoods(n,1)=medianDGoodsVal;
+end
+DurableGoodsTT = addvars(DurableGoodsTT,meanDGoods,medianDGoods);
+SourceFile(152,1)="DurableGoodsOrders.xlsx";
+Code(152,1)="UMDMNO";
+Desc(152,1)="Durable Goods Orders";
+Freq(152,1)="Monthly";
+StartYear(152,1)=1992;
+EndYear(152,1)=2025;
+SeasonalAdj(152,1)="No";
+BaseYear(152,1)=1992;
+NumObs(152,1)=413;
+FRObj.Desc=Desc;
+Chap(152,1)=11;
+Section(152,1)=5;
+% Calculate the Simple Stats
+itype=152;
+Data=DurableGoodsTT.Orders/1000;
+FRObj=FRObj.SimpleStats(Data,itype);
+NYears=EndYear(152,1)-StartYear(152,1)+1;
+FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
+GrowthRateAll=FRObj.GrowthRateAll;
+SG152=100*GrowthRateAll(itype,1);
+FRObj.SG152=SG152;
+% Smooth the Data
+goodsmooth = smoothdata(Data);
+P0=goodsmooth(1);
+PF=goodsmooth(413);
+DurableGoodsTT= addvars(DurableGoodsTT,goodsmooth);
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0)
+    [DurableGoodsTT,icase] = OverlapTimeLinesRev1(DurableGoodsTT,RecessProbTT);
+    FRObj.DurableGoodsTT=DurableGoodsTT;
+    RecessionInfo(152,1)=icase;
+end
+% Now plot this data
+FRObj.barval=200;
+FRObj.DurableGoodsTT=DurableGoodsTT;
+% Now plot this data
+titlestr='DurableGoodsOrders';
+PlotFredData(FRObj,DurableGoodsTT,itype,titlestr)
+% Add this table to the FredObj
+titlestr=char(titlestr);
+figstr2=strcat(titlestr,'.png');
+figstr2=char(figstr2);
+FredPngList{1,1}=figstr2;
+% Now create the data for a cumilative distribution plot
+titlestr3='DurableGoods-CumilDist';
+titlest3=char(titlestr3);
+figstr3=strcat(titlestr3,'.png');
+figstr3=char(figstr3);
+PlotCumilFredData(FRObj,itype,titlestr3)
+%% Create a correlation matrix related to food costs
+titlestr='FoodPriceCorrelation';
+CreateFoodCorrelationPlot(FRObj,titlestr)
 %% Create a Catalog table to hold key data extracted from the FRED database
 Catalog = table(Code,Desc,Freq,StartYear,EndYear,SeasonalAdj,BaseYear,NumObs,Chap,Section,Commodity);
 FRObj.Catalog=Catalog;
@@ -13127,6 +12975,7 @@ eval(['cd ' logfilepath(1:length(logfilepath)-1)]);
 writetable(Catalog,logfilename,'Delimiter','\t','WriteMode','append');  
 writetable(Catalog,'CatalogFile.xlsx','Sheet',1)
 disp('Wrote CatalogFile to Excel Spreadsheet')
+
 %% Close and display PDF report if one is created
 a1=exist('rpt','var');
 if((iCreatePDFReport==1) && (RptGenPresent==1))
@@ -13138,14 +12987,10 @@ end
 %% Save the object holding the imported data
 eval(['cd ' tablepath(1:length(tablepath)-1)]);
 actionstr='save';
-% if(a1==1)
-%     varstr='FRObj FoodCorrTable';
-% else
-%     varstr='FRObj FoodCorrTable';
-% end
-varstr='FRObj FoodCorrTable';
+FoodRho=rho;
+varstr='FRObj FoodCorrTable FoodRho';
 qualstr='-v7.3';
-TableName='ImportedFredData147.mat';
+TableName='ImportedFredData152.mat';
 [cmdString]=MyStrcatV73(actionstr,TableName,varstr,qualstr);
 eval(cmdString);
 wrtstr1=strcat('Wrote Imported Fred Data To File-',TableName);
@@ -13159,6 +13004,9 @@ disp(dispstr)
 %% Run Close out
 fprintf(fid,'\n');
 disp('Run Completed');
-%fprintf(fid,'%40s\n','**********Run Completed**********');
+elapsed_time=toc;
+str1=strcat('Run took-',num2str(elapsed_time),'-seconds to complete');
+disp(str1)
+fprintf(fid,'%30s\n',str1);
+fprintf(fid,'%40s\n','**********Run Completed**********');
 fclose(fid);
-ab=1;

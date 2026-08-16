@@ -299,7 +299,6 @@ elseif(itype==9)
         bar(InputTT.Date,barval*InputTT.RevFlag,'b','LineWidth',1);
         hold off
     end
- 
     title(titlestr)
     xlabel('Date','FontWeight','bold','FontSize',12,'FontWeight','bold');
     ylabel('Consumer Confidence Index','FontWeight','bold','FontSize',12,'FontWeight','bold');
@@ -1614,7 +1613,7 @@ elseif(itype==48)
         InputTT.Date,InputTT.mdspsmooth,'y');
     title(titlestr)
     xlabel('Date','FontWeight','bold','FontSize',12,'FontWeight','bold');
-    ylabel('Mortgage Payments As Income Per Centage','FontWeight','bold','FontSize',12,'FontWeight','bold');
+    ylabel('Mortgage Payments As % Of Disposable Income','FontWeight','bold','FontSize',12,'FontWeight','bold');
     if(iLogo==1)
         eval(['cd ' govjpegpath(1:length(govjpegpath)-1)]);
         ha =gca;
@@ -3613,12 +3612,6 @@ elseif(itype==112)
         InputTT.Date,InputTT.meanNatGasPrices,'r--',...
         InputTT.Date,InputTT.medianNatGasPrices,'b--',...
         InputTT.Date,InputTT.natgassmooth,'y--');
-     % if(ishowrecession==1)
-     %    hold on
-     %    barval=FRObj.barval;
-     %    bar(InputTT.Date,barval*InputTT.RevFlag,'b','LineWidth',1);
-     %    hold off
-     % end
     title(titlestr)
     xlabel('Date','FontWeight','bold','FontSize',12,'FontWeight','bold');
     ylabel('HenryHubNaturalGas Prices-USD/Million BTU','FontWeight','bold','FontSize',12,'FontWeight','bold');
@@ -3759,7 +3752,6 @@ elseif(itype==117)
         bar(InputTT.Date,barval*InputTT.RevFlag,'b','LineWidth',1);
         hold off
      end
-
     title(titlestr)
     xlabel('Date','FontWeight','bold','FontSize',12,'FontWeight','bold');
     ylabel('Aluminum-Thousand USD/Metric Ton','FontWeight','bold','FontSize',12,'FontWeight','bold');
@@ -5053,7 +5045,7 @@ elseif(itype==9)
 elseif(itype==10)
     txtstr1='Days On Market For House Sale';
     txt1=text(tx1,ty1,txtstr1,'FontWeight','bold','FontSize',12);
-    txtstr2=strcat('Mean Days  =',num2str(meanDaysOnMarket,4),'-Medians Days',num2str(medianDaysOnMarket,4));
+    txtstr2=strcat('Mean Days  =',num2str(meanDaysOnMarket,4),'-Median Days-',num2str(medianDaysOnMarket,4));
     txt2=text(tx2,ty2,txtstr2,'FontWeight','bold','FontSize',12);
 elseif(itype==11)
     txtstr1='Mean/Median 10 Year Bond Yields %';
@@ -5375,7 +5367,7 @@ elseif(itype==60)
         '-Median =',num2str(medianSalesVal,5));
     SG60=FRObj.SG60;
     % txtstr2=strcat('Mean Sales =',num2str(meanSalesVal,5),'-Retail Sales','-AnnualGrowthRate=',num2str(SG60),'-in pct');
-    % txt2=text(tx2,ty2,txtstr2,'FontWeight','bold','FontSize',12);
+    txt2=text(tx2,ty2,txtstr2,'FontWeight','bold','FontSize',12);
 elseif(itype==61)
     txtstr1='Mean/Median E Commerce Retails Sales In Billions USD';
     txt1=text(tx1,ty1,txtstr1,'FontWeight','bold','FontSize',12);
@@ -5388,7 +5380,7 @@ elseif(itype==62)
     txtstr2=strcat('Mean =',num2str(meanSRatioVal,5),...
         '-Median =',num2str(medianSRatioVal,5));
     SG62x=FRObj.SG62x;
-    txtstr2=strcat('Mean Ratio =',num2str(meanSRatioVal,5),'-','-Inventory/Sales=',num2str(SG62x),'-in pct');
+    %txtstr2=strcat('Mean Ratio =',num2str(meanSRatioVal,5),'-','-Inventory/Sales=',num2str(SG62x),'-in pct');
     txt2=text(tx2,ty2,txtstr2,'FontWeight','bold','FontSize',12);
 elseif(itype==63)
     txtstr1='Mean/Median Retail Inventories Billions of USD';

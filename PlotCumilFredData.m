@@ -1422,7 +1422,7 @@ elseif(itype==56)
     plot(xpt,ypt,'r','LineWidth',2);
     title(titlestr3)
     xlabel('Cumil Pct','FontWeight','bold','FontSize',12,'FontWeight','bold');
-    ylabel('Flex CPI','FontWeight','bold','FontSize',12,'FontWeight','bold');
+    ylabel('Flex CPI %','FontWeight','bold','FontSize',12,'FontWeight','bold');
     if(iLogo==1)
         eval(['cd ' govjpegpath(1:length(govjpegpath)-1)]);
         ha =gca;
@@ -1509,7 +1509,7 @@ elseif(itype==56)
     set(gca,'Color', [0.3 0.3 0.3]);
     set(gca,'XGrid','on','GridColor',[1 1 1]);
     set(gca,'YGrid','on','GridColor',[1 1 1]);
-    meanSalesVal=ypt(10,1)/1E3;
+    medianSalesVal=ypt(10,1)/1E3;
 elseif(itype==62)
     plot(xpt,ypt,'r','LineWidth',2);
     title(titlestr3)
@@ -4055,7 +4055,7 @@ elseif(itype==61)
     tx2=.10;
     ty2=.03;
     SG61=FRObj.SG61;
-    txtstr2=strcat('Mean Sales =',num2str(meanSalesVal,5),'-Retail Sales','-AnnualGrowthRate=',num2str(SG61),'-in pct');
+    txtstr2=strcat('Median Sales =',num2str(medianSalesVal,5),'-Retail Sales','-AnnualGrowthRate=',num2str(SG61),'-in pct');
     txt2=text(tx2,ty2,txtstr2,'FontWeight','bold','FontSize',12);
 elseif(itype==62)
     txtstr1='Inventory To Sales Ratio-1992-2025';

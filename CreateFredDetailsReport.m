@@ -172,7 +172,8 @@ add(chapter,image);
 parastr21='The chart shown above shows the U2 rate for the period 1967 thru 2025.';
 parastr22=' The big jump in the 2020 time is due to the COVID restrictions on business and represents the biggest short term jump ever.';
 parastr23=' A smaller but longer downturn is evident in the period 2008 thru 2010 and corresponds to the Lehman Brothers collapse.';
-parastr29=strcat(parastr21,parastr22,parastr23);
+parastr24=' The vertical blue lines if present in the chart show recession periods.';
+parastr29=strcat(parastr21,parastr22,parastr23,parastr24);
 p3 = Paragraph(parastr29);
 p3.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
 add(chapter,p3);
@@ -228,7 +229,8 @@ add(chapter,image);
 parastr11='The chart was created by this software package and closely mirrors the Fred example chart.';
 parastr12=' The data are seasonally adjusted and reported in numbers of claims over the entire USA.';
 parastr13=' A great burst of claims are obvious in the 2020 period due to the onslaught of COVID restrictions.';
-parastr19=strcat(parastr11,parastr12,parastr13);
+parastr14=' Note that the Y axis is ploted on a log scale to make the Covid claims extent easier to see.';
+parastr19=strcat(parastr11,parastr12,parastr13,parastr14);
 p2 = Paragraph(parastr19);
 p2.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
 add(chapter,p2);
@@ -250,7 +252,7 @@ image.Width = widthstr;
 image.ScaleToFit=0;
 add(chapter,image); 
 parastr31='The chart was designed to show the cumilative distribution of the Initial Unemployment Claims.';
-parastr32=' Inspection of the graphic shows that the cumilitive 50% values of the distribution to be about 360000 .';
+parastr32=' Inspection of the graphic shows that the cumilitive 50% values of the distribution to be about 340000 .';
 parastr39=strcat(parastr31,parastr32);
 p4 = Paragraph(parastr39);
 p4.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
@@ -286,7 +288,8 @@ add(chapter,image);
 parastr11='The chart was created by this software package and closely mirrors the Fred example chart.';
 parastr12=' The data are seasonally adjusted and reported in numbers of claims over the entire USA.';
 parastr13=' Spike in continuing claims is most obvious during the period 2020-21 due to Covid.';
-parastr19=strcat(parastr11,parastr12,parastr13);
+parastr14=' Like the initial claims chart the rates were ploted on a log scale.';
+parastr19=strcat(parastr11,parastr12,parastr13,parastr14);
 p2 = Paragraph(parastr19);
 p2.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
 add(chapter,p2);
@@ -376,8 +379,9 @@ image.ScaleToFit=0;
 add(chapter,image); 
 parastr11='The chart was created by this software package and closely mirrors the Fred example chart.';
 parastr12=' Coverage region of the data is the entire US.';
-parastr13=' Inspection of the chart reveals dips in the available openings in the 2008 receision and during the Covid period.';
-parastr19=strcat(parastr11,parastr12,parastr13);
+parastr13=' Inspection of the chart reveals dips in the available openings in the 2008 recession and during the Covid period.';
+parastr14=' If vertical blue columns appear on the chart these bars define recession periods.';
+parastr19=strcat(parastr11,parastr12,parastr13,parastr14);
 p2 = Paragraph(parastr19);
 p2.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
 add(chapter,p2);
@@ -443,6 +447,8 @@ add(chapter,image);
 parastr11='The chart was created by this software package and closely mirrors the Fred example chart.';
 parastr12=' Coverage region of the data is the entire US for the period 2000 thru 2025.';
 parastr13=' As was the case for total job openings the construction component was affected by recessions and Covid.';
+parastr14=' If vertical blue bars appear on the chart these deliniate declared recession periods.';
+
 parastr19=strcat(parastr11,parastr12,parastr13);
 p2 = Paragraph(parastr19);
 p2.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
@@ -475,7 +481,7 @@ add(chapter,br)
 add(chapter,Section('Job Openings-Manufacturing'));
 parastr21='This section will provide data on job openings in manufacturing.';
 parastr22=' These can be looked up using the code JTS3000JOL.';
-parastr23=' These jobs include manufacture of both durable and no durable goods';
+parastr23=' These jobs include manufacture of both durable and non durable goods';
 parastr29=strcat(parastr21,parastr22,parastr23);
 p3 = Paragraph(parastr29);
 p3.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
@@ -508,7 +514,9 @@ parastr11='The chart was created by this software package and closely mirrors th
 parastr12=' Coverage region of the data is the entire US for the period 2000 thru 2025.';
 parastr13=' As was the case for totl job openings, the construction component was affected by recessions and Covid.';
 parastr14=' The number of manufacturing job openings is less volatile than construction but took more time to recover.';
-parastr19=strcat(parastr11,parastr12,parastr13,parastr14);
+parastr15=' If vertical blue bars are shown on the chart these bars definite recession periods';
+parastr16=' During recession periods manufacturing job openings plummet.';
+parastr19=strcat(parastr11,parastr12,parastr13,parastr14,parastr15,parastr16);
 p2 = Paragraph(parastr19);
 p2.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
 add(chapter,p2);% Worked if Chap 4 Sec 2 commented out
@@ -528,7 +536,7 @@ image.Width = widthstr;
 image.ScaleToFit=0;
 add(chapter,image); 
 parastr31='The chart was designed to show the cumilative distribution of the Manufacturing Job Openings.';
-parastr32=' Inspection of the graphic shows that the cumilitive 50% values of the distribution to be about 365 K per reporting period .';
+parastr32=' Inspection of the graphic shows that the cumilitive 50% values of the distribution to be about 317 K per reporting period .';
 parastr39=strcat(parastr31,parastr32);
 p4 = Paragraph(parastr39);
 p4.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
@@ -596,17 +604,20 @@ parastr29=strcat(parastr21,parastr22);
 p3 = Paragraph(parastr29);
 p3.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
 add(chapter,p3);
+br = PageBreak();
+add(chapter,br);
 % 
 %Start Health Care Job Openings Chap 4 Section 5 
 % itype=22
 add(chapter,Section('JobOpenings-Health Care'));
-parastr21='This section will provide data on job openings in the Health Care field.';
-parastr22=' These can be looked up using the code JTS6200JOL.';
-parastr23=' The BLS contains a full list of the job categories included in this field and they are extensive.';
-parastr24=' Openings run the gamut from physicians to dentists to nursesphysical therapists thru medical technicians.';
-parastr29=strcat(parastr21,parastr22,parastr23,parastr24); 
-P3=Paragraph(parastr29); 
-p3.Style = {OuterMargin("0pt","0pt","20pt","10pt")}; add(chapter,p3);
+parastr41='This section will provide data on job openings in the Health Care field.';
+parastr42=' These can be looked up using the code JTS6200JOL.';
+parastr43=' The BLS contains a full list of the job categories included in this field and they are extensive.';
+parastr44=' Openings run the gamut from physicians to dentists to nursesphysical therapists thru medical technicians.';
+parastr49=strcat(parastr41,parastr42,parastr43,parastr44); 
+P4=Paragraph(parastr49); 
+p4.Style = {OuterMargin("0pt","0pt","20pt","10pt")};
+add(chapter,p4);
 % add a chart to show health care job openings 
 eval(['cd ' tiffpath(1:length(tiffpath)-1)]); 
 imdata =imread('HealthCare-Job-Openings-2000-2025.png');
@@ -624,7 +635,7 @@ add(chapter,image);
 parastr11='This career field is large and diverse so the saleries cover a wide range.';
 parastr12=' Coverage region of the data is the entire US for the period 2000 thru 2025.'; 
 parastr13=' The recession of 2008 noticeably impacted this field for up to 2 years but the Covid effects were of short duration.';
-parastr14=' Oddly enough,the health care opening declined during the first part of Covid as many electiveprocedures halted.';
+parastr14=' Oddly enough,the health care opening declined during the first part of Covid as many elective procedures were halted.';
 parastr15=' Post Covid health care job openings have been a driver of the economy in part due to the aging of the population';
 parastr19=strcat(parastr11,parastr12,parastr13,parastr14,parastr15);
 p2 =Paragraph(parastr19); 
@@ -706,13 +717,13 @@ image.Width = widthstr;
 image.ScaleToFit=0;
 add(chapter,image); 
 parastr21='The chart was designed to show the cumilative distribution of Gov Job Openings Distributions.';
-parastr22=' Inspection of the graphic shows that the cumiliative 50% values of the distribution to be about 710 K.';
+parastr22=' Inspection of the graphic shows that the cumiliative 50% values of the distribution to be about 450 K.';
 parastr29=strcat(parastr21,parastr22);
 p3 = Paragraph(parastr29);
 p3.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
 add(chapter,p3);
 % 
-%Chapter 4 Section 7
+%Chapter 4 Section 7 (U2RATE)
 add(chapter,Section('Job Losers'));
 parastr1='This item contains the percent of individuals who lost jobs involuntarily';
 parastr2=' In addition,it these people have no expected time to be called back to work.';
@@ -766,13 +777,16 @@ image.Width = widthstr;
 image.ScaleToFit=0;
 add(chapter,image); 
 parastr21='The chart was designed to show the cumilative distribution of Job Loser Distributions.';
-parastr22=' Inspection of the graphic shows that the cumiliative 50% values of the distribution to be about 710 K.';
+parastr22=' Inspection of the graphic shows that the cumiliative 50% values of the distribution to be about 2.7 %.';
+parastr23=' Information on how seasonal adjustments are made be found in the link below.';
 parastr29=strcat(parastr21,parastr22);
 p3 = Paragraph(parastr29);
 p3.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
 add(chapter,p3);
+link = ExternalLink("https://www.bls.gov/cpi/seasonal-adjustment/using-seasonally-adjusted-data.htm", "Seasonal Adjustment");
+append(p2, link);
 add(rpt,chapter);
-
+% Update past this point
 %% Open a new chapter (5)
 chapter = Chapter("Title", "Inflation Data");
 chapter.Layout.Landscape = true;
@@ -1017,7 +1031,8 @@ parastr1='The measure of merit consists of the medium number of days that homes 
 parastr2=' This metric counts the number of days that a house first lists for sale until it is sold or a pending deal is made.';
 parastr3=' Realtor.com is the source of this data-there was a methodology change in 2021 than makes it hard to compared data with current data.';
 parastr4=' Interested readers should click the link provided.';
-parastr9=strcat(parastr1,parastr2,parastr3,parastr4);
+parastr5=' The Realtor website provides extensive data downloads at National,County and ZIP code levels.';
+parastr9=strcat(parastr1,parastr2,parastr3,parastr4,parastr5);
 p1 = Paragraph(parastr9);
 p1.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
 link = ExternalLink("https://www.realtor.com/research/data/", "Real Estate Data");
@@ -1050,8 +1065,9 @@ parastr11='The chart was created by this software package and closely mirrors th
 parastr12=' This data is not seasonally adjusted and are reported monthly.';
 parastr13=' In order to clear up a source of confusion regarding mean and median days for houses on the market.';
 parastr14=' The reported statistics is mean days on the market-this is essentially a mean of a mean.';
-parastr15=' In this case the median days show the variation of the median days on market statistic.';
-parastr19=strcat(parastr11,parastr12,parastr13,parastr14,parastr15);
+parastr15=' In this case the median days shows the variation of the days on market statistic.';
+parastr16=' Unfortunately the FRED dataset only started being collected in 2016 so is not really a good source of long term trends.';
+parastr19=strcat(parastr11,parastr12,parastr13,parastr14,parastr15,parastr16);
 p2 = Paragraph(parastr19);
 p2.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
 add(chapter,p2);
@@ -1430,7 +1446,7 @@ image.ScaleToFit=0;
 add(chapter,image); 
 parastr11='The chart was created by this software package and closely mirrors the Fred example chart.';
 parastr12=' This data id not seasonally adjusted and are reported monthly.';
-parastr13=' During the 2000-2014 time frame this metric was faily constant.';
+parastr13=' During the 2000-2014 time frame this metric was fairly constant.';
 parastr14=' From 2014-2019 gains tended to exceed inflation-note that in general the household size in the US is trending downwards.';
 parastr19=strcat(parastr11,parastr12,parastr13,parastr14);
 p2 = Paragraph(parastr19);
@@ -1457,7 +1473,8 @@ parastr4=' The Mortgage DSR (MDSP) is total quarterly required mortgage payments
 parastr5='  (CDSP) is total quarterly scheduled consumer debt payments divided by total quarterly disposable personal income.';
 parastr6=' The MDSP is mortgage specific and the second CDSP focusses on all other consumer debt.';
 parastr7=' Household Debt Service Ratio (DSR)  is the sum of these two components.';
-parastr9=strcat(parastr1,parastr2,parastr4,parastr4,parastr5,parastr6,parastr7);
+parastr8=' Disposable income is frequently referred to as after tax income.';
+parastr9=strcat(parastr1,parastr2,parastr4,parastr4,parastr5,parastr6,parastr7,parastr8);
 p1 = Paragraph(parastr9);
 p1.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
 add(chapter,p1);
@@ -1780,7 +1797,10 @@ parastr1=' This statistic tracks the number of vacant housing units in the US.';
 parastr2=' Housing units are called vacant if no one is living in the unit at the time of the survey and the vacancy is not temporary.';
 parastr3=' For new constructed housing the criteria is if they are livable but unoccupied they are considered vacant.';
 parastr4=' Building that are exposed to the elements or not destined to serve as housing are not counted.';
-parastr9=strcat(parastr1,parastr2,parastr3,parastr4);
+parastr5=' As a reference point the typical total vacancy rate is about 10%.';
+parastr6=' However this number includes vacant rental properties that are usually about 6-8%.';
+parastr7=' If only the homeowner for sale vacancy rate this is much lower standing at 1 to 2 %.';
+parastr9=strcat(parastr1,parastr2,parastr3,parastr4,parastr5,parastr6,parastr7);
 p1 = Paragraph(parastr9);
 p1.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
 add(chapter,p1);
@@ -1926,7 +1946,7 @@ image.Width = widthstr;
 image.ScaleToFit=0;
 add(chapter,image); 
 parastr21='The chart was designed to show the cumilative distribution of the Personal Savings Rate.';
-parastr22=' Inspection of the chart reveals that the median rate is about 8.3 Per Cent.';
+parastr22=' Inspection of the chart reveals that the median rate is about 8.4 Per Cent.';
 parastr29=strcat(parastr21,parastr22);
 p3 = Paragraph(parastr29);
 p3.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
@@ -9823,5 +9843,55 @@ parastr49=strcat(parastr41,parastr42,parastr43);
 p5 = Paragraph(parastr49);
 p5.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
 add(chapter,p5);
+add(rpt,chapter)
+
+% Add Chapter 20 Correlation studies
+chapter = Chapter("Title", "Selected Correlation  Studies");
+chapter.Layout.Landscape = true;
+PStatsObj.chapter=chapter;
+add(chapter,Section('Food Correlations'));
+% Chap 20 
+% No itype defined for this item
+parastr1='This chapter is intended to fo a quick study on some items rise and fall with other items .';
+parastr2=' Basically this is an exploratory analysis of what factors may drive prices and affect other quantities.';
+parastr3=' The highest correlation would be 1 which implies that the two items under study rise and fall in lockstep.';
+parastr4=' A correlation value of -1 actualy means the items are moving in opposite price directions.';
+parastr9=strcat(parastr1,parastr2,parastr3,parastr4);
+p1 = Paragraph(parastr9);
+p1.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
+add(chapter,p1);
+add(chapter,Section('Food Item Correlation'));
+% Chap 20-1
+parastr11='This item shows a 2D correlation matrix of selected food tiems.';
+parastr12=' A total of 7 food items were selected for this study but others could be added.';
+parastr13=' Two of these 7 items are not food items-one is the price of Diesel fuel and the second is electricity cost.';
+parastr14=' These two were included because both these items are a significan part of food production costs.';
+parastr19=strcat(parastr11,parastr12,parastr13,parastr14); 
+p2 = Paragraph(parastr19);
+p2.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
+add(chapter,p2)
+% add a chart to show the Food Correlation Matrix 
+eval(['cd ' tiffpath(1:length(tiffpath)-1)]);
+imdata = imread('FoodPriceCorrelation.png');
+[nhigh,nwid,~]=size(imdata);
+image = mlreportgen.report.FormalImage();
+image.Image = which('FoodPriceCorrelation.png');
+text = Text('Food Price Correlation Matrix');
+text.Color = 'red';
+image.Caption = text;
+heightstr=strcat(num2str(nhigh/2),'px');
+widthstr=strcat(num2str(nwid/2),'px');
+image.Height = heightstr;
+image.Width = widthstr;
+image.ScaleToFit=0;
+add(chapter,image); 
+parastr21='The Y and Y axes show the 7 items to be compared.';
+parastr22=' A color bar is located on the right side of the image which relates the correlation value to plot color.';
+parastr23=' For the purpose of clarity the value of the correlation is displayed for each square accurate to 2 decimal places.';
+parastr24=' Generally the spread of correlation values is not very large ranging for about .71 to .95 neglecting the self correlations.';
+parastr29=strcat(parastr21,parastr22,parastr23,parastr24);
+p3 = Paragraph(parastr29);
+p3.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
+add(chapter,p3)
 add(rpt,chapter)
 end

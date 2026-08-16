@@ -94,6 +94,11 @@ if(nmatch>=minPts)
             Vector3(n,1)=Table3.Index(n);
             Vector4(n,1)=Table4.Prices(n);
         end
+    elseif(ikind==4)
+        for n=1:nmatch
+            Vector3(n,1)=Table3.Price(n);
+            Vector4(n,1)=Table4.Price(n);
+        end
     end
     numover=nmatch;
 % Calculate the correlation
