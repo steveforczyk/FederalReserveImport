@@ -26,6 +26,9 @@
 % Revised: Jul 2026 adding recession data to items that are sampled monthly
 % and that are likely to show recession effects
 % Revised: Aug 3,2026 added Personal Savings Rate Data
+% Revised: Aug 17,2026 added Lumber Costs
+% Revised: Aug 18,2026 added HardwoodLumber
+% Revised: Aug 19,2026 added HardwoodFlooring
 
 
 % Set Up some initial Data
@@ -48,7 +51,7 @@ fredpath='K:\Investing2\FRED_Data\';
 iCreatePDFReport=1;
 iTechCounter=0;
 icapture=1;
-pdffilename='FredDataImport152E.pdf';
+pdffilename='FredDataImport159B.pdf';
 dataYear=2025;
 tic;
 %% Call some routines that will create nice plot window sizes and locations
@@ -200,13 +203,14 @@ FRObj.iCreatePDFReport=iCreatePDFReport;
 FRObj.RptGenPresent=RptGenPresent;
 ishowrecession=1;
 FRObj.ishowrecession=1;
-Chap=-1*ones(152,1);
-Section=-1*ones(152,1);
-Commodity=zeros(152,1);
-FredPngList=cell(152,1);
+Chap=-1*ones(159,1);
+Section=-1*ones(159,1);
+Commodity=zeros(159,1);
+FredPngList=cell(159,1);
 rho=zeros(25,1);
+rho2=zeros(25,1);
 numoverlap=zeros(25,1);
-RecessionInfo=zeros(152,1);
+RecessionInfo=zeros(159,1);
 % Start with loading some items that need to be available immediately
 % For this reason they are done "Out of order"
 %% Get the Inferred Recession Dates(JHDUSRGDPBR)-must be done here to add recssions bars in later plots
@@ -440,6 +444,186 @@ titlestr3=char(titlestr3);
 figstr3=strcat(titlestr3,'.png');
 figstr3=char(figstr3);
 PlotCumilFredData(FRObj,itype,titlestr3)
+
+% %% Treated Wood Index ((WPU087)(Monthly) 
+% % wood products that have been treated
+% % This dataset is loaded here so it is available the commodity data is
+% % imported  itype=158
+% eval(['cd ' fredpath(1:length(fredpath)-1)]);
+% TreatedWoodTable = readtable(FRObj.fredfile158,'Sheet','Monthly');
+% [nrows158,ncols158]=size(TreatedWoodTable);
+% clear DateNumbers
+% clear dateArray
+% dateArray=strings(nrows158,1);
+% for n=1:nrows158
+%     nowstr=string(TreatedWoodTable.Date(n,1));
+%     dateArray(n,1)=nowstr;
+%     if(n==1)
+%         nowStartDate=nowstr;
+%     elseif(n==nrows158)
+%         nowEndDate=nowstr;
+%     end
+% end
+% rowTimes=datetime(dateArray);
+% DateNumbers=datenum(rowTimes);
+% loopstr1='Process the Treated Wood Index Table';
+% fprintf(fid,'\n');
+% fprintf(fid,'%50s\n',loopstr1);
+% loopstr2=strcat('Data is available for-',num2str(nrows158,4),'-dates-',...
+%     'From-',nowStartDate,'-to-',nowEndDate');
+% fprintf(fid,'%50s\n',loopstr2);
+% TreatedWoodTT=table2timetable(TreatedWoodTable,'RowTimes','Date');
+% TreatedWoodTT = addvars(TreatedWoodTT,DateNumbers);
+% woodmeanVal=mean(TreatedWoodTT.Index);
+% woodmedianVal=median(TreatedWoodTT.Index);
+% meanTWood=zeros(nrows158,1);
+% medianTWood=zeros(nrows158,1);
+% for n=1:nrows158
+%     meanTWood(n,1)=woodmeanVal;
+%     medianTWood(n,1)=woodmedianVal;
+% end
+% TreatedWoodTT = addvars(TreatedWoodTT,meanTWood,medianTWood);
+% SourceFile(158,1)="TreatedWoodIndex.xlsx";
+% Code(158,1)="WPU087";
+% Desc(158,1)="TreatedWoodIndex";
+% Freq(158,1)="Monthly";
+% StartYear(158,1)=1985;
+% EndYear(158,1)=2025;
+% SeasonalAdj(158,1)="No";
+% BaseYear(158,1)=1985;
+% NumObs(158,1)=494;
+% Chap(158,1)=18;
+% Section(158,1)=25;
+% itype=158;
+% StartYear1=1985;
+% EndYear1=2025;
+% % Calculate the Simple Stats
+% Data=TreatedWoodTT.Index;
+% FRObj=FRObj.SimpleStats(Data,itype);
+% % Smooth the Data
+% woodsmooth = smoothdata(Data);
+% P0=woodsmooth(1);
+% PF=woodsmooth(494);
+% TreatedWoodTT= addvars(TreatedWoodTT,woodsmooth);
+% NYears=EndYear(itype,1)-StartYear(itype,1)+1;
+% FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
+% GrowthRateAll=FRObj.GrowthRateAll;
+% SG158=100*GrowthRateAll(itype,1);
+% FRObj.SG158=SG158;
+% ishowrecession=FRObj.ishowrecession;
+% if(ishowrecession>0)
+%     [TreatedWoodTT,icase] = OverlapTimeLinesRev1(TreatedWoodTT,RecessProbTT);
+%     FRObj.TreatedWoodTT=TreatedWoodTT;
+%     RecessionInfo(itype,1)=icase;
+% end
+% % Now plot this data
+% FRObj.barval=160;
+% FRObj.TreatedWoodTT=TreatedWoodTT;
+% % Now plot this data
+% titlestr='TreatedWood-PriceIndex';
+% PlotFredData(FRObj,TreatedWoodTT,itype,titlestr)
+% % Add this data to the Fred Obj
+% FRObj.TreatedWoodTT=TreatedWoodTT;
+% titlestr=char(titlestr);
+% figstr2=strcat(titlestr,'.png');
+% figstr2=char(figstr2);
+% FredPngList{itype,1}=figstr2;
+% % Now create the data for a cumilative distribution plot
+% titlestr3='TreatedWoodIndex-Cumil-Distribution';
+% titlestr3=char(titlestr3);
+% figstr3=strcat(titlestr3,'.png');
+% figstr3=char(figstr3);
+% PlotCumilFredData(FRObj,itype,titlestr3)
+% %% Plastic Pipe Index (PCU32612232612213)(Monthly) 
+% % wood products that have been treated
+% %
+% % imported  itype=159
+% itype=159;
+% eval(['cd ' fredpath(1:length(fredpath)-1)]);
+% PlasticPipeTable = readtable(FRObj.fredfile159,'Sheet','Monthly');
+% [nrows159,ncols159]=size(PlasticPipeTable);
+% clear DateNumbers
+% clear dateArray
+% dateArray=strings(nrows159,1);
+% for n=1:nrows159
+%     nowstr=string(PlasticPipeTable.Date(n,1));
+%     dateArray(n,1)=nowstr;
+%     if(n==1)
+%         nowStartDate=nowstr;
+%     elseif(n==nrows159)
+%         nowEndDate=nowstr;
+%     end
+% end
+% rowTimes=datetime(dateArray);
+% DateNumbers=datenum(rowTimes);
+% loopstr1='Process the Plastic Pipe Index Table';
+% fprintf(fid,'\n');
+% fprintf(fid,'%50s\n',loopstr1);
+% loopstr2=strcat('Data is available for-',num2str(nrows159,4),'-dates-',...
+%     'From-',nowStartDate,'-to-',nowEndDate');
+% fprintf(fid,'%50s\n',loopstr2);
+% PlasticPipeTT=table2timetable(PlasticPipeTable,'RowTimes','Date');
+% PlasticPipeTT = addvars(PlasticPipeTT,DateNumbers);
+% plasticmeanVal=mean(PlasticPipeTT.Index);
+% plasticmedianVal=median(PlasticPipeTT.Index);
+% meanPlastic=zeros(nrows159,1);
+% medianPlastic=zeros(nrows159,1);
+% for n=1:nrows159
+%     meanPlastic(n,1)=plasticmeanVal;
+%     medianPlastic(n,1)=plasticmedianVal;
+% end
+% PlasticPipeTT = addvars(PlasticPipeTT,meanPlastic,medianPlastic);
+% SourceFile(itype,1)="PlasticPipeIndex.xlsx";
+% Code(itype,1)="PCU32612232612213";
+% Desc(itype,1)="PlasticPipeIndex";
+% Freq(itype,1)="Monthly";
+% StartYear(itype,1)=1987;
+% EndYear(itype,1)=2025;
+% SeasonalAdj(itype,1)="No";
+% BaseYear(itype,1)=1987;
+% NumObs(itype,1)=470;
+% Chap(itype,1)=18;
+% Section(itype,1)=26;
+% %itype=158;
+% StartYear1=1987;
+% EndYear1=2025;
+% % Calculate the Simple Stats
+% Data=PlasticPipeTT.Index;
+% FRObj=FRObj.SimpleStats(Data,itype);
+% % Smooth the Data
+% plasticsmooth = smoothdata(Data);
+% P0=plasticsmooth(1);
+% PF=plasticsmooth(470);
+% PlasticPipeTT= addvars(PlasticPipeTT,plasticsmooth);
+% NYears=EndYear(itype,1)-StartYear(itype,1)+1;
+% FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
+% GrowthRateAll=FRObj.GrowthRateAll;
+% SG159=100*GrowthRateAll(itype,1);
+% FRObj.SG159=SG159;
+% ishowrecession=FRObj.ishowrecession;
+% if(ishowrecession>0)
+%     [PlasticPipeTT,icase] = OverlapTimeLinesRev1(PlasticPipeTT,RecessProbTT);
+%     FRObj.PlasticPipeTT=PlasticPipeTT;
+%     RecessionInfo(itype,1)=icase;
+% end
+% % Now plot this data
+% FRObj.barval=200;
+% FRObj.PlasticPipeTT=PlasticPipeTT;
+% % Now plot this data
+% titlestr='PlasticPipe-PriceIndex';
+% PlotFredData(FRObj,PlasticPipeTT,itype,titlestr)
+% % Add this data to the Fred Obj
+% FRObj.PlasticPipeTT=PlasticPipeTT;
+% titlestr=char(titlestr);
+% figstr2=strcat(titlestr,'.png');
+% figstr2=char(figstr2);
+% FredPngList{itype,1}=figstr2;
+% % Now create the data for a cumilative distribution plot
+% titlestr3='PlasticPipeIndex-Cumil-Distribution';
+% titlestr3=char(titlestr3);
+% figstr3=strcat(titlestr3,'.png');
+% figstr3=char(figstr3);
+% PlotCumilFredData(FRObj,itype,titlestr3)
 % Next work on importing most of the tables (>100 tables)
 %% Start with The Unemployment Data (UNRATE) (Monthly)  Chap 3-1
 loopstr='**********Start Looping through the available FRED data**********';
@@ -450,7 +634,7 @@ loopstr1='Process the Unemployment Rate Data';
 fprintf(fid,'\n');
 fprintf(fid,'%50s\n',loopstr1);
 UnrateTable = readtable(FRObj.fredfile1,'Sheet','Monthly');
-[nrows,ncols]=size(UnrateTable);
+[nrows,~]=size(UnrateTable);
 dateArray=strings(nrows,1);
 for n=1:nrows
     nowstr=string(UnrateTable.Date(n,1));
@@ -527,8 +711,14 @@ varTypes = ["double","string","double","double","double","string","double","doub
 varNames = ["BaseiType","BaseTableName","StartYear1","EndYear1","CompiType","CompTableName","StartYear2","EndYear2",...
     "rho","GR","numovrlp"];
 FoodCorrTable = table('Size',sz,'VariableTypes',varTypes,'VariableNames',varNames);
+% Pre Allocate a table to store Home Price data that will be used later
+sz = [25 11];
+varTypes = ["double","string","double","double","double","string","double","double","double","double","double"];
+varNames = ["BaseiType","BaseTableName","StartYear1","EndYear1","CompiType","CompTableName","StartYear2","EndYear2",...
+    "rho","GR","numovrlp"];
+HomeCorrTable = table('Size',sz,'VariableTypes',varTypes,'VariableNames',varNames);
 %% Continue with the CoreSticky CPI Data (CORESTICKM159SFRBATL)(Monthly)
-% itype=2
+itype=2;
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
 SCPITable = readtable(FRObj.fredfile2,'Sheet','Monthly');
 [nrows2,ncols2]=size(SCPITable);
@@ -609,6 +799,17 @@ titlestr3=char(titlestr3);
 figstr3=strcat(titlestr3,'.png');
 figstr3=char(figstr3);
 PlotCumilFredData(FRObj,itype,titlestr3)
+% Now calculate the correlation between Unemployment Rate and the
+% CoreSticky CPI for the HomePrice Correlation Table
+% Index
+datacol=1;
+minCorrPts=100;
+ikind2=1;
+[rho2(1),~,numoverlap(2)] = CalculateHomeCorrelation(UnrateTT,SCPITT,ikind2,minCorrPts);
+dispstr=strcat('Price Correlation Between U2 Unemployment and Inflation-',num2str(rho2(1)));
+disp(dispstr)
+SG2=100*GrowthRateAll(itype,1);
+HomeCorrTable(1,:) = {2,"UnrateTT",StartYear1,EndYear1,3,"SCPITT",1968,2025,rho2(1),SG2,numoverlap(2)};
 
 %% Continue with the Labor force Participation Rate (CIVPart) (Chap 3 Section 2)
 % itype=3
@@ -2643,6 +2844,17 @@ titlest3=char(titlestr3);
 figstr3=strcat(titlestr3,'.png');
 figstr3=char(figstr3);
 PlotCumilFredData(FRObj,itype,titlestr3)
+% Now calculate the correlation between Unemployment Rate and the
+% Case Shiller Home Price Index for the HomePrice Correlation Table
+% Index
+datacol=1;
+minCorrPts=100;
+ikind2=2;
+[rho2(2),~,numoverlap(2)] = CalculateHomeCorrelation(UnrateTT,CaseShillerTT,ikind2,minCorrPts);
+dispstr=strcat('Price Correlation Between U2 Unemployment and Case Shiller Index-',num2str(rho2(2)));
+disp(dispstr)
+SG27=100*GrowthRateAll(itype,1);
+HomeCorrTable(2,:) = {2,"UnrateTT",StartYear1,EndYear1,3,"CaseShillerTT",1987,2025,rho2(2),SG27,numoverlap(2)};
 
 %% Continue with Median Weekly Earnings (LES1252881600Q)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
@@ -6017,7 +6229,6 @@ if(ishowrecession>0)%
 end
 FRObj.barval=1;
 FRObj.ManufacturingSalesTT=ManufacturingSalesTT;
-
 titlestr='ManufacturingSales';
 PlotFredData(FRObj,ManufacturingSalesTT,itype,titlestr)
 titlestr=char(titlestr);
@@ -6123,7 +6334,7 @@ titlest3=char(titlestr3);
 figstr3=strcat(titlestr3,'.png');
 figstr3=char(figstr3);
 PlotCumilFredData(FRObj,itype,titlestr3)
-
+% Update stopped here
 %% Continue with Full Serve Restaurants Sales (SM722511USN)
 eval(['cd ' fredpath(1:length(fredpath)-1)]);
 FullServeRestaurantsTable = readtable(FRObj.fredfile69,'Sheet','Monthly');
@@ -11582,7 +11793,7 @@ ikind=2;
 [rho(16),~,numoverlap(16)] = CalculateCorrelation(UrbanHFTT,WholeChickenTT,ikind,minCorrPts);
 dispstr=strcat('Price Correlation Between Urban Home Food and Whole Chicken Prices-',num2str(rho(16)));
 disp(dispstr)
-FoodCorrTable(16,:) = {126,"UrbanHFTT",StartYear1,EndYear1,135,"WholeChickenTT",1980,2025,rho(16),SG136,numoverlap(16)};
+FoodCorrTable(16,:) = {126,"UrbanHFTT",StartYear1,EndYear1,136,"WholeChickenTT",1980,2025,rho(16),SG136,numoverlap(16)};
 
 %% Continue with PPI Farm Products (WPU01) (Monthly)  Chap 19-12
 loopstr='**********Start Looping through the available FRED data**********';
@@ -12960,9 +13171,723 @@ titlest3=char(titlestr3);
 figstr3=strcat(titlestr3,'.png');
 figstr3=char(figstr3);
 PlotCumilFredData(FRObj,itype,titlestr3)
+%% Lumber Price Index (WPU081)(Monthly)
+% This dataset is loaded here so it is available the commodity data is
+% imported  itype=153
+eval(['cd ' fredpath(1:length(fredpath)-1)]);
+LumberPriceTable = readtable(FRObj.fredfile153,'Sheet','Monthly');
+[nrows153,ncols153]=size(LumberPriceTable);
+clear DateNumbers
+clear dateArray
+dateArray=strings(nrows153,1);
+for n=1:nrows153
+    nowstr=string(LumberPriceTable.Date(n,1));
+    dateArray(n,1)=nowstr;
+    if(n==1)
+        nowStartDate=nowstr;
+    elseif(n==nrows153)
+        nowEndDate=nowstr;
+    end
+end
+rowTimes=datetime(dateArray);
+DateNumbers=datenum(rowTimes);
+loopstr1='Process the Lumber Price Index Table';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr1);
+loopstr2=strcat('Data is available for-',num2str(nrows153,4),'-dates-',...
+    'From-',nowStartDate,'-to-',nowEndDate');
+fprintf(fid,'%50s\n',loopstr2);
+LumberPriceTT=table2timetable(LumberPriceTable,'RowTimes','Date');
+LumberPriceTT = addvars(LumberPriceTT,DateNumbers);
+LumberPricemeanVal=mean(LumberPriceTT.Index);
+LumberPricemedianVal=median(LumberPriceTT.Index);
+meanLumber=zeros(nrows153,1);
+medianLumber=zeros(nrows153,1);
+for n=1:nrows153
+    meanLumber(n,1)=LumberPricemeanVal;
+    medianLumber(n,1)=LumberPricemedianVal;
+end
+LumberPriceTT = addvars(LumberPriceTT,meanLumber,medianLumber);
+SourceFile(153,1)="LumberPrices.xlsx";
+Code(153,1)="WPU081";
+Desc(153,1)="LumberPriceIndex";
+Freq(153,1)="Monthly";
+StartYear(153,1)=1926;
+EndYear(153,1)=2025;
+SeasonalAdj(153,1)="No";
+BaseYear(153,1)=1982;
+NumObs(153,1)=1207;
+Chap(153,1)=18;
+Section(153,1)=20;
+itype=153;
+StartYear1=1926;
+EndYear1=2025;
+% Calculate the Simple Stats
+Data=LumberPriceTT.Index;
+FRObj=FRObj.SimpleStats(Data,itype);
+% Smooth the Data
+lumbersmooth = smoothdata(Data);
+P0=lumbersmooth(1);
+PF=lumbersmooth(1207);
+LumberPriceTT= addvars(LumberPriceTT,lumbersmooth);
+NYears=EndYear(153,1)-StartYear(153,1)+1;
+FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
+GrowthRateAll=FRObj.GrowthRateAll;
+SG153=100*GrowthRateAll(itype,1);
+FRObj.SG153=SG153;
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0)
+    [LumberPriceTT,icase] = OverlapTimeLinesRev1(LumberPriceTT,RecessProbTT);
+    FRObj.LumberPriceTT=LumberPriceTT;
+    RecessionInfo(153,1)=icase;
+end
+% Now plot this data
+FRObj.barval=200;
+FRObj.LumberPriceTT=LumberPriceTT;
+% Now plot this data
+titlestr='Lumber-PriceIndex';
+PlotFredData(FRObj,LumberPriceTT,itype,titlestr)
+% Add this data to the Fred Obj
+FRObj.LumberPriceTT=LumberPriceTT;
+titlestr=char(titlestr);
+figstr2=strcat(titlestr,'.png');
+figstr2=char(figstr2);
+FredPngList{153,1}=figstr2;
+% Now create the data for a cumilative distribution plot
+titlestr3='LumberPriceIndex-Cumil-Distribution';
+titlestr3=char(titlestr3);
+figstr3=strcat(titlestr3,'.png');
+figstr3=char(figstr3);
+PlotCumilFredData(FRObj,itype,titlestr3)
+% Now calculate the correlation between Unemployment Rate and the
+% Lumber Price Index
+% Index
+datacol=1;
+minCorrPts=100;
+ikind2=3;
+[rho2(3),~,numoverlap(3)] = CalculateHomeCorrelation(UnrateTT,LumberPriceTT,ikind2,minCorrPts);
+dispstr=strcat('Price Correlation Between U2 Unemployment and Lumber Price-',num2str(rho2(3)));
+disp(dispstr)
+SG153=100*GrowthRateAll(itype,1);
+HomeCorrTable(3,:) = {2,"UnrateTT",StartYear1,EndYear1,3,"LumberPriceTT",1926,2025,rho2(3),SG153,numoverlap(3)};
+%% Hardwood Price Index (WPU0811)(Monthly)
+% This dataset is loaded here so it is available the commodity data is
+% imported  itype=154
+eval(['cd ' fredpath(1:length(fredpath)-1)]);
+HardwoodIndexTable = readtable(FRObj.fredfile154,'Sheet','Monthly');
+[nrows154,ncols154]=size(HardwoodIndexTable);
+clear DateNumbers
+clear dateArray
+dateArray=strings(nrows154,1);
+for n=1:nrows154
+    nowstr=string(HardwoodIndexTable.Date(n,1));
+    dateArray(n,1)=nowstr;
+    if(n==1)
+        nowStartDate=nowstr;
+    elseif(n==nrows154)
+        nowEndDate=nowstr;
+    end
+end
+rowTimes=datetime(dateArray);
+DateNumbers=datenum(rowTimes);
+loopstr1='Process the Hardwood Index Table';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr1);
+loopstr2=strcat('Data is available for-',num2str(nrows154,4),'-dates-',...
+    'From-',nowStartDate,'-to-',nowEndDate');
+fprintf(fid,'%50s\n',loopstr2);
+HardWoodIndexTT=table2timetable(HardwoodIndexTable,'RowTimes','Date');
+HardWoodIndexTT = addvars(HardWoodIndexTT,DateNumbers);
+HardwoodIndexmeanVal=mean(HardWoodIndexTT.Index);
+HardwoodIndexmedianVal=median(HardWoodIndexTT.Index);
+meanHardwood=zeros(nrows154,1);
+medianHardwood=zeros(nrows154,1);
+for n=1:nrows154
+    meanHardwood(n,1)=HardwoodIndexmeanVal;
+    medianHardwood(n,1)=HardwoodIndexmedianVal;
+end
+HardWoodIndexTT = addvars(HardWoodIndexTT,meanHardwood,medianHardwood);
+SourceFile(154,1)="HardwoodLumberIndex.xlsx";
+Code(154,1)="WPU0811";
+Desc(154,1)="HardwoodLumberIndex";
+Freq(154,1)="Monthly";
+StartYear(154,1)=1947;
+EndYear(154,1)=2025;
+SeasonalAdj(154,1)="No";
+BaseYear(154,1)=1982;
+NumObs(154,1)=955;
+Chap(154,1)=18;
+Section(154,1)=21;
+itype=154;
+StartYear1=1947;
+EndYear1=2025;
+% Calculate the Simple Stats
+Data=HardWoodIndexTT.Index;
+FRObj=FRObj.SimpleStats(Data,itype);
+% Smooth the Data
+hardwoodsmooth = smoothdata(Data);
+P0=hardwoodsmooth(1);
+PF=hardwoodsmooth(955);
+HardWoodIndexTT= addvars(HardWoodIndexTT,hardwoodsmooth);
+NYears=EndYear(154,1)-StartYear(154,1)+1;
+FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
+GrowthRateAll=FRObj.GrowthRateAll;
+SG154=100*GrowthRateAll(itype,1);
+FRObj.SG154=SG154;
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0)
+    [HardWoodIndexTT,icase] = OverlapTimeLinesRev1(HardWoodIndexTT,RecessProbTT);
+    FRObj.HardWoodIndexTT=HardWoodIndexTT;
+    RecessionInfo(154,1)=icase;
+end
+% Now plot this data
+FRObj.barval=200;
+FRObj.HardWoodIndexTT=HardWoodIndexTT;
+% Now plot this data
+titlestr='Hardwood-PriceIndex';
+PlotFredData(FRObj,HardWoodIndexTT,itype,titlestr)
+% Add this data to the Fred Obj
+FRObj.HardWoodIndexTT=HardWoodIndexTT;
+titlestr=char(titlestr);
+figstr2=strcat(titlestr,'.png');
+figstr2=char(figstr2);
+FredPngList{154,1}=figstr2;
+% Now create the data for a cumilative distribution plot
+titlestr3='HardwoodIndex-Cumil-Distribution';
+titlestr3=char(titlestr3);
+figstr3=strcat(titlestr3,'.png');
+figstr3=char(figstr3);
+PlotCumilFredData(FRObj,itype,titlestr3)
+% Now calculate the correlation between Unemployment Rate and the
+% HardwoodPrice Index
+% Index
+datacol=1;
+minCorrPts=100;
+ikind2=3;
+[rho2(4),~,numoverlap(4)] = CalculateHomeCorrelation(UnrateTT,HardWoodIndexTT,ikind2,minCorrPts);
+dispstr=strcat('Price Correlation Between U2 Unemployment and HardWood Index-',num2str(rho2(4)));
+disp(dispstr)
+SG154=100*GrowthRateAll(itype,1);
+HomeCorrTable(4,:) = {2,"UnrateTT",StartYear1,EndYear1,3,"HardWoodIndexTT",1947,2025,rho2(4),SG154,numoverlap(4)};
+%% Softwood Lumber Price Index (WPU0811)(Monthly) the code assigned is
+% the same as for hardwood
+% This dataset is loaded here so it is available the commodity data is
+% imported  itype=155
+eval(['cd ' fredpath(1:length(fredpath)-1)]);
+SoftwoodIndexTable = readtable(FRObj.fredfile155,'Sheet','Monthly');
+[nrows155,ncols155]=size(SoftwoodIndexTable);
+clear DateNumbers
+clear dateArray
+dateArray=strings(nrows155,1);
+for n=1:nrows155
+    nowstr=string(SoftwoodIndexTable.Date(n,1));
+    dateArray(n,1)=nowstr;
+    if(n==1)
+        nowStartDate=nowstr;
+    elseif(n==nrows155)
+        nowEndDate=nowstr;
+    end
+end
+rowTimes=datetime(dateArray);
+DateNumbers=datenum(rowTimes);
+loopstr1='Process the Softwood Index Table';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr1);
+loopstr2=strcat('Data is available for-',num2str(nrows155,4),'-dates-',...
+    'From-',nowStartDate,'-to-',nowEndDate');
+fprintf(fid,'%50s\n',loopstr2);
+SoftWoodIndexTT=table2timetable(SoftwoodIndexTable,'RowTimes','Date');
+SoftWoodIndexTT = addvars(SoftWoodIndexTT,DateNumbers);
+SoftwoodIndexmeanVal=mean(SoftWoodIndexTT.Index);
+SoftwoodIndexmedianVal=median(SoftWoodIndexTT.Index);
+meanSoftwood=zeros(nrows155,1);
+medianSoftwood=zeros(nrows155,1);
+for n=1:nrows155
+    meanSoftwood(n,1)=SoftwoodIndexmeanVal;
+    medianSoftwood(n,1)=SoftwoodIndexmedianVal;
+end
+SoftWoodIndexTT = addvars(SoftWoodIndexTT,meanSoftwood,medianSoftwood);
+SourceFile(155,1)="SoftWoodLumberIndex.xlsx";
+Code(155,1)="WPU0811";
+Desc(155,1)="SoftWoodIndex";
+Freq(155,1)="Monthly";
+StartYear(155,1)=1947;
+EndYear(155,1)=2025;
+SeasonalAdj(155,1)="No";
+BaseYear(155,1)=1982;
+NumObs(155,1)=955;
+Chap(155,1)=18;
+Section(155,1)=22;
+itype=155;
+StartYear1=1947;
+EndYear1=2025;
+% Calculate the Simple Stats
+Data=SoftWoodIndexTT.Index;
+FRObj=FRObj.SimpleStats(Data,itype);
+% Smooth the Data
+softwoodsmooth = smoothdata(Data);
+P0=softwoodsmooth(1);
+PF=softwoodsmooth(955);
+SoftWoodIndexTT= addvars(SoftWoodIndexTT,softwoodsmooth);
+NYears=EndYear(155,1)-StartYear(155,1)+1;
+FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
+GrowthRateAll=FRObj.GrowthRateAll;
+SG155=100*GrowthRateAll(itype,1);
+FRObj.SG155=SG155;
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0)
+    [SoftWoodIndexTT,icase] = OverlapTimeLinesRev1(SoftWoodIndexTT,RecessProbTT);
+    FRObj.SoftWoodIndexTT=SoftWoodIndexTT;
+    RecessionInfo(155,1)=icase;
+end
+% Now plot this data
+FRObj.barval=200;
+FRObj.SoftWoodIndexTT=SoftWoodIndexTT;
+% Now plot this data
+titlestr='Softwood-PriceIndex';
+PlotFredData(FRObj,SoftWoodIndexTT,itype,titlestr)
+% Add this data to the Fred Obj
+FRObj.SoftWoodIndexTT=SoftWoodIndexTT;
+titlestr=char(titlestr);
+figstr2=strcat(titlestr,'.png');
+figstr2=char(figstr2);
+FredPngList{155,1}=figstr2;
+% Now create the data for a cumilative distribution plot
+titlestr3='SoftwoodIndex-Cumil-Distribution';
+titlestr3=char(titlestr3);
+figstr3=strcat(titlestr3,'.png');
+figstr3=char(figstr3);
+PlotCumilFredData(FRObj,itype,titlestr3)
+% Now calculate the correlation between Unemployment Rate and the
+% HardwoodPrice Index
+% Index
+datacol=1;
+minCorrPts=100;
+ikind2=3;
+[rho2(5),~,numoverlap(5)] = CalculateHomeCorrelation(UnrateTT,SoftWoodIndexTT,ikind2,minCorrPts);
+dispstr=strcat('Price Correlation Between U2 Unemployment and SoftWood Index-',num2str(rho2(5)));
+disp(dispstr)
+SG155=100*GrowthRateAll(itype,1);
+HomeCorrTable(5,:) = {2,"UnrateTT",StartYear1,EndYear1,3,"SoftWoodIndexTT",1947,2025,rho2(5),SG155,numoverlap(5)};
+%% Hardwood Flooring Price Index ((WPU081204)(Monthly) the code assigned is
+% hardwood flooring using all types of wood materials (oak,maple,other)
+% This dataset is loaded here so it is available the commodity data is
+% imported  itype=156
+eval(['cd ' fredpath(1:length(fredpath)-1)]);
+FloorIndexTable = readtable(FRObj.fredfile156,'Sheet','Monthly');
+[nrows156,ncols156]=size(FloorIndexTable);
+clear DateNumbers
+clear dateArray
+dateArray=strings(nrows156,1);
+for n=1:nrows156
+    nowstr=string(FloorIndexTable.Date(n,1));
+    dateArray(n,1)=nowstr;
+    if(n==1)
+        nowStartDate=nowstr;
+    elseif(n==nrows156)
+        nowEndDate=nowstr;
+    end
+end
+rowTimes=datetime(dateArray);
+DateNumbers=datenum(rowTimes);
+loopstr1='Process the Flooring Index Table';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr1);
+loopstr2=strcat('Data is available for-',num2str(nrows156,4),'-dates-',...
+    'From-',nowStartDate,'-to-',nowEndDate');
+fprintf(fid,'%50s\n',loopstr2);
+HardwoodFlooringTT=table2timetable(FloorIndexTable,'RowTimes','Date');
+HardwoodFlooringTT = addvars(HardwoodFlooringTT,DateNumbers);
+floormeanVal=mean(HardwoodFlooringTT.Index);
+floormedianVal=median(HardwoodFlooringTT.Index);
+meanHFloor=zeros(nrows156,1);
+medianHFloor=zeros(nrows156,1);
+for n=1:nrows156
+    meanHFloor(n,1)=floormeanVal;
+    medianHFloor(n,1)=floormedianVal;
+end
+HardwoodFlooringTT = addvars(HardwoodFlooringTT,meanHFloor,medianHFloor);
+SourceFile(156,1)="HardwoodFlooringIndex.xlsx";
+Code(156,1)="WPU081204";
+Desc(156,1)="FloorPriceIndex";
+Freq(156,1)="Monthly";
+StartYear(156,1)=1984;
+EndYear(156,1)=2025;
+SeasonalAdj(156,1)="No";
+BaseYear(156,1)=1984;
+NumObs(156,1)=506;
+Chap(156,1)=18;
+Section(156,1)=23;
+itype=156;
+StartYear1=1984;
+EndYear1=2025;
+% Calculate the Simple Stats
+Data=HardwoodFlooringTT.Index;
+FRObj=FRObj.SimpleStats(Data,itype);
+% Smooth the Data
+floorsmooth = smoothdata(Data);
+P0=floorsmooth(1);
+PF=floorsmooth(506);
+HardwoodFlooringTT= addvars(HardwoodFlooringTT,floorsmooth);
+NYears=EndYear(itype,1)-StartYear(itype,1)+1;
+FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
+GrowthRateAll=FRObj.GrowthRateAll;
+SG156=100*GrowthRateAll(itype,1);
+FRObj.SG156=SG156;
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0)
+    [HardwoodFlooringTT,icase] = OverlapTimeLinesRev1(HardwoodFlooringTT,RecessProbTT);
+    FRObj.HardwoodFlooringTT=HardwoodFlooringTT;
+    RecessionInfo(itype,1)=icase;
+end
+% Now plot this data
+FRObj.barval=160;
+FRObj.HardwoodFlooringTT=HardwoodFlooringTT;
+% Now plot this data
+titlestr='Floor-PriceIndex';
+PlotFredData(FRObj,HardwoodFlooringTT,itype,titlestr)
+% Add this data to the Fred Obj
+FRObj.HardwoodFlooringTT=HardwoodFlooringTT;
+titlestr=char(titlestr);
+figstr2=strcat(titlestr,'.png');
+figstr2=char(figstr2);
+FredPngList{itype,1}=figstr2;
+% Now create the data for a cumilative distribution plot
+titlestr3='FloorIndex-Cumil-Distribution';
+titlestr3=char(titlestr3);
+figstr3=strcat(titlestr3,'.png');
+figstr3=char(figstr3);
+PlotCumilFredData(FRObj,itype,titlestr3)
+% Now calculate the correlation between Unemployment Rate and the
+% Hardwood Floor Price Index
+% Index
+datacol=1;
+minCorrPts=100;
+ikind2=5;
+[rho2(6),~,numoverlap(6)] = CalculateHomeCorrelation(UnrateTT,HardwoodFlooringTT,ikind2,minCorrPts);
+dispstr=strcat('Price Correlation Between U2 Unemployment and Hardwood Flooring Index-',num2str(rho2(6)));
+disp(dispstr)
+SG156=100*GrowthRateAll(itype,1);
+HomeCorrTable(6,:) = {2,"UnrateTT",StartYear1,EndYear1,3,"HardwoodFlooringTT",1984,2025,rho2(6),SG156,numoverlap(6)};
+%% Millwork Price Index ((WPU0821)(Monthly) the code assigned is
+% wood products that are shaped in a nilling machine
+% This dataset is loaded here so it is available the commodity data is
+% imported  itype=157
+eval(['cd ' fredpath(1:length(fredpath)-1)]);
+MillworkIndexTable = readtable(FRObj.fredfile157,'Sheet','Monthly');
+[nrows157,ncols157]=size(MillworkIndexTable);
+clear DateNumbers
+clear dateArray
+dateArray=strings(nrows157,1);
+for n=1:nrows157
+    nowstr=string(MillworkIndexTable.Date(n,1));
+    dateArray(n,1)=nowstr;
+    if(n==1)
+        nowStartDate=nowstr;
+    elseif(n==nrows157)
+        nowEndDate=nowstr;
+    end
+end
+rowTimes=datetime(dateArray);
+DateNumbers=datenum(rowTimes);
+loopstr1='Process the Millwork Index Table';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr1);
+loopstr2=strcat('Data is available for-',num2str(nrows157,4),'-dates-',...
+    'From-',nowStartDate,'-to-',nowEndDate');
+fprintf(fid,'%50s\n',loopstr2);
+MillworkTT=table2timetable(MillworkIndexTable,'RowTimes','Date');
+MillworkTT = addvars(MillworkTT,DateNumbers);
+millmeanVal=mean(MillworkTT.Index);
+millmedianVal=median(MillworkTT.Index);
+meanMillwork=zeros(nrows157,1);
+medianMillwork=zeros(nrows157,1);
+for n=1:nrows157
+    meanMillwork(n,1)=millmeanVal;
+    medianMillwork(n,1)=millmedianVal;
+end
+MillworkTT = addvars(MillworkTT,meanMillwork,medianMillwork);
+SourceFile(157,1)="MillworkIndex.xlsx";
+Code(157,1)="WPU0821";
+Desc(157,1)="MillworkPriceIndex";
+Freq(157,1)="Monthly";
+StartYear(157,1)=1964;
+EndYear(157,1)=2025;
+SeasonalAdj(157,1)="No";
+BaseYear(157,1)=1964;
+NumObs(157,1)=751;
+Chap(157,1)=18;
+Section(157,1)=24;
+itype=157;
+StartYear1=1964;
+EndYear1=2025;
+% Calculate the Simple Stats
+Data=MillworkTT.Index;
+FRObj=FRObj.SimpleStats(Data,itype);
+% Smooth the Data
+millsmooth = smoothdata(Data);
+P0=millsmooth(1);
+PF=millsmooth(751);
+MillworkTT= addvars(MillworkTT,millsmooth);
+NYears=EndYear(itype,1)-StartYear(itype,1)+1;
+FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
+GrowthRateAll=FRObj.GrowthRateAll;
+SG157=100*GrowthRateAll(itype,1);
+FRObj.SG157=SG157;
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0)
+    [MillworkTT,icase] = OverlapTimeLinesRev1(MillworkTT,RecessProbTT);
+    FRObj.MillworkTT=MillworkTT;
+    RecessionInfo(itype,1)=icase;
+end
+% Now plot this data
+FRObj.barval=120;
+FRObj.MillworkTT=MillworkTT;
+% Now plot this data
+titlestr='Millwork-PriceIndex';
+PlotFredData(FRObj,MillworkTT,itype,titlestr)
+% Add this data to the Fred Obj
+FRObj.MillworkTT=MillworkTT;
+titlestr=char(titlestr);
+figstr2=strcat(titlestr,'.png');
+figstr2=char(figstr2);
+FredPngList{itype,1}=figstr2;
+% Now create the data for a cumilative distribution plot
+titlestr3='MillworkIndex-Cumil-Distribution';
+titlestr3=char(titlestr3);
+figstr3=strcat(titlestr3,'.png');
+figstr3=char(figstr3);
+PlotCumilFredData(FRObj,itype,titlestr3)
+% Now calculate the correlation between Unemployment Rate and the
+% Hardwood Millwork Price Index
+% Index
+datacol=1;
+minCorrPts=100;
+ikind2=5;
+[rho2(7),~,numoverlap(7)] = CalculateHomeCorrelation(UnrateTT,MillworkTT,ikind2,minCorrPts);
+dispstr=strcat('Price Correlation Between U2 Unemployment and Millwork Price  Index-',num2str(rho2(7)));
+disp(dispstr)
+SG157=100*GrowthRateAll(itype,1);
+HomeCorrTable(7,:) = {2,"UnrateTT",StartYear1,EndYear1,3,"MillworkTT",1964,2025,rho2(7),SG157,numoverlap(7)};
+%% Treated Wood Index ((WPU087)(Monthly) 
+% wood products that have been treated
+% This dataset is loaded here so it is available the commodity data is
+% imported  itype=158
+eval(['cd ' fredpath(1:length(fredpath)-1)]);
+TreatedWoodTable = readtable(FRObj.fredfile158,'Sheet','Monthly');
+[nrows158,ncols158]=size(TreatedWoodTable);
+clear DateNumbers
+clear dateArray
+dateArray=strings(nrows158,1);
+for n=1:nrows158
+    nowstr=string(TreatedWoodTable.Date(n,1));
+    dateArray(n,1)=nowstr;
+    if(n==1)
+        nowStartDate=nowstr;
+    elseif(n==nrows158)
+        nowEndDate=nowstr;
+    end
+end
+rowTimes=datetime(dateArray);
+DateNumbers=datenum(rowTimes);
+loopstr1='Process the Treated Wood Index Table';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr1);
+loopstr2=strcat('Data is available for-',num2str(nrows158,4),'-dates-',...
+    'From-',nowStartDate,'-to-',nowEndDate');
+fprintf(fid,'%50s\n',loopstr2);
+TreatedWoodTT=table2timetable(TreatedWoodTable,'RowTimes','Date');
+TreatedWoodTT = addvars(TreatedWoodTT,DateNumbers);
+woodmeanVal=mean(TreatedWoodTT.Index);
+woodmedianVal=median(TreatedWoodTT.Index);
+meanTWood=zeros(nrows158,1);
+medianTWood=zeros(nrows158,1);
+for n=1:nrows158
+    meanTWood(n,1)=woodmeanVal;
+    medianTWood(n,1)=woodmedianVal;
+end
+TreatedWoodTT = addvars(TreatedWoodTT,meanTWood,medianTWood);
+SourceFile(158,1)="TreatedWoodIndex.xlsx";
+Code(158,1)="WPU087";
+Desc(158,1)="TreatedWoodIndex";
+Freq(158,1)="Monthly";
+StartYear(158,1)=1985;
+EndYear(158,1)=2025;
+SeasonalAdj(158,1)="No";
+BaseYear(158,1)=1985;
+NumObs(158,1)=494;
+Chap(158,1)=18;
+Section(158,1)=25;
+itype=158;
+StartYear1=1985;
+EndYear1=2025;
+% Calculate the Simple Stats
+Data=TreatedWoodTT.Index;
+FRObj=FRObj.SimpleStats(Data,itype);
+% Smooth the Data
+woodsmooth = smoothdata(Data);
+P0=woodsmooth(1);
+PF=woodsmooth(494);
+TreatedWoodTT= addvars(TreatedWoodTT,woodsmooth);
+NYears=EndYear(itype,1)-StartYear(itype,1)+1;
+FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
+GrowthRateAll=FRObj.GrowthRateAll;
+SG158=100*GrowthRateAll(itype,1);
+FRObj.SG158=SG158;
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0)
+    [TreatedWoodTT,icase] = OverlapTimeLinesRev1(TreatedWoodTT,RecessProbTT);
+    FRObj.TreatedWoodTT=TreatedWoodTT;
+    RecessionInfo(itype,1)=icase;
+end
+% Now plot this data
+FRObj.barval=160;
+FRObj.TreatedWoodTT=TreatedWoodTT;
+% Now plot this data
+titlestr='TreatedWood-PriceIndex';
+PlotFredData(FRObj,TreatedWoodTT,itype,titlestr)
+% Add this data to the Fred Obj
+FRObj.TreatedWoodTT=TreatedWoodTT;
+titlestr=char(titlestr);
+figstr2=strcat(titlestr,'.png');
+figstr2=char(figstr2);
+FredPngList{itype,1}=figstr2;
+% Now create the data for a cumilative distribution plot
+titlestr3='TreatedWoodIndex-Cumil-Distribution';
+titlestr3=char(titlestr3);
+figstr3=strcat(titlestr3,'.png');
+figstr3=char(figstr3);
+PlotCumilFredData(FRObj,itype,titlestr3)
+% Now calculate the correlation between Unemployment Rate and the
+% Hardwood Treated Wood Price Index
+% Index
+datacol=1;
+minCorrPts=100;
+ikind2=5;
+[rho2(8),~,numoverlap(8)] = CalculateHomeCorrelation(UnrateTT,TreatedWoodTT,ikind2,minCorrPts);
+dispstr=strcat('Price Correlation Between U2 Unemployment and Millwork Price  Index-',num2str(rho2(8)));
+disp(dispstr)
+SG158=100*GrowthRateAll(itype,1);
+HomeCorrTable(8,:) = {2,"UnrateTT",StartYear1,EndYear1,3,"TreatedWoodTT",1985,2025,rho2(8),SG158,numoverlap(8)};
+%% Plastic Pipe Index (PCU32612232612213)(Monthly) 
+% wood products that have been treated
+%
+% imported  itype=159
+itype=159;
+eval(['cd ' fredpath(1:length(fredpath)-1)]);
+PlasticPipeTable = readtable(FRObj.fredfile159,'Sheet','Monthly');
+[nrows159,ncols159]=size(PlasticPipeTable);
+clear DateNumbers
+clear dateArray
+dateArray=strings(nrows159,1);
+for n=1:nrows159
+    nowstr=string(PlasticPipeTable.Date(n,1));
+    dateArray(n,1)=nowstr;
+    if(n==1)
+        nowStartDate=nowstr;
+    elseif(n==nrows159)
+        nowEndDate=nowstr;
+    end
+end
+rowTimes=datetime(dateArray);
+DateNumbers=datenum(rowTimes);
+loopstr1='Process the Plastic Pipe Index Table';
+fprintf(fid,'\n');
+fprintf(fid,'%50s\n',loopstr1);
+loopstr2=strcat('Data is available for-',num2str(nrows159,4),'-dates-',...
+    'From-',nowStartDate,'-to-',nowEndDate');
+fprintf(fid,'%50s\n',loopstr2);
+PlasticPipeTT=table2timetable(PlasticPipeTable,'RowTimes','Date');
+PlasticPipeTT = addvars(PlasticPipeTT,DateNumbers);
+plasticmeanVal=mean(PlasticPipeTT.Index);
+plasticmedianVal=median(PlasticPipeTT.Index);
+meanPlastic=zeros(nrows159,1);
+medianPlastic=zeros(nrows159,1);
+for n=1:nrows159
+    meanPlastic(n,1)=plasticmeanVal;
+    medianPlastic(n,1)=plasticmedianVal;
+end
+PlasticPipeTT = addvars(PlasticPipeTT,meanPlastic,medianPlastic);
+SourceFile(itype,1)="PlasticPipeIndex.xlsx";
+Code(itype,1)="PCU32612232612213";
+Desc(itype,1)="PlasticPipeIndex";
+Freq(itype,1)="Monthly";
+StartYear(itype,1)=1987;
+EndYear(itype,1)=2025;
+SeasonalAdj(itype,1)="No";
+BaseYear(itype,1)=1987;
+NumObs(itype,1)=470;
+Chap(itype,1)=18;
+Section(itype,1)=26;
+%itype=158;
+StartYear1=1987;
+EndYear1=2025;
+% Calculate the Simple Stats
+Data=PlasticPipeTT.Index;
+FRObj=FRObj.SimpleStats(Data,itype);
+% Smooth the Data
+plasticsmooth = smoothdata(Data);
+P0=plasticsmooth(1);
+PF=plasticsmooth(470);
+PlasticPipeTT= addvars(PlasticPipeTT,plasticsmooth);
+NYears=EndYear(itype,1)-StartYear(itype,1)+1;
+FRObj=FRObj.SimpleGrowthAll(P0,PF,NYears,itype);
+GrowthRateAll=FRObj.GrowthRateAll;
+SG159=100*GrowthRateAll(itype,1);
+FRObj.SG159=SG159;
+ishowrecession=FRObj.ishowrecession;
+if(ishowrecession>0)
+    [PlasticPipeTT,icase] = OverlapTimeLinesRev1(PlasticPipeTT,RecessProbTT);
+    FRObj.PlasticPipeTT=PlasticPipeTT;
+    RecessionInfo(itype,1)=icase;
+end
+% Now plot this data
+FRObj.barval=200;
+FRObj.PlasticPipeTT=PlasticPipeTT;
+% Now plot this data
+titlestr='PlasticPipe-PriceIndex';
+PlotFredData(FRObj,PlasticPipeTT,itype,titlestr)
+% Add this data to the Fred Obj
+FRObj.PlasticPipeTT=PlasticPipeTT;
+titlestr=char(titlestr);
+figstr2=strcat(titlestr,'.png');
+figstr2=char(figstr2);
+FredPngList{itype,1}=figstr2;
+% Now create the data for a cumilative distribution plot
+titlestr3='PlasticPipeIndex-Cumil-Distribution';
+titlestr3=char(titlestr3);
+figstr3=strcat(titlestr3,'.png');
+figstr3=char(figstr3);
+PlotCumilFredData(FRObj,itype,titlestr3)
+% Now calculate the correlation between Unemployment Rate and the
+% Hardwood Treated Wood Price Index
+% Index
+datacol=1;
+minCorrPts=100;
+ikind2=5;
+[rho2(9),~,numoverlap(9)] = CalculateHomeCorrelation(UnrateTT,PlasticPipeTT,ikind2,minCorrPts);
+dispstr=strcat('Price Correlation Between U2 Unemployment and Plastic Pipe Price  Index-',num2str(rho2(9)));
+disp(dispstr)
+SG159=100*GrowthRateAll(itype,1);
+HomeCorrTable(9,:) = {2,"UnrateTT",StartYear1,EndYear1,159,"PlasticPipeTT",1987,2025,rho2(9),SG159,numoverlap(9)};
+% Now calculate correlations involving SCPITT as the base
+% Now calculate the correlation between Unemployment Rate and the
+% CoreSticky CPI for the HomePrice Correlation Table
+% Index
+datacol=1;
+minCorrPts=100;
+ikind2=6;
+itype=27;
+[rho2(10),~,numoverlap(10)] = CalculateHomeCorrelation(SCPITT,CaseShillerTT,ikind2,minCorrPts);
+dispstr=strcat('Price Correlation Between Sticky Inflation and The Shiller House Price Index-',num2str(rho2(10)));
+disp(dispstr)
+SG2=100*GrowthRateAll(itype,1);
+HomeCorrTable(10,:) = {2,"SCPITT",StartYear1,EndYear1,6,"CaseShiller",1987,2025,rho2(10),SG2,numoverlap(10)};
 %% Create a correlation matrix related to food costs
 titlestr='FoodPriceCorrelation';
 CreateFoodCorrelationPlot(FRObj,titlestr)
+%% Create a correlation matrix related to home building costs
+CreateHomeCorrelationPlot(FRObj,titlestr)
 %% Create a Catalog table to hold key data extracted from the FRED database
 Catalog = table(Code,Desc,Freq,StartYear,EndYear,SeasonalAdj,BaseYear,NumObs,Chap,Section,Commodity);
 FRObj.Catalog=Catalog;
@@ -12988,7 +13913,7 @@ end
 eval(['cd ' tablepath(1:length(tablepath)-1)]);
 actionstr='save';
 FoodRho=rho;
-varstr='FRObj FoodCorrTable FoodRho';
+varstr='FRObj FoodCorrTable FoodRho HomeCorrTable';
 qualstr='-v7.3';
 TableName='ImportedFredData152.mat';
 [cmdString]=MyStrcatV73(actionstr,TableName,varstr,qualstr);

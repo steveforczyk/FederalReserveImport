@@ -1,0 +1,90 @@
+function status = sendTxt(params,msg)
+% status = sendTxt(params, msg)
+%
+% params: Parameter struct containing address and server info in fields:
+%       params.domain       domain of smtp server (ex: 'uchicago.edu')
+%       params.smtp         smtp server (ex: 'smtp.uchicago.edu')
+%       params.phoneNumber  in string or numerical form with no dashes (ex: 7735551212)
+%       params.provider     valid providers are:
+%                           'verizon'
+%                           'att'
+%                           'tmobile'
+%                           'sprint'
+%       params.fromAddr     'from' address
+%                           (ex: myname@uchicago.edu)
+%       params.exeLoc       location and filename of mailsend executable
+%                           (ex: 'C:\mailsend.exe')
+%
+% msg:  String containing short text message to send.  If no string is
+%       specified, the text of the most recent error is sent.
+%
+% status: returns message from mailsend or 0 if no error
+%
+% NOTE: 'msg' is automatically truncated to 158 chars 
+% get lasterr
+params.domain='uchicago.edu';
+params.smtp ='smtp.uchicago.edu';
+params.phoneNumber='2565130415';
+params.provider='att';
+params.fromAddr='myname@uchicago.edu';
+msg='Help me';
+if nargin == 1
+    msg = lasterr;
+end
+% input checking
+err = [ ~isfield(params,'domain') ...
+        ~isfield(params,'smtp') ...
+        ~isfield(params,'phoneNumber') ...
+        ~isfield(params,'provider') ...
+        ~isfield(params,'fromAddr') ...
+        ~isfield(params,'exeLoc') ];
+if any(err)
+    error('Params structure is missing fields.');
+end
+if ~isstr(msg)
+    error('Msg input should be a short string');
+end
+      
+% remove carriage returns and single quotes from msg and replace with spaces
+ind = find(isspace(msg));
+msg(ind)=' ';
+ind = strfind(msg,'''');
+msg(ind)=' ';
+% truncate msg to sms length
+if length(msg) > 158
+    msg=msg(1:158);
+end
+% convert phone number to string if necessary
+if isnumeric(params.phoneNumber)
+    params.phoneNumber = num2str(params.phoneNumber);
+end
+% remove leading '1' from phone number if necessary
+if params.phoneNumber(1) == '1'
+    params.phoneNumber(1) = [];
+end
+% check for 10-digit number
+if length(params.phoneNumber) ~= 10
+    error('Must include full ten digit phone number.')
+end
+switch lowercase(params.provider)
+    case 'verizon'
+        toAddr = [params.phoneNumber '@vtext.com'];
+    case 'att'
+        toAddr = [params.phoneNumber '@txt.att.net'];
+    case 'sprint'
+        toAddr = [params.phoneNumber '@messaging.sprintpcs.com'];
+    case 'tmobile'
+        toAddr = [params.phoneNumber '@tmomail.net'];
+    case 't-mobile'
+        toAddr = [params.phoneNumber '@tmomail.net'];
+    otherwise
+        error('Carrier not recognized.');
+end
+% send it
+status = eval([ 'system(''' params.exeLoc...
+                ' -d '      params.domain...
+                ' -smtp '   params.smtp...
+                ' -t '      toAddr...
+                ' -f '      params.fromAddr...
+                ' -M "'     msg     '"'');']);
+            
