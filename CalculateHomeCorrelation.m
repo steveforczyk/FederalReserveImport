@@ -15,6 +15,7 @@ significance=-1;
 % First calculate dates of table 1 and 2 and then count overlap values
 numTable1=height(Table1);
 numTable2=height(Table2);
+iflip=1;
 if(numTable1>=numTable2)
     Table3=Table1;
     Table4=Table2;
@@ -25,6 +26,7 @@ else
     Table4=Table1;
     numTable3=numTable2;
     numTable4=numTable1;
+    iflip=-1;
 end
 Table3Start=min(Table3.DateNumbers);
 Table3End=max(Table3.DateNumbers);
@@ -36,6 +38,8 @@ ab=1;
 intersect=0;
 % Now calculate the number of overlapping points
 if((Table3Start<=Table4Start) && (Table3End>=Table4Start+minPts))
+    intersect=1;
+elseif((Table4Start<=Table4Start) && (Table4End>=Table4Start+minPts))
     intersect=1;
 end
 ab=1;
@@ -112,8 +116,28 @@ if(nmatch>=minPts)
             Vector3(n,1)=Table3.SCPINFNE(n);
             Vector4(n,1)=Table4.HousePriceIndex(n);
         end
-    end
+   elseif(ikind2==7)
+        for n=1:nmatch
+            Vector3(n,1)=Table3.Index(n);
+            Vector4(n,1)=Table4.SCPINFNE(n);
+        end
+    elseif(ikind2==8)
+        for n=1:nmatch
+            Vector4(n,1)=Table4.Index(n);
+           Vector3(n,1)=Table3.SCPINFNE(n);
+        end
+    elseif(ikind2==9)
+        for n=1:nmatch
+            Vector4(n,1)=Table4.HousePriceIndex(n);% This is a problem
+            Vector3(n,1)=Table3.Index(n);
+        end
+    elseif(ikind2==10)
+        for n=1:nmatch
+           Vector4(n,1)=Table3.Index(n);
+           Vector3(n,1)=Table4.Index(n);
+        end
    end
+ end
    numover2=nmatch;
 % Calculate the correlation
     rho2 = corr(Vector3,Vector4,'Rows','pairwise');
