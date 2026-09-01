@@ -51,7 +51,7 @@ fredpath='K:\Investing2\FRED_Data\';
 iCreatePDFReport=1;
 iTechCounter=0;
 icapture=1;
-pdffilename='FredDataImport159C.pdf';
+pdffilename='FredDataImport159E.pdf';
 dataYear=2025;
 tic;
 %% Call some routines that will create nice plot window sizes and locations
@@ -208,8 +208,8 @@ Section=-1*ones(159,1);
 Commodity=zeros(159,1);
 FredPngList=cell(159,1);
 rho=zeros(25,1);
-rho2=zeros(40,1);
-numoverlap=zeros(40,1);
+rho2=zeros(45,1);
+numoverlap=zeros(45,1);
 RecessionInfo=zeros(159,1);
 % Start with loading some items that need to be available immediately
 % For this reason they are done "Out of order"
@@ -13856,7 +13856,7 @@ disp(dispstr)
 SG157=100*GrowthRateAll(itype,1);
 HomeCorrTable(22,:) = {27,"CaseShiller",StartYear1,EndYear1,157,"MillworkPriceIndex",1964,2025,rho2(22),SG157,numoverlap(22)};
 % Now calculate correlations involving CaseShiller Price Index as the base
-% and the Treated WoodPieces MillworkTT
+% and the Treated WoodPieces 
 datacol=1;
 minCorrPts=100;
 ikind2=9;
@@ -13922,6 +13922,7 @@ dispstr=strcat('Price Correlation Between The Lumber Price Index and the Millwor
 disp(dispstr)
 SG157=100*GrowthRateAll(itype,1);
 HomeCorrTable(28,:) = {153,"LumberPrice",StartYear1,EndYear1,157,"MillworkPrice",1964,2025,rho2(28),SG157,numoverlap(28)};
+% ------Start work on Column 4 as the base----
 % Now calculate correlations involving Lumber Price Index as the base
 % and the Treated Wood Index as the dependent variable
 datacol=1;
@@ -13944,7 +13945,7 @@ dispstr=strcat('Price Correlation Between The Lumber Price Index and the Plastic
 disp(dispstr)
 SG159=100*GrowthRateAll(itype,1);
 HomeCorrTable(30,:) = {153,"LumberPrice",StartYear1,EndYear1,159,"PlasticPipe",1987,2025,rho2(30),SG159,numoverlap(30)};
-% Start work on Column 5 as the base
+% ------Start work on Column 5 as the base----
 % Now calculate correlations involving Hardwood Lumber Index as the base
 % and the Softwood Lumber Index Index as the dependent variable
 datacol=1;
@@ -13956,6 +13957,170 @@ dispstr=strcat('Price Correlation Hardwood Price Index- and SoftWood Price Index
 disp(dispstr)
 SG155=100*GrowthRateAll(itype,1);
 HomeCorrTable(31,:) = {154,"HardWoodPrice",StartYear1,EndYear1,155,"SoftWoodPrice",1947,2025,rho2(31),SG155,numoverlap(31)};
+% Now calculate correlations involving Hardwood Lumber Index as the base
+% and the Softwood Hardwood Flooring Index as the dependent variable
+datacol=1;
+minCorrPts=100;
+ikind2=10;
+itype=154;
+[rho2(32),~,numoverlap(32)] = CalculateHomeCorrelation(HardWoodIndexTT,HardwoodFlooringTT,ikind2,minCorrPts);
+dispstr=strcat('Price Correlation Hardwood Price Index- and Hardwood Flooring Index',num2str(rho2(32)));
+disp(dispstr)
+SG156=100*GrowthRateAll(itype,1);
+HomeCorrTable(32,:) = {154,"HardWoodPrice",StartYear1,EndYear1,156,"HardwoodFlooring",1984,2025,rho2(32),SG156,numoverlap(32)};
+% Now calculate correlations involving Hardwood Lumber Index as the base
+% and the Millwork Index as the dependent variable
+datacol=1;
+minCorrPts=100;
+ikind2=10;
+itype=157;
+[rho2(33),~,numoverlap(33)] = CalculateHomeCorrelation(HardWoodIndexTT,MillworkTT,ikind2,minCorrPts);
+dispstr=strcat('Price Correlation Hardwood Price Index- and MillWood Index',num2str(rho2(33)));
+disp(dispstr)
+SG157=100*GrowthRateAll(itype,1);
+HomeCorrTable(33,:) = {154,"HardWoodPrice",StartYear1,EndYear1,157,"Millwork",1964,2025,rho2(33),SG157,numoverlap(33)};
+% Now calculate correlations involving Hardwood Lumber Index as the base
+% and the Treated Wood Index as the dependent variable
+datacol=1;
+minCorrPts=100;
+ikind2=10;
+itype=158;
+[rho2(34),~,numoverlap(34)] = CalculateHomeCorrelation(HardWoodIndexTT,TreatedWoodTT,ikind2,minCorrPts);
+dispstr=strcat('Price Correlation Hardwood Price Index- and Treated Wood Index',num2str(rho2(34)));
+disp(dispstr)
+SG158=100*GrowthRateAll(itype,1);
+HomeCorrTable(34,:) = {154,"HardWoodPrice",StartYear1,EndYear1,158,"Treated Wood",1985,2025,rho2(34),SG158,numoverlap(34)};
+% Now calculate correlations involving Hardwood Lumber Index as the base
+% and the Plastic Pipe Index as the dependent variable
+datacol=1;
+minCorrPts=100;
+ikind2=10;
+itype=159;
+[rho2(35),~,numoverlap(35)] = CalculateHomeCorrelation(HardWoodIndexTT,PlasticPipeTT,ikind2,minCorrPts);
+dispstr=strcat('Price Correlation Hardwood Price Index- and Plastic Pipe Index',num2str(rho2(35)));
+disp(dispstr)
+SG159=100*GrowthRateAll(itype,1);
+HomeCorrTable(35,:) = {154,"HardWoodPrice",StartYear1,EndYear1,158,"Plastic Pipe",1987,2025,rho2(35),SG159,numoverlap(35)};
+% ------Start work on Column 6 as the base----
+% Now calculate correlations involving SoftWood Lumber Index as the base
+% and the Treated Wood Index as the dependent variable
+datacol=1;
+minCorrPts=100;
+ikind2=10;
+itype=156;
+[rho2(36),~,numoverlap(36)] = CalculateHomeCorrelation(SoftWoodIndexTT,HardwoodFlooringTT,ikind2,minCorrPts);
+dispstr=strcat('Price Correlation SoftWood Price Index- and HardWoodFlooring Index',num2str(rho2(36)));
+disp(dispstr)
+SG156=100*GrowthRateAll(itype,1);
+HomeCorrTable(36,:) = {155,"SoftWoodPrice",StartYear1,EndYear1,156,"Hard Flooring",1985,2025,rho2(36),SG156,numoverlap(36)};
+% Now calculate correlations involving SoftWood  Lumber Index as the base
+% and the Millwork Price Index as the dependent variable
+datacol=1;
+minCorrPts=100;
+ikind2=10;
+itype=157;
+[rho2(37),~,numoverlap(37)] = CalculateHomeCorrelation(SoftWoodIndexTT,MillworkTT,ikind2,minCorrPts);
+dispstr=strcat('Price Correlation Hardwood Price Index- and Millwork Index',num2str(rho2(37)));
+disp(dispstr)
+SG157=100*GrowthRateAll(itype,1);
+HomeCorrTable(37,:) = {155,"SoftWoodPrice",StartYear1,EndYear1,157,"Millwork",1964,2025,rho2(35),SG157,numoverlap(37)};
+% Now calculate correlations involving SoftWood Lumber Index as the base
+% and the Treated Wood Index as the dependent variable
+datacol=1;
+minCorrPts=100;
+ikind2=10;
+itype=158;
+[rho2(38),~,numoverlap(38)] = CalculateHomeCorrelation(SoftWoodIndexTT,TreatedWoodTT,ikind2,minCorrPts);
+dispstr=strcat('Price Correlation SoftWood Price Index- and Treated Wood Index',num2str(rho2(38)));
+disp(dispstr)
+SG156=100*GrowthRateAll(itype,1);
+HomeCorrTable(38,:) = {155,"SoftWoodPrice",StartYear1,EndYear1,158,"Treated Wood",1985,2025,rho2(36),SG156,numoverlap(38)};
+% Now calculate correlations involving SoftWood  Lumber Index as the base
+% and the Plastic Pipe as the dependent variable
+datacol=1;
+minCorrPts=100;
+ikind2=10;
+itype=159;
+[rho2(39),~,numoverlap(39)] = CalculateHomeCorrelation(SoftWoodIndexTT,PlasticPipeTT,ikind2,minCorrPts);
+dispstr=strcat('Price Correlation SoftWood Price Index- and Plastic Pipe Index',num2str(rho2(39)));
+disp(dispstr)
+SG159=100*GrowthRateAll(itype,1);
+HomeCorrTable(39,:) = {155,"SoftWoodPrice",StartYear1,EndYear1,159,"Plastic Pipe",1987,2025,rho2(37),SG159,numoverlap(39)};
+datacol=1;
+minCorrPts=100;
+ikind2=10;
+itype=157;
+[rho2(40),~,numoverlap(40)] = CalculateHomeCorrelation(HardwoodFlooringTT,MillworkTT,ikind2,minCorrPts);
+dispstr=strcat('Price Correlation Floor Price Index- and Millwork Index',num2str(rho2(40)));
+disp(dispstr)
+SG157=100*GrowthRateAll(itype,1);
+HomeCorrTable(40,:) = {156,"FloorPrice",StartYear1,EndYear1,157,"Millwork Index",1964,2025,rho2(40),SG157,numoverlap(40)};
+% Now calculate correlations involving HardWood Floor Price Index as the base
+% and the Treated Wood Price Index as the dependent variable
+datacol=1;
+minCorrPts=100;
+ikind2=10;
+itype=158;
+[rho2(41),~,numoverlap(39)] = CalculateHomeCorrelation(HardwoodFlooringTT,TreatedWoodTT,ikind2,minCorrPts);
+dispstr=strcat('Price Correlation Floor Price Index- and Treated Wood Index',num2str(rho2(41)));
+disp(dispstr)
+SG158=100*GrowthRateAll(itype,1);
+HomeCorrTable(41,:) = {156,"FloorPrice",StartYear1,EndYear1,158,"Treated Wood Index",1985,2025,rho2(41),SG158,numoverlap(41)};
+% now compute the correlation between the Floor Price Index and the Plastic
+% Pipe Index
+datacol=1;
+minCorrPts=100;
+ikind2=10;
+itype=159;
+[rho2(42),~,numoverlap(42)] = CalculateHomeCorrelation(HardwoodFlooringTT,PlasticPipeTT,ikind2,minCorrPts);
+SG159=100*GrowthRateAll(itype,1);
+HomeCorrTable(42,:) = {156,"FloorPrice",StartYear1,EndYear1,159,"Plastic PipeIndex",1985,2025,rho2(42),SG159,numoverlap(42)};
+% ------Start work on Column 8 as the base----
+% Now calculate correlations table involving Millwork Price Index as the base
+% and the Treated Wood Index as the dependent variable
+nCorrPts=100;
+idatacol=1;
+mikind2=10;
+itype=158;
+[rho2(43),~,numoverlap(43)] = CalculateHomeCorrelation(MillworkTT,TreatedWoodTT,ikind2,minCorrPts);
+dispstr=strcat('Millwork Index vs Treated Wood',num2str(rho2(43)));
+disp(dispstr)
+SG158=100*GrowthRateAll(itype,1);
+HomeCorrTable(43,:) = {157,"Millwork",StartYear1,EndYear1,158,"Treated Wood Index",1985,2025,rho2(43),SG158,numoverlap(43)};
+% Now calculate correlations involving Millwork Index as the base
+% and the Plastic Pipe Price Index as the dependent variable
+datacol=1;
+minCorrPts=100;
+ikind2=10;
+itype=159;
+[rho2(44),~,numoverlap(44)] = CalculateHomeCorrelation(MillworkTT,PlasticPipeTT,ikind2,minCorrPts);
+dispstr=strcat('Price Correlation Millwork Index- and Plastic PipeIndex',num2str(rho2(44)));
+disp(dispstr)
+SG159=100*GrowthRateAll(itype,1);
+HomeCorrTable(44,:) = {157,"Millwork",StartYear1,EndYear1,159,"Plastic PipeIndex",1987,2025,rho2(44),SG159,numoverlap(44)};
+% Now calculate correlations table involving Treated Wood Index as the base
+% and the Plastic Pipe Index as the dependent variable this is Column 9
+nCorrPts=100;
+idatacol=1;
+mikind2=10;
+itype=159;
+[rho2(45),~,numoverlap(45)] = CalculateHomeCorrelation(TreatedWoodTT,PlasticPipeTT,ikind2,minCorrPts);
+dispstr=strcat('Treated Wood Index vs Plastic Pipe',num2str(rho2(45)));
+disp(dispstr)
+SG159=100*GrowthRateAll(itype,1);
+HomeCorrTable(45,:) = {157,"Treated Wood",StartYear1,EndYear1,159,"PlasticPipe",1987,2025,rho2(45),SG159,numoverlap(45)};
+% ------Start work on Column 9 as the base----
+% Now calculate correlations table involving Treated Wood Index as the base
+% and the Plastic Pipe Index as the dependent variable
+% nCorrPts=100;
+% idatacol=1;
+% mikind2=10;
+% itype=159;
+% [rho2(43),~,numoverlap(43)] = CalculateHomeCorrelation(MillworkTT,PlasticPipeTT,ikind2,minCorrPts);
+% dispstr=strcat('Millwood Index Index vs Plastic Pipe',num2str(rho2(43)));
+% disp(dispstr)
+% SG159=100*GrowthRateAll(itype,1);
+% HomeCorrTable(43,:) = {157,"Millwork",StartYear1,EndYear1,159,"Treated Eood",1987,2025,rho2(43),SG159,numoverlap(43)};
 %% Create a correlation matrix related to food costs
 titlestr='FoodPriceCorrelation';
 CreateFoodCorrelationPlot(FRObj,titlestr)
