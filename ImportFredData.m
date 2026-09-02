@@ -13279,7 +13279,7 @@ figstr3=strcat(titlestr3,'.png');
 figstr3=char(figstr3);
 PlotCumilFredData(FRObj,itype,titlestr3)
 % Now calculate the correlation between Unemployment Rate and the
-% HardwoodPrice Index
+% SoftwoodPrice Index
 % Index
 datacol=1;
 minCorrPts=100;
@@ -13680,7 +13680,7 @@ figstr3=strcat(titlestr3,'.png');
 figstr3=char(figstr3);
 PlotCumilFredData(FRObj,itype,titlestr3)
 % Now calculate the correlation between Unemployment Rate and the
-% Hardwood Treated Wood Price Index
+% Plastic Pipe Price Index
 % Index
 datacol=1;
 minCorrPts=100;
@@ -13704,8 +13704,7 @@ disp(dispstr)
 SG2=100*GrowthRateAll(itype,1);
 HomeCorrTable(10,:) = {2,"SCPITT",StartYear1,EndYear1,27,"CaseShiller",1987,2025,rho2(10),SG2,numoverlap(10)};
 % Now calculate correlations involving SCPITT as the base
-% Now calculate the correlation between SCIPTT and the
-% CoreSticky CPI for the HomePrice Correlation Table
+% and the Hardwood Lumber Price Index
 % Index
 datacol=1;
 minCorrPts=100;
@@ -13742,19 +13741,20 @@ dispstr=strcat('Price Correlation Between The Sticky Inflation and The SoftWood 
 disp(dispstr)
 SG155=100*GrowthRateAll(itype,1);
 HomeCorrTable(13,:) = {2,"SCPITT",StartYear1,EndYear1,155,"SoftWoodPrice",1947,2025,rho2(13),SG155,numoverlap(13)};
-% Now calculate correlations involving SCPITT as the base
-% and the Softwood Price Index
-% CoreSticky CPI for the SoftWood Price Index
-% Index
-datacol=1;
-minCorrPts=100;
-ikind2=7;
-itype=155;
-[rho2(13),~,numoverlap(13)] = CalculateHomeCorrelation(SCPITT,SoftWoodIndexTT,ikind2,minCorrPts);
-dispstr=strcat('Price Correlation Between The Sticky Inflation and The SoftWood Price Index-',num2str(rho2(13)));
-disp(dispstr)
-SG155=100*GrowthRateAll(itype,1);
-HomeCorrTable(13,:) = {2,"SCPITT",StartYear1,EndYear1,155,"SoftWoodPrice",1947,2025,rho2(13),SG155,numoverlap(13)};
+% % Now calculate correlations involving SCPITT as the base
+% % and the Softwood Price Index
+% % CoreSticky CPI for the SoftWood Price Index
+% % Index
+% datacol=1;
+% minCorrPts=100;
+% ikind2=7;
+% itype=155;
+% [rho2(13),~,numoverlap(13)] = CalculateHomeCorrelation(SCPITT,SoftWoodIndexTT,ikind2,minCorrPts);
+% dispstr=strcat('Price Correlation Between The Sticky Inflation and The SoftWood Price Index-',num2str(rho2(13)));
+% disp(dispstr)
+% SG155=100*GrowthRateAll(itype,1);
+% HomeCorrTable(13,:) = {2,"SCPITT",StartYear1,EndYear1,155,"SoftWoodPrice",1947,2025,rho2(13),SG155,numoverlap(13)};
+
 % Now calculate correlations involving SCPITT as the base
 % and the HardwoodFlooring Price
 datacol=1;
@@ -13958,7 +13958,7 @@ disp(dispstr)
 SG155=100*GrowthRateAll(itype,1);
 HomeCorrTable(31,:) = {154,"HardWoodPrice",StartYear1,EndYear1,155,"SoftWoodPrice",1947,2025,rho2(31),SG155,numoverlap(31)};
 % Now calculate correlations involving Hardwood Lumber Index as the base
-% and the Softwood Hardwood Flooring Index as the dependent variable
+% and the Hardwood Flooring Index as the dependent variable
 datacol=1;
 minCorrPts=100;
 ikind2=10;
@@ -14109,18 +14109,7 @@ dispstr=strcat('Treated Wood Index vs Plastic Pipe',num2str(rho2(45)));
 disp(dispstr)
 SG159=100*GrowthRateAll(itype,1);
 HomeCorrTable(45,:) = {157,"Treated Wood",StartYear1,EndYear1,159,"PlasticPipe",1987,2025,rho2(45),SG159,numoverlap(45)};
-% ------Start work on Column 9 as the base----
-% Now calculate correlations table involving Treated Wood Index as the base
-% and the Plastic Pipe Index as the dependent variable
-% nCorrPts=100;
-% idatacol=1;
-% mikind2=10;
-% itype=159;
-% [rho2(43),~,numoverlap(43)] = CalculateHomeCorrelation(MillworkTT,PlasticPipeTT,ikind2,minCorrPts);
-% dispstr=strcat('Millwood Index Index vs Plastic Pipe',num2str(rho2(43)));
-% disp(dispstr)
-% SG159=100*GrowthRateAll(itype,1);
-% HomeCorrTable(43,:) = {157,"Millwork",StartYear1,EndYear1,159,"Treated Eood",1987,2025,rho2(43),SG159,numoverlap(43)};
+[HomeCorrTable2] = BuildHomeCorrelationTable(FRObj);
 %% Create a correlation matrix related to food costs
 titlestr='FoodPriceCorrelation';
 CreateFoodCorrelationPlot(FRObj,titlestr)
