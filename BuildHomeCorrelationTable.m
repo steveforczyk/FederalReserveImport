@@ -55,7 +55,8 @@ HomeCorrTable(1,:) = {1,"UnrateTT",StartYear1,EndYear1,2,"SCPITT",1968,2025,rho2
 % Index
 datacol=1;
 minCorrPts=100;
-ikind2=27;
+ikind2=2;
+itype=27;
 [rho2(2),~,numoverlap(2)] = CalculateHomeCorrelation(UnrateTT,CaseShillerTT,ikind2,minCorrPts);
 dispstr=strcat('Price Correlation Between U2 Unemployment and Case Shiller Index-',num2str(rho2(2)));
 disp(dispstr)

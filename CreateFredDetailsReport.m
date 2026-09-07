@@ -2458,7 +2458,7 @@ add(chapter,p3);
 br = PageBreak();
 add(chapter,br);
 
-%Add Chapter 7 Section 7 Manufacturing Sales 
+%Add Chapter 7 Section 8 Manufacturing Sales 
 add(chapter,Section('Manufacturing  Sales'));% itype=67
 parastr1='This metric also relates directly to the strength of the US economy.';
 parastr2=' The data is sesonally adjusted and reported in chained dollars.';
@@ -2529,7 +2529,7 @@ add(chapter,br);
 
 
 % 
-% Chapter 7 Section 7
+% Chapter 7 Section 9
 % Add new section Dealer New Car Sales (MRTSSM44111USN) Section 7-7
 add(chapter,Section('Dealer New Car Sales'));% itype=68
 parastr1='This item reports on the dollar value of new cars sold by dealers.';
@@ -2598,8 +2598,8 @@ br = PageBreak();
 add(chapter,br);
 
 % 
-% Chapter 7 Section 8
-% Add new section Full Serve Restaurant Sales (MRTSSM44111USN) Section 7-8
+% Chapter 7 Section 10
+% Add new section Full Serve Restaurant Sales (MRTSSM44111USN) Section 7-10
 add(chapter,Section('Full Serve Restaurant Sales'));% itype=69
 parastr1='This item reports on the dollar value of food sales in full serve restaurants.';
 parastr2=' Note this data is not seasonally adjusted.';
@@ -2665,8 +2665,8 @@ add(chapter,p3);
 br = PageBreak();
 add(chapter,br);
 % 
-% Add Chapter 7 Section 9
-% Add new section Retail Gas Sales (MRTSSM447USN) Chap 7 Section 9
+% Add Chapter 7 Section 11
+% Add new section Retail Gas Sales (MRTSSM447USN) Chap 7 Section 11
 add(chapter,Section('Retail Gas Sales'));% itype=70
 parastr1='This item reports on the dollar value of gas sales from gas stations.';
 parastr2=' Note this data is not seasonally adjusted.';
@@ -2734,8 +2734,8 @@ add(chapter,p3);
 br = PageBreak();
 add(chapter,br);
 
-% Chapter 7 Section 10
-% Add new section Retail Auto Parts (MRTSSM441USS) Chapter 7 Section 10
+% Chapter 7 Section 12
+% Add new section Retail Auto Parts (MRTSSM441USS) Chapter 7 Section 12
 add(chapter,Section('Retail Auto Parts Sales'));% itype=71
 parastr1='This item provides data on auto parts sales from retail outlets.';
 parastr2=' Note this data is seasonally adjusted.';
@@ -2803,7 +2803,7 @@ p3.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
 add(chapter,p3);
 
 % Add new section Vehicle Miles Travelled(TRFVOLUSM227NFWA) Chapter 7
-% Section 11 (Shows up as section 13)
+% Section 13 
 add(chapter,Section('Vehicle Miles Travelled'));% itype=42
 parastr1='This item provides loads data for Vehicle Miles travelled over a period of 1 month.';
 parastr2=' Overall this is a complex metric so a the hyperlink is provided make available more detailed data.';
@@ -2875,7 +2875,7 @@ p3 = Paragraph(parastr29);
 p3.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
 add(chapter,p3);
 
-% Add new section Freight Transpo Index(TSIFRGHT) Section 12
+% Add new section Freight Transpo Index(TSIFRGHT) Section 14
 add(chapter,Section('Freight Transportation Index'));% itype=43
 parastr1='This item reports on an index that measures freight shipment activity.';
 parastr2=' The purpose of this metric is to provide another window into the status of the economy.';
@@ -2946,9 +2946,9 @@ p3.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
 add(chapter,p3);
 %add(chapter,ul);
 br = PageBreak();
+add(chapter,br);
 
-
-% Add new section RailCarLoads(RAILFRTCARLOADSD11) Chapter 7 Section 13
+% Add new section RailCarLoads(RAILFRTCARLOADSD11) Chapter 7 Section 15
 add(chapter,Section('Rail Car Loads'));% itype=44
 parastr1='This item reports on an index that measures rail freight shipment activity in terms of carloads.';
 parastr2=' The purpose of this metric is to provide another window into the status of the economy.';
@@ -3017,7 +3017,7 @@ p3 = Paragraph(parastr29);
 p3.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
 add(chapter,p3);
 
-% Add new section Airine Load Factors(LOADFACTOR) Chapter 7 Section 14
+% Add new section Airine Load Factors(LOADFACTOR) Chapter 7 Section 16
 add(chapter,Section('Air Line Load Factors'));% itype=45
 parastr1='This item details the airline load factors on domestic and foreign aircraft flights in the US.';
 parastr2=' The purpose of this metric is to provide another window into the status of the economy.';
@@ -8527,6 +8527,408 @@ parastr39=strcat(parastr31,parastr32,parastr33,parastr34);
 p4 = Paragraph(parastr39);
 p4.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
 add(chapter,p4);
+add(chapter,Section('Lumber Price Index'));
+% Lumber Price (Monthly)  Chap 18-20
+% Add (itype=153)
+parastr11='WPU081 is a table which shows as the Producer Price Index for Lumber relative to a base year of 1982 .';
+parastr12=' No seasonal adjustments have been applied to the data nor has inflation been used to scale the data .';
+parastr13=' Lumber Prices are a key component of House prices which relate to construction activities.';
+parastr19=strcat(parastr11,parastr12,parastr13);
+p2 = Paragraph(parastr19);
+p2.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
+add(chapter,p2);
+% add a chart to showing the change of Lumber Price over time
+eval(['cd ' tiffpath(1:length(tiffpath)-1)]);
+imdata = imread('Lumber-PriceIndex.png');
+[nhigh,nwid,~]=size(imdata);
+image = mlreportgen.report.FormalImage();
+image.Image = which('Lumber-PriceIndex.png');
+text = Text('Lumber Prices Price');
+text.Color = 'red';
+image.Caption = text;
+heightstr=strcat(num2str(nhigh/2),'px');
+widthstr=strcat(num2str(nwid/2),'px');
+image.Height = heightstr;
+image.Width = widthstr;
+image.ScaleToFit=0;
+add(chapter,image); 
+parastr21='The chart was created by this software package and closely mirrors the Fred example chart.';
+parastr22=' Inspection of the chart shows a slow steady rise in Lumber prices until 1970 .';
+parastr23=' In the after 1970 years prices begin a much more rapid rise.';
+parastr24=' With the advent of Covid in 2020 supply chains were disrupted a metoric rise is seen for about 3 years.';
+parastr25=' In recent years prices retreated but the rate of rise was simular to th1 1970-2019 timeframe.';
+parastr29=strcat(parastr21,parastr22,parastr23,parastr24,parastr25);
+p3 = Paragraph(parastr29);
+p3.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
+Lists=cell(5,1);
+Lists{1,1}='Source: US Bureau of Labor Statistics';
+Lists{2,1}='Lumber PPI wrt 1982';
+Lists{3,1}='Frequency:Monthly';
+Lists{4,1}='Seasonally Adjusted: No';
+Lists{5,1}='Covered Period: 1926-2025';
+ul = UnorderedList(Lists);
+add(chapter,ul);
+br = PageBreak();
+add(chapter,br)
+% add a chart to show the  Cumilative Distribution of Lumber Prices
+eval(['cd ' tiffpath(1:length(tiffpath)-1)]);
+imdata = imread('LumberPriceIndex-Cumil-Distribution.png');
+[nhigh,nwid,~]=size(imdata);
+image = mlreportgen.report.FormalImage();
+image.Image = which('LumberPriceIndex-Cumil-Distribution.png');
+text = Text('Distribution of Lumber Prices');
+text.Color = 'red';
+image.Caption = text;
+heightstr=strcat(num2str(nhigh/2),'px');
+widthstr=strcat(num2str(nwid/2),'px');
+image.Height = heightstr;
+image.Width = widthstr;
+image.ScaleToFit=0;
+add(chapter,image); 
+parastr31='The chart was provides the distribution of the price of lumber relative to a baseline year of 1982.';
+parastr32=' Inspection of the graphic shows that the cumilitive median values of the distribution to be 84 wrt to to the 1982 price.';
+parastr33=' This chart is raw data over the stated time period with no seasonal adjustment applied.';
+parastr34=' Overall this vital raw material for homebuilding has been rising since 1926.';
+parastr39=strcat(parastr31,parastr32,parastr33,parastr34);
+p4 = Paragraph(parastr39);
+p4.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
+add(chapter,p4);
+add(chapter,Section('Hardwood Lumber Price Index'));
+
+% Hardwood Lumber Price (Monthly)  Chap 18-21
+% Add (itype=154)
+parastr11='WPU0811 is a table which shows as the Producer Price Index for Hardwood Lumber relative to a base year of 1982 .';
+parastr12=' No seasonal adjustments have been applied to the data nor has inflation been used to scale the data .';
+parastr13=' Lumber Prices are a key component of House prices which relate to construction activities.';
+parastr19=strcat(parastr11,parastr12,parastr13);
+p2 = Paragraph(parastr19);
+p2.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
+add(chapter,p2);
+% add a chart to showing the change of the HardWood Lumber Price Index over time
+eval(['cd ' tiffpath(1:length(tiffpath)-1)]);
+imdata = imread('Hardwood-PriceIndex.png');
+[nhigh,nwid,~]=size(imdata);
+image = mlreportgen.report.FormalImage();
+image.Image = which('Hardwood-PriceIndex.png');
+text = Text('Hardwood Lumber Price Index');
+text.Color = 'red';
+image.Caption = text;
+heightstr=strcat(num2str(nhigh/2),'px');
+widthstr=strcat(num2str(nwid/2),'px');
+image.Height = heightstr;
+image.Width = widthstr;
+image.ScaleToFit=0;
+add(chapter,image); 
+parastr21='The chart was created by this software package and closely mirrors the Fred example chart.';
+parastr22=' Inspection of the chart shows a slow steady rise in Hardwood Lumber prices until 1970 .';
+parastr23=' In the after 1970 years prices begin a much more rapid rise.';
+parastr24=' With the advent of Covid in 2020 supply chains were disrupted a metoric rise is seen for about 3 years.';
+parastr25=' In recent years prices retreated but the rate of rise was simular to the 1970-2019 timeframe.';
+parastr29=strcat(parastr21,parastr22,parastr23,parastr24,parastr25);
+p3 = Paragraph(parastr29);
+p3.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
+Lists=cell(5,1);
+Lists{1,1}='Source: US Bureau of Labor Statistics';
+Lists{2,1}='Hardwood Lumber PPI wrt 1982';
+Lists{3,1}='Frequency:Monthly';
+Lists{4,1}='Seasonally Adjusted: No';
+Lists{5,1}='Covered Period: 1947-2025';
+ul = UnorderedList(Lists);
+add(chapter,ul);
+br = PageBreak();
+add(chapter,br)
+% add a chart to show the  Cumilative Distribution of HardWood Lumber Prices
+eval(['cd ' tiffpath(1:length(tiffpath)-1)]);
+imdata = imread('HardwoodIndex-Cumil-Distribution.png');
+[nhigh,nwid,~]=size(imdata);
+image = mlreportgen.report.FormalImage();
+image.Image = which('HardwoodIndex-Cumil-Distribution.png');
+text = Text('Distribution of Hardwood Lumber Prices');
+text.Color = 'red';
+image.Caption = text;
+heightstr=strcat(num2str(nhigh/2),'px');
+widthstr=strcat(num2str(nwid/2),'px');
+image.Height = heightstr;
+image.Width = widthstr;
+image.ScaleToFit=0;
+add(chapter,image); 
+parastr31='The chart was provides the distribution of the price of hardwood lumber relative to a baseline year of 1982.';
+parastr32=' Inspection of the graphic shows that the cumilitive median values of the distribution to be about 116.';
+parastr33=' This chart is raw data over the stated time period with no seasonal adjustment applied.';
+parastr34=' Overall this vital raw material for homebuilding has been rising since 1947.';
+parastr39=strcat(parastr31,parastr32,parastr33,parastr34);
+p4 = Paragraph(parastr39);
+p4.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
+add(chapter,p4);
+
+add(chapter,Section('SoftWood Lumber Price Index'));
+% Softwood Lumber Price (Monthly)  Chap 18-22
+% Add (itype=155)
+parastr11='WPU0811 is a table which shows as the Producer Price Index for Softwood Wood Lumber relative to a base year of 1982 .';
+parastr12=' No seasonal adjustments have been applied to the data nor has inflation been used to scale the data .';
+parastr13=' Lumber Prices are a key component of House prices which relate to construction activities.';
+parastr19=strcat(parastr11,parastr12,parastr13);
+p2 = Paragraph(parastr19);
+p2.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
+add(chapter,p2);
+% add a chart to showing the change of the SoftWood Lumber Price Index over time
+eval(['cd ' tiffpath(1:length(tiffpath)-1)]);
+imdata = imread('Softwood-PriceIndex.png');
+[nhigh,nwid,~]=size(imdata);
+image = mlreportgen.report.FormalImage();
+image.Image = which('Softwood-PriceIndex.png');
+text = Text('Softwood Lumber Price Index');
+text.Color = 'red';
+image.Caption = text;
+heightstr=strcat(num2str(nhigh/2),'px');
+widthstr=strcat(num2str(nwid/2),'px');
+image.Height = heightstr;
+image.Width = widthstr;
+image.ScaleToFit=0;
+add(chapter,image); 
+parastr21='The chart was created by this software package and closely mirrors the Fred example chart.';
+parastr22=' Inspection of the chart shows a slow steady rise in Softwood Lumber prices until 1970 .';
+parastr23=' In the after 1970 years prices begin a much more rapid rise.';
+parastr24=' With the advent of Covid in 2020 supply chains were disrupted a metoric rise is seen for about 3 years.';
+parastr25=' In recent years prices retreated but the rate of rise was simular to the 1970-2019 timeframe.';
+parastr29=strcat(parastr21,parastr22,parastr23,parastr24,parastr25);
+p3 = Paragraph(parastr29);
+p3.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
+Lists=cell(5,1);
+Lists{1,1}='Source: US Bureau of Labor Statistics';
+Lists{2,1}='Softwood Lumber PPI wrt 1982';
+Lists{3,1}='Frequency:Monthly';
+Lists{4,1}='Seasonally Adjusted: No';
+Lists{5,1}='Covered Period: 1947-2025';
+ul = UnorderedList(Lists);
+add(chapter,ul);
+br = PageBreak();
+add(chapter,br)
+% add a chart to show the  Cumilative Distribution of SoftWood Lumber Prices
+eval(['cd ' tiffpath(1:length(tiffpath)-1)]);
+imdata = imread('SoftwoodIndex-Cumil-Distribution.png');
+[nhigh,nwid,~]=size(imdata);
+image = mlreportgen.report.FormalImage();
+image.Image = which('SoftwoodIndex-Cumil-Distribution.png');
+text = Text('Distribution of Softwood Lumber Prices');
+text.Color = 'red';
+image.Caption = text;
+heightstr=strcat(num2str(nhigh/2),'px');
+widthstr=strcat(num2str(nwid/2),'px');
+image.Height = heightstr;
+image.Width = widthstr;
+image.ScaleToFit=0;
+add(chapter,image); 
+parastr31='The chart was provides the distribution of the price of softwood lumber relative to a baseline year of 1982.';
+parastr32=' Inspection of the graphic shows that the cumilitive median values of the distribution to be about 117.';
+parastr33=' This chart is raw data over the stated time period with no seasonal adjustment applied.';
+parastr34=' Overall this vital raw material for homebuilding has been rising since 1947.';
+parastr39=strcat(parastr31,parastr32,parastr33,parastr34);
+p4 = Paragraph(parastr39);
+p4.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
+add(chapter,p4);
+
+add(chapter,Section('Hardwood Flooring Price Index'));
+% Hardwood Flooring (Monthly)  Chap 18-23
+% Add (itype=156)
+parastr11='WPU0811 is a table which shows as the Hardwood Flooring Price Index  relative to a base year of 1984 .';
+parastr12=' No seasonal adjustments have been applied to the data nor has inflation been used to scale the data .';
+parastr13=' Flooring Prices are another key component of House prices which relate to construction activities.';
+parastr19=strcat(parastr11,parastr12,parastr13);
+p2 = Paragraph(parastr19);
+p2.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
+add(chapter,p2);
+% add a chart to showing the change of the Hardwood Flooring Price Index over time
+eval(['cd ' tiffpath(1:length(tiffpath)-1)]);
+imdata = imread('Floor-PriceIndex.png');
+[nhigh,nwid,~]=size(imdata);
+image = mlreportgen.report.FormalImage();
+image.Image = which('Floor-PriceIndex.png');
+text = Text('Hardwood Flooring Price Index');
+text.Color = 'red';
+image.Caption = text;
+heightstr=strcat(num2str(nhigh/2),'px');
+widthstr=strcat(num2str(nwid/2),'px');
+image.Height = heightstr;
+image.Width = widthstr;
+image.ScaleToFit=0;
+add(chapter,image); 
+parastr21='The chart was created by this software package and closely mirrors the Fred example chart.';
+parastr22=' Inspection of the chart shows a slow steady rise in Hardwood Flooring  prices until 1990 .';
+parastr23=' In the after 1990 years prices begin a much more rapid rise.';
+parastr24=' With the advent of Covid in 2020 supply chains were disrupted a metoric rise up tp the current time frame of 2026.';
+parastr29=strcat(parastr21,parastr22,parastr23,parastr24);
+p3 = Paragraph(parastr29);
+p3.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
+Lists=cell(5,1);
+Lists{1,1}='Source: US Bureau of Labor Statistics';
+Lists{2,1}='Hardwood Flooring Index wrt 1984';
+Lists{3,1}='Frequency:Monthly';
+Lists{4,1}='Seasonally Adjusted: No';
+Lists{5,1}='Covered Period: 1984-2026';
+ul = UnorderedList(Lists);
+add(chapter,ul);
+br = PageBreak();
+add(chapter,br)
+% add a chart to show the  Cumilative Distribution of Hardwood Flooring Prices
+eval(['cd ' tiffpath(1:length(tiffpath)-1)]);
+imdata = imread('FloorIndex-Cumil-Distribution.png');
+[nhigh,nwid,~]=size(imdata);
+image = mlreportgen.report.FormalImage();
+image.Image = which('FloorIndex-Cumil-Distribution.png');
+text = Text('Distribution of Hardwood Flooring Prices');
+text.Color = 'red';
+image.Caption = text;
+heightstr=strcat(num2str(nhigh/2),'px');
+widthstr=strcat(num2str(nwid/2),'px');
+image.Height = heightstr;
+image.Width = widthstr;
+image.ScaleToFit=0;
+add(chapter,image); 
+parastr31='The chart was provides the distribution of the price of softwood lumber relative to a baseline year of 1984.';
+parastr32=' Inspection of the graphic shows that the cumilitive median values of the distribution to be about 155.';
+parastr33=' This chart is raw data over the stated time period with no seasonal adjustment applied.';
+parastr34=' Overall this vital raw material for homebuilding has been rising since 1982 and since Covid at a faster that inflation pace.';
+parastr39=strcat(parastr31,parastr32,parastr33,parastr34);
+p4 = Paragraph(parastr39);
+p4.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
+add(chapter,p4);
+
+add(chapter,Section('Millwood Price Index'));
+% General Millwork (Monthly)  Chap 18-24
+% Add (itype=157)
+parastr11='WPU0821 is a table which shows as the General Millwork Price Index relative to a base year of 1982 .';
+parastr12=' No seasonal adjustments have been applied to the data nor has inflation been used to scale the data .';
+parastr13=' Millwork referes to wood products that are shaped by a millworking machine.';
+parastr14=' Examples of millwork include trim and modling,doors,fireplace mantels and built in bookshelves.';
+parastr19=strcat(parastr11,parastr12,parastr13,parastr14);
+p2 = Paragraph(parastr19);
+p2.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
+add(chapter,p2);
+% add a chart to showing the change of the Millwork Price Index over time
+eval(['cd ' tiffpath(1:length(tiffpath)-1)]);
+imdata = imread('Millwork-PriceIndex.png');
+[nhigh,nwid,~]=size(imdata);
+image = mlreportgen.report.FormalImage();
+image.Image = which('Millwork-PriceIndex.png');
+text = Text('General Millwork Price Index');
+text.Color = 'red';
+image.Caption = text;
+heightstr=strcat(num2str(nhigh/2),'px');
+widthstr=strcat(num2str(nwid/2),'px');
+image.Height = heightstr;
+image.Width = widthstr;
+image.ScaleToFit=0;
+add(chapter,image); 
+parastr21='The chart was created by this software package and closely mirrors the Fred example chart.';
+parastr22=' Inspection of the chart shows a slow steady rise in Hardwood Flooring  prices from 1970 up to 2020 .';
+parastr23=' The arrival of Covid meant that the skilled workers who made these items were sidelined.';
+parastr24=' As a result prices rose steeply during this time period-to date they have not returned to pre Covid levels.';
+parastr29=strcat(parastr21,parastr22,parastr23,parastr24);
+p3 = Paragraph(parastr29);
+p3.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
+Lists=cell(5,1);
+Lists{1,1}='Source: US Bureau of Labor Statistics';
+Lists{2,1}='Hardwood Flooring Index wrt 1982';
+Lists{3,1}='Frequency:Monthly';
+Lists{4,1}='Seasonally Adjusted: No';
+Lists{5,1}='Covered Period: 1964-2026';
+ul = UnorderedList(Lists);
+add(chapter,ul);
+br = PageBreak();
+add(chapter,br)
+% add a chart to show the  Cumilative Distribution of General Millwork Prices
+eval(['cd ' tiffpath(1:length(tiffpath)-1)]);
+imdata = imread('MillworkIndex-Cumil-Distribution.png');
+[nhigh,nwid,~]=size(imdata);
+image = mlreportgen.report.FormalImage();
+image.Image = which('MillworkIndex-Cumil-Distribution.png');
+text = Text('Distribution of General Millwork Prices');
+text.Color = 'red';
+image.Caption = text;
+heightstr=strcat(num2str(nhigh/2),'px');
+widthstr=strcat(num2str(nwid/2),'px');
+image.Height = heightstr;
+image.Width = widthstr;
+image.ScaleToFit=0;
+add(chapter,image); 
+parastr31='The chart was provides the distribution of the price of millwork products relative to a baseline year of 1982.';
+parastr32=' Inspection of the graphic shows that the cumilitive median values of the distribution to be about 165.';
+parastr33=' This chart is raw data over the stated time period with no seasonal adjustment applied.';
+parastr34=' Not only did Covid disrupt supply chains but it also redcued the pool of skilled craftsmen.';
+parastr39=strcat(parastr31,parastr32,parastr33,parastr34);
+p4 = Paragraph(parastr39);
+p4.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
+add(chapter,p4);
+br = PageBreak();
+add(chapter,br)
+
+add(chapter,Section('Treated Wood Price Index'));
+% Treated Wood (Monthly)  Chap 18-25
+% Add (itype=158)
+parastr11='WPU087 is a table which shows as the Treated Wood Price Index relative to a base year of 1985 .';
+parastr12=' No seasonal adjustments have been applied to the data nor has inflation been used to scale the data .';
+parastr13=' Treated wood is a wood that has had chemicals added to it under pressure to resist rot and decay.';
+parastr14=' Examples of treated wood could include outdoor decks and fences.';
+parastr19=strcat(parastr11,parastr12,parastr13,parastr14);
+p2 = Paragraph(parastr19);
+p2.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
+add(chapter,p2);
+% add a chart to showing the change of the Treated Wood Price Index over time
+eval(['cd ' tiffpath(1:length(tiffpath)-1)]);
+imdata = imread('TreatedWood-PriceIndex.png');
+[nhigh,nwid,~]=size(imdata);
+image = mlreportgen.report.FormalImage();
+image.Image = which('TreatedWood-PriceIndex.png');
+text = Text('Treated Wood Price Index');
+text.Color = 'red';
+image.Caption = text;
+heightstr=strcat(num2str(nhigh/2),'px');
+widthstr=strcat(num2str(nwid/2),'px');
+image.Height = heightstr;
+image.Width = widthstr;
+image.ScaleToFit=0;
+add(chapter,image); 
+parastr21='The chart was created by this software package and closely mirrors the Fred example chart.';
+parastr22=' Inspection of the chart shows a slow steady rise in treated wood prices from 1985 up to 2020 .';
+parastr23=' The arrival of Covid meant that the skilled workers who made these items were sidelined and prices fluctuated upwards.';
+parastr24=' To date they have not returned to pre Covid levels.';
+parastr29=strcat(parastr21,parastr22,parastr23,parastr24);
+p3 = Paragraph(parastr29);
+p3.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
+Lists=cell(5,1);
+Lists{1,1}='Source: US Bureau of Labor Statistics';
+Lists{2,1}='Treated Wood Price Index wrt 1985';
+Lists{3,1}='Frequency:Monthly';
+Lists{4,1}='Seasonally Adjusted: No';
+Lists{5,1}='Covered Period: 1985-2026';
+ul = UnorderedList(Lists);
+add(chapter,ul);
+br = PageBreak();
+add(chapter,br)
+% add a chart to show the  Cumilative Distribution of Treated Wood Prices
+eval(['cd ' tiffpath(1:length(tiffpath)-1)]);
+imdata = imread('TreatedWoodIndex-Cumil-Distribution.png');
+[nhigh,nwid,~]=size(imdata);
+image = mlreportgen.report.FormalImage();
+image.Image = which('TreatedWoodIndex-Cumil-Distribution.png');
+text = Text('Distribution of Treated Wood Prices');
+text.Color = 'red';
+image.Caption = text;
+heightstr=strcat(num2str(nhigh/2),'px');
+widthstr=strcat(num2str(nwid/2),'px');
+image.Height = heightstr;
+image.Width = widthstr;
+image.ScaleToFit=0;
+add(chapter,image); 
+parastr31='The chart was provides the distribution of the price of treated wood products relative to a baseline year of 1985.';
+parastr32=' Inspection of the graphic shows that the cumilitive median values of the distribution to be about 165.';
+parastr33=' This chart is raw data over the stated time period with no seasonal adjustment applied.';
+parastr34=' Not only did Covid disrupt supply chains but it also redcued the pool of skilled craftsmen.';
+parastr39=strcat(parastr31,parastr32,parastr33,parastr34);
+p4 = Paragraph(parastr39);
+p4.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
+add(chapter,p4);
 add(rpt,chapter)
 %%%%%%%%%%%%%%%% Chapter 19  %%%%%%%%%
 % Start on Chapter 19
@@ -9845,7 +10247,7 @@ p5.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
 add(chapter,p5);
 add(rpt,chapter)
 
-% Add Chapter 20 Correlation studies
+% Add Chapter 20 Correlation studies-start with Food Price Correlations
 chapter = Chapter("Title", "Selected Correlation  Studies");
 chapter.Layout.Landscape = true;
 PStatsObj.chapter=chapter;
@@ -9862,7 +10264,7 @@ p1.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
 add(chapter,p1);
 add(chapter,Section('Food Item Correlation'));
 % Chap 20-1
-parastr11='This item shows a 2D correlation matrix of selected food tiems.';
+parastr11='This item shows a 2D correlation matrix of selected food items.';
 parastr12=' A total of 7 food items were selected for this study but others could be added.';
 parastr13=' Two of these 7 items are not food items-one is the price of Diesel fuel and the second is electricity cost.';
 parastr14=' These two were included because both these items are a significan part of food production costs.';
@@ -9893,5 +10295,43 @@ parastr29=strcat(parastr21,parastr22,parastr23,parastr24);
 p3 = Paragraph(parastr29);
 p3.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
 add(chapter,p3)
+br = PageBreak();
+add(chapter,br);
+add(chapter,Section('Home Item Correlation'));
+% Set up a correlation table for plotting based on the HomeCorrTable
+% Chap 20-3
+parastr11='This item shows a 2D correlation matrix of selected housing items.';
+parastr12=' A total of 10 items were selected for this study but others could be added.';
+parastr13=' Two of these 10 items are now specific to home costs-thhe first Unemployment Rate .';
+parastr14=' The second item is the so called sticky inflation index.';
+parastr15=' A total of 8 items were selected because of their direct influence on housing costs';
+parastr19=strcat(parastr11,parastr12,parastr13,parastr14,parastr15); 
+p2 = Paragraph(parastr19);
+p2.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
+add(chapter,p2)
+% add a chart to show the House Price  Correlation Matrix 
+eval(['cd ' tiffpath(1:length(tiffpath)-1)]);
+imdata = imread('HomePriceCorrelation.png');
+[nhigh,nwid,~]=size(imdata);
+image = mlreportgen.report.FormalImage();
+image.Image = which('HomePriceCorrelation.png');
+text = Text('Home Price Correlation Matrix');
+text.Color = 'red';
+image.Caption = text;
+heightstr=strcat(num2str(nhigh/2),'px');
+widthstr=strcat(num2str(nwid/2),'px');
+image.Height = heightstr;
+image.Width = widthstr;
+image.ScaleToFit=0;
+add(chapter,image); 
+parastr21='The Y and Y axes show the 10 items to be compared.';
+parastr22=' A color bar is located on the right side of the image which relates the correlation value to plot color.';
+parastr23=' For the purpose of clarity the value of the correlation is displayed for each square accurate to 2 decimal places.';
+parastr24=' Generally the spread of correlation values wider than for food costs ranging for about -.3 to .95 neglecting the self correlations.';
+parastr29=strcat(parastr21,parastr22,parastr23,parastr24);
+p3 = Paragraph(parastr29);
+p3.Style = {OuterMargin("0pt", "0pt","20pt","10pt")};
+add(chapter,p3)
+
 add(rpt,chapter)
 end
